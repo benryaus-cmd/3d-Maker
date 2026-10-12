@@ -16,8 +16,8 @@ const CAR_TUNES:Record<CarStyle,Partial<CarTune>>={
 type Actor={car:CarState;mesh:THREE.Group;type:'police'|'traffic'|'racer';style:CarStyle;routeX:number;routeZ:number;repath:number;alert:number;stuck:number;lastX:number;lastZ:number};
 type Ped={mesh:THREE.Group;x:number;z:number;vx:number;vz:number;panic:number;down:number;alive:boolean;bleed:THREE.Mesh|null};
 type Radar={player:[number,number];cops:[number,number][];traffic:[number,number][];people:[number,number][];target:[number,number]|null};
-type UI={speed:number;hp:number;heat:number;cash:number;nitro:number;mission:string;objective:string;message:string;area:string;near:string|null;mode:'campaign'|'freeroam';house:boolean;notice:string;radar:Radar;cargo:number};
-const initialUi:UI={speed:0,hp:100,heat:0,cash:1200,nitro:100,mission:'LAST $200',objective:'DRIVE TO SAFEHOUSE',message:'',area:'DOCKSIDE',near:null,mode:'campaign',house:false,notice:'',radar:{player:[0,0],cops:[],traffic:[],people:[],target:null},cargo:0};
+type UI={speed:number;hp:number;heat:number;cash:number;nitro:number;mission:string;objective:string;message:string;area:string;near:string|null;mode:'campaign'|'freeroam';house:boolean;notice:string;radar:Radar;cargo:number;race:string|null};
+const initialUi:UI={speed:0,hp:100,heat:0,cash:1200,nitro:100,mission:'LAST $200',objective:'DRIVE TO SAFEHOUSE',message:'',area:'DOCKSIDE',near:null,mode:'campaign',house:false,notice:'',radar:{player:[0,0],cops:[],traffic:[],people:[],target:null},cargo:0,race:null};
 type Controls={throttle:boolean;brake:boolean;left:boolean;right:boolean;handbrake:boolean;nitro:boolean;moveX:number;moveZ:number};
 const clearInputs=(c:Controls)=>{c.throttle=false;c.brake=false;c.left=false;c.right=false;c.handbrake=false;c.nitro=false;c.moveX=0;c.moveZ=0;};
 const wrap=(a:number)=>Math.atan2(Math.sin(a),Math.cos(a));
@@ -360,6 +360,7 @@ class EmpireEngine{
    mission:this.save.mode==='freeroam'?'FREE ROAM':mission?.title??'CAMPAIGN COMPLETE',
    objective:this.save.mode==='freeroam'?'BUILD YOUR EMPIRE':mission?.brief??'CITY IS YOURS',
    message:this.gameTime<this.noticeUntil?this.message:'',area:district,near,mode:this.save.mode,house:this.house,
+   race:this.raceRival?'RACE · '+Math.max(0,Math.ceil(65-this.raceTime))+'s LEFT · RIVAL '+Math.min(3,this.rivalStep)+'/3':null,
    notice:this.player.hp<25?'ENGINE CRITICAL · REPAIR AT GARAGE':'',cargo:cargoCount(this.save),
    radar:{player:[here.x,here.z],cops:this.actors.filter(a=>a.type==='police').map(a=>[a.car.x,a.car.z] as [number,number]),
     traffic:this.actors.filter(a=>a.type==='traffic').map(a=>[a.car.x,a.car.z] as [number,number]),
@@ -451,6 +452,7 @@ export default function CrimeGame(){
   </header>
   <div className="be-speed"><b>{hud.speed}</b><small>KM/H</small><span>VEHICLE {Math.round(hud.hp)}%</span><i><u style={{width:Math.max(0,hud.hp)+'%'}}/></i><span>NITRO {hud.nitro}%</span></div>
   {hud.message&&<div className="be-banner">{hud.message}</div>}
+  {hud.race&&<div className="be-race">{hud.race}</div>}
   {hud.notice&&<div className="be-danger">{hud.notice}</div>}
   <div className="be-worldactions"><button onClick={()=>{engine.current?.unlock();setMenu('jobs');}}>JOBS</button><button onClick={()=>{engine.current?.unlock();openNear();}}>{hud.near===null?'ENTER / EXIT':hud.near==='safehouse'?'SAFEHOUSE':hud.near==='garage'?'GARAGE':'DEAL / ENTER'}</button></div>
   <div className="be-controls"><div className="be-steer">
