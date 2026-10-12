@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {Controls} from '../src/crime/Controls.ts';
+const c=new Controls();
+assert.equal(c.steer,0,'steering starts neutral');
+c.setStick(.55,-.7);c.pointer(7,'throttle');c.key('d',true);
+assert.equal(c.steer,.55);assert.equal(c.moveX,.55);assert.equal(c.moveZ,-.7);
+assert.ok(c.throttle&&c.right,'touch pedals and keyboard coexist with analog input');
+c.release(7);assert.equal(c.steer,.55);assert.ok(c.right&&!c.throttle);
+c.setStick(0,0);assert.ok(c.right,'cancelled stick does not clear keyboard');
+c.setStick(9,-9);assert.ok(Math.hypot(c.moveX,c.moveZ)<=1.000001,'walk vector bounded to unit circle');
+c.clear();assert.equal(c.steer,0);assert.equal(c.moveX,0);assert.equal(c.moveZ,0);assert.equal(c.right,false);
+c.setStick(NaN,Infinity);assert.equal(c.steer,0);assert.equal(c.moveZ,0);
+console.log('Mobile analog / mixed sources / cancellation: PASS');

@@ -12,6 +12,13 @@ export const newCar=(x=0,z=0,heading=0,hp=100):CarState=>({x,z,heading,vx:0,vz:0
 export const speed=(s:CarState)=>Math.hypot(s.vx,s.vz);
 export const kmh=(s:CarState)=>Math.round(speed(s)*3.6);
 export const axes=(heading:number)=>({fx:Math.sin(heading),fz:Math.cos(heading),rx:Math.cos(heading),rz:-Math.sin(heading)});
+/** Circle against the same oriented chassis used by solid car collisions. */
+export function pointTouchesCar(s:CarState,x:number,z:number,radius=.35):boolean{
+ const a=axes(s.heading),dx=x-s.x,dz=z-s.z;
+ const side=Math.max(0,Math.abs(dx*a.rx+dz*a.rz)-1.1);
+ const front=Math.max(0,Math.abs(dx*a.fx+dz*a.fz)-2.25);
+ return side*side+front*front<radius*radius;
+}
 export function tuneWithMods(base:CarTune,mods:{engine:number;tires:number;brakes:number;armor:number}):CarTune{
  return {...base,power:base.power*(1+.15*mods.engine),grip:base.grip*(1+.11*mods.tires),brakeForce:base.brakeForce*(1+.13*mods.brakes),mass:base.mass+mods.armor*95,durability:base.durability*(1+.23*mods.armor)};
 }
@@ -19,20 +26,25 @@ export function tuneWithMods(base:CarTune,mods:{engine:number;tires:number;brake
 export function drive(s:CarState,c:DriverInput,dt:number,t:CarTune=BASE_TUNE,wet=false):void{
  dt=limit(dt,0,1/30); const a=axes(s.heading),long=s.vx*a.fx+s.vz*a.fz,lat=s.vx*a.rx+s.vz*a.rz;
  const k=limit(1-s.hp/100,0,1);
- const maxAngle=t.steerLock/(1+Math.abs(long)*.025);
+ const maxAngle=t.steerLock/(1+Math.abs(long)*.035);
  const target=limit(c.steer,-1,1)*maxAngle;
- s.steerAngle+=limit(target-s.steerAngle,-dt*3.7,dt*3.7);
- const engine=limit(c.throttle,0,1)*(t.power/t.mass)*(1-k*.5);
+ const steeringRate=(c.handbrake?4.2:3.6)/(1+Math.abs(long)*.015);
+ s.steerAngle+=limit(target-s.steerAngle,-dt*steeringRate,dt*steeringRate);
+ // Stronger initial torque, then a gentle roll-off rather than a constant shove.
+ const torque=1.16-.24*limit(Math.abs(long)/t.topSpeed,0,1);
+ const engine=limit(c.throttle,0,1)*(t.power/t.mass)*torque*(1-k*.5);
  const reverse=c.throttle<.1&&c.brake>0&&(long<-.3||(c.brake>.8&&Math.abs(long)<.5));
  const motor=reverse ? -c.brake*4.2:engine;
  const braking=reverse?0:c.brake*t.brakeForce/t.mass;
- const resistance=.018*long*Math.abs(long)+t.drag*long/t.mass+(.14*long);
+ const resistance=.0025*long*Math.abs(long)+t.drag*long/t.mass+(.11*long);
  let flong=motor-resistance-(Math.abs(long)>.08?Math.sign(long)*braking:0);
  if(!reverse&&Math.abs(long)<.25&&c.brake>.6&&!c.throttle)flong=0;
  const grip=t.grip*(wet?.78:1)*(c.handbrake?.36:1)*9.81;
  const latForce=limit(-lat*7.6,-grip,grip);
  const steerYaw=long*Math.tan(s.steerAngle)/t.wheelbase;
- const targetYaw=steerYaw*(c.handbrake?1.5:1);
+ // Limit ordinary turning by tyre acceleration; handbrake permits yaw/slip to separate.
+ const yawLimit=t.grip*(wet?.78:1)*9.81*(c.handbrake?1.8:1.25)/Math.max(4,Math.abs(long));
+ const targetYaw=limit(steerYaw*(c.handbrake?1.35:1),-yawLimit,yawLimit);
  const yawResponse=limit((c.handbrake?2.8:5.4)*dt,0,1);
  s.yawRate+=(targetYaw-s.yawRate)*yawResponse;
  // Excess speed and sharp turning generate real lateral slip, not instant velocity snapping.

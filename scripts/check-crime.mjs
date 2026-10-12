@@ -1,4 +1,9 @@
 import assert from 'node:assert/strict';
+import * as vehicleGeometry from '../src/crime/vehiclePhysics.ts';
+assert.equal(typeof vehicleGeometry.pointTouchesCar,'function','pedestrian collisions must use the oriented vehicle hull');
+assert.ok(vehicleGeometry.pointTouchesCar(vehicleGeometry.newCar(),0,2.45,.35),'bonnet touches a pedestrian before the car centre does');
+assert.ok(!vehicleGeometry.pointTouchesCar(vehicleGeometry.newCar(),1.55,0,.3),'no phantom side collision beyond the body');
+assert.ok(vehicleGeometry.pointTouchesCar(vehicleGeometry.newCar(0,0,Math.PI/2),2.45,0,.35),'hull contact rotates with the car');
 import {Controls} from '../src/crime/Controls.ts';
 const controls=new Controls();
 controls.pointer(1,'throttle');controls.pointer(2,'left');controls.pointer(3,'handbrake');
@@ -24,6 +29,12 @@ assert.ok(reversing.vz>1,'throttle must recover forward motion while reversing')
 assert.ok(kmh(s60)>30,'car must accelerate');
 assert.ok(Math.abs(kmh(s60)-kmh(s30))<2,'handling must not depend on frame rate');
 assert.ok(simulate(1/60,4,1).x>3,'steering must produce a turn');
+const highway=newCar();highway.vz=25;
+for(let i=0;i<45;i++)drive(highway,{throttle:.4,brake:0,steer:1,handbrake:false,nitro:false},1/60);
+assert.ok(Math.abs(highway.yawRate)<1.3,'high-speed steering stays within a controllable cornering envelope');
+const cruising=newCar();
+for(let i=0;i<900;i++)drive(cruising,{throttle:1,brake:0,steer:0,handbrake:false,nitro:false},1/60);
+assert.ok(kmh(cruising)>90,'normal car can reach useful city/pursuit speed');
 const crashed=newCar();crashed.vz=18;crashed.z=7;
 const wall={x:0,z:8,w:5,d:2};
 const hit=collideWall(crashed,wall);assert.ok(hit&&hit.speed>5,'solid collision returns meaningful impact');

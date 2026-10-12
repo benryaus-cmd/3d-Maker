@@ -1,0 +1,5767 @@
+{
+  "durationSeconds": 122.333,
+  "samples": [
+    {
+      "x": 0,
+      "z": 0,
+      "heading": 0,
+      "speed": 0,
+      "hp": 100,
+      "zoom": 1.1917778382672473,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 90,
+      "geometries": 37,
+      "textures": 16,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.02409112746504905,
+      "heading": 0,
+      "speed": 0.481066555453615,
+      "hp": 100,
+      "zoom": 1.2148819911597992,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 1,
+      "geometries": 37,
+      "textures": 16,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.07204629534604098,
+      "heading": 0,
+      "speed": 0.861828462629096,
+      "hp": 100,
+      "zoom": 1.2134405094910536,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 17,
+      "geometries": 37,
+      "textures": 17,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.07204629534604098,
+      "heading": 0,
+      "speed": 0.861828462629096,
+      "hp": 100,
+      "zoom": 1.2134405094910536,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 17,
+      "geometries": 37,
+      "textures": 17,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.07204629534604098,
+      "heading": 0,
+      "speed": 0.861828462629096,
+      "hp": 100,
+      "zoom": 1.2134405094910536,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 17,
+      "geometries": 37,
+      "textures": 17,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.07204629534604098,
+      "heading": 0,
+      "speed": 0.861828462629096,
+      "hp": 100,
+      "zoom": 1.2134405094910536,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 17,
+      "geometries": 37,
+      "textures": 17,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.16744424686958015,
+      "heading": 0,
+      "speed": 1.3326443483012045,
+      "hp": 100,
+      "zoom": 1.2111320163742476,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 27,
+      "geometries": 38,
+      "textures": 19,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.27182836913343844,
+      "heading": 0,
+      "speed": 1.7051733416162131,
+      "hp": 100,
+      "zoom": 1.2082402389617584,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 34,
+      "geometries": 38,
+      "textures": 19,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.4369889961196309,
+      "heading": 0,
+      "speed": 2.165663136581774,
+      "hp": 100,
+      "zoom": 1.2046324448279044,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 44,
+      "geometries": 40,
+      "textures": 19,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.6402357946530115,
+      "heading": 0,
+      "speed": 2.6203913655447773,
+      "hp": 100,
+      "zoom": 1.200415861136093,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 48,
+      "geometries": 40,
+      "textures": 19,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.9337286371172966,
+      "heading": 0,
+      "speed": 3.158441477625995,
+      "hp": 100,
+      "zoom": 1.194162310914944,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 57,
+      "geometries": 42,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 0.9337286371172966,
+      "heading": 0,
+      "speed": 3.158441477625995,
+      "hp": 100,
+      "zoom": 1.194162310914944,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:31",
+      "calls": 57,
+      "geometries": 42,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 1.4736806233526467,
+      "heading": 0,
+      "speed": 3.9498905891644185,
+      "hp": 100,
+      "zoom": 1.1823677117663864,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 71,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 1.6798377141704677,
+      "heading": 0,
+      "speed": 4.20953562168791,
+      "hp": 100,
+      "zoom": 1.1774843702925317,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 85,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 2.0520762635386505,
+      "heading": 0,
+      "speed": 4.637641274009975,
+      "hp": 100,
+      "zoom": 1.1705556026183386,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 93,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 2.721059610858985,
+      "heading": 0,
+      "speed": 5.310562129659435,
+      "hp": 100,
+      "zoom": 1.159741224454151,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 90,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 3.2810566018044494,
+      "heading": 0,
+      "speed": 5.80553395428312,
+      "hp": 100,
+      "zoom": 1.1523308750517292,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 93,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 3.78519584246893,
+      "heading": 0,
+      "speed": 6.2116599692347965,
+      "hp": 100,
+      "zoom": 1.1464167031352002,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 93,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 4.434414338310122,
+      "heading": 0,
+      "speed": 6.691409803473957,
+      "hp": 100,
+      "zoom": 1.1384173182092079,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 93,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 5.011743814190638,
+      "heading": 0,
+      "speed": 7.084885414114685,
+      "hp": 100,
+      "zoom": 1.1322466613102147,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 93,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 5.621576694094375,
+      "heading": 0,
+      "speed": 7.47263908285674,
+      "hp": 100,
+      "zoom": 1.1242250522001813,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:32",
+      "calls": 93,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 6.26343719328796,
+      "heading": 0,
+      "speed": 7.854692013550147,
+      "hp": 100,
+      "zoom": 1.1180799726571715,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 91,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 6.26343719328796,
+      "heading": 0,
+      "speed": 7.854692013550147,
+      "hp": 100,
+      "zoom": 1.1180799726571715,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 91,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 6.26343719328796,
+      "heading": 0,
+      "speed": 7.854692013550147,
+      "hp": 100,
+      "zoom": 1.1180799726571715,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 91,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 6.26343719328796,
+      "heading": 0,
+      "speed": 7.854692013550147,
+      "hp": 100,
+      "zoom": 1.1180799726571715,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 91,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 6.936851415618283,
+      "heading": 0,
+      "speed": 8.231067829791868,
+      "hp": 100,
+      "zoom": 1.1118436898622381,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 93,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 7.641347550616992,
+      "heading": 0,
+      "speed": 8.601792484104687,
+      "hp": 100,
+      "zoom": 1.105541542001267,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 94,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 7.641347550616992,
+      "heading": 0,
+      "speed": 8.601792484104687,
+      "hp": 100,
+      "zoom": 1.105541542001267,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 94,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 8.376456063039837,
+      "heading": 0,
+      "speed": 8.966894167203888,
+      "hp": 100,
+      "zoom": 1.0991954900732865,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 94,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 8.986269821231126,
+      "heading": 0,
+      "speed": 9.25494729197019,
+      "hp": 100,
+      "zoom": 1.0929942835943671,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 95,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 9.775305339200239,
+      "heading": 0,
+      "speed": 9.610005465452526,
+      "hp": 100,
+      "zoom": 1.0867598422848772,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 95,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 10.59365216041364,
+      "heading": 0,
+      "speed": 9.959530740342885,
+      "hp": 100,
+      "zoom": 1.0805096503223726,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 96,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 10.59365216041364,
+      "heading": 0,
+      "speed": 9.959530740342885,
+      "hp": 100,
+      "zoom": 1.0805096503223726,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 96,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 11.787706787886028,
+      "heading": 0,
+      "speed": 10.43963950721396,
+      "hp": 100,
+      "zoom": 1.0703354436570658,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 97,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 11.787706787886028,
+      "heading": 0,
+      "speed": 10.43963950721396,
+      "hp": 100,
+      "zoom": 1.0703354436570658,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 97,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 11.787706787886028,
+      "heading": 0,
+      "speed": 10.43963950721396,
+      "hp": 100,
+      "zoom": 1.0703354436570658,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 97,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 12.67453271283873,
+      "heading": 0,
+      "speed": 10.776035621148116,
+      "hp": 100,
+      "zoom": 1.0642915161422868,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 99,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 13.404004055425814,
+      "heading": 0,
+      "speed": 11.041259862441384,
+      "hp": 100,
+      "zoom": 1.0584071895668408,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 99,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 13.404004055425814,
+      "heading": 0,
+      "speed": 11.041259862441384,
+      "hp": 100,
+      "zoom": 1.0584071895668408,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:33",
+      "calls": 99,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 14.340479674269908,
+      "heading": 0,
+      "speed": 11.367959224805341,
+      "hp": 100,
+      "zoom": 1.0525155912315496,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:34",
+      "calls": 98,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 15.696736364116202,
+      "heading": 0,
+      "speed": 11.816397834251982,
+      "hp": 100,
+      "zoom": 1.04292752582176,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:34",
+      "calls": 98,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 4
+    },
+    {
+      "x": 0,
+      "z": 16.6971705271093,
+      "heading": 0,
+      "speed": 12.130385734516558,
+      "hp": 100,
+      "zoom": 1.037319398098442,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:34",
+      "calls": 112,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 6
+    },
+    {
+      "x": 0,
+      "z": 16.6971705271093,
+      "heading": 0,
+      "speed": 12.130385734516558,
+      "hp": 100,
+      "zoom": 1.037319398098442,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:34",
+      "calls": 112,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 6
+    },
+    {
+      "x": 0,
+      "z": 17.72350909021348,
+      "heading": 0,
+      "speed": 12.439154719614201,
+      "hp": 100,
+      "zoom": 1.032443926077007,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:34",
+      "calls": 114,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 6
+    },
+    {
+      "x": 0,
+      "z": 18.56294030542357,
+      "heading": 0,
+      "speed": 12.682444158894926,
+      "hp": 100,
+      "zoom": 1.0282053943237162,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:34",
+      "calls": 114,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 6
+    },
+    {
+      "x": 0,
+      "z": 19.634819475134332,
+      "heading": 0,
+      "speed": 12.981939552839217,
+      "hp": 100,
+      "zoom": 1.0245205918379934,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:34",
+      "calls": 114,
+      "geometries": 44,
+      "textures": 20,
+      "chunks": 6
+    },
+    {
+      "x": -138.30485486558496,
+      "z": 26.143489977112452,
+      "heading": -1.642219385361594,
+      "speed": 3.0312884209397946,
+      "hp": 78.68062693901389,
+      "zoom": 1.1544717632250525,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:43",
+      "calls": 72,
+      "geometries": 71,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -137.75703052504338,
+      "z": 26.182683935851195,
+      "heading": -1.642219385361594,
+      "speed": 1.771039996714167,
+      "hp": 78.68062693901389,
+      "zoom": 1.163367938610805,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:44",
+      "calls": 70,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -137.75703052504338,
+      "z": 26.182683935851195,
+      "heading": -1.642219385361594,
+      "speed": 1.771039996714167,
+      "hp": 78.68062693901389,
+      "zoom": 1.163367938610805,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:44",
+      "calls": 70,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -137.50804648964348,
+      "z": 26.200497437895343,
+      "heading": -1.642219385361594,
+      "speed": 0.6249990119773489,
+      "hp": 78.68062693901389,
+      "zoom": 1.1769571601037876,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:44",
+      "calls": 70,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -137.73962600459842,
+      "z": 26.18392913801857,
+      "heading": -1.642219385361594,
+      "speed": 1.5907922567897135,
+      "hp": 78.68062693901389,
+      "zoom": 1.1942846173350783,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:44",
+      "calls": 69,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -138.60713708323576,
+      "z": 26.121863269627433,
+      "heading": -1.642219385361594,
+      "speed": 3.2837566369475955,
+      "hp": 78.68062693901389,
+      "zoom": 1.1818564599379988,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:45",
+      "calls": 70,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -139.96822482385247,
+      "z": 26.02448457942026,
+      "heading": -1.642219385361594,
+      "speed": 4.813797279591365,
+      "hp": 78.68062693901389,
+      "zoom": 1.1645916406079726,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:45",
+      "calls": 70,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -140.8359536503053,
+      "z": 25.962403132314808,
+      "heading": -1.642219385361594,
+      "speed": 5.548771207187547,
+      "hp": 78.68062693901389,
+      "zoom": 1.1529531946159912,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:45",
+      "calls": 70,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -142.53795380522817,
+      "z": 25.84063394663124,
+      "heading": -1.642219385361594,
+      "speed": 0.5109682342852314,
+      "hp": 74.23802762429462,
+      "zoom": 1.153889527480453,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:46",
+      "calls": 71,
+      "geometries": 79,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -142.6094210699473,
+      "z": 25.835520838619637,
+      "heading": -1.642219385361594,
+      "speed": 0.019505434005513335,
+      "hp": 74.23802762429462,
+      "zoom": 1.1812397904949092,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:46",
+      "calls": 65,
+      "geometries": 79,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -142.61017406618993,
+      "z": 25.835466965687235,
+      "heading": -1.642219385361594,
+      "speed": 0.010986582236070724,
+      "hp": 74.23802762429462,
+      "zoom": 1.2006537302505915,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:47",
+      "calls": 60,
+      "geometries": 77,
+      "textures": 23,
+      "chunks": 6
+    },
+    {
+      "x": -142.61017406618993,
+      "z": 25.835466965687235,
+      "heading": -1.642219385361594,
+      "speed": 0.010986582236070724,
+      "hp": 74.23802762429462,
+      "zoom": 1.208863581787799,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:47",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.61017406618993,
+      "z": 25.835466965687235,
+      "heading": -1.642219385361594,
+      "speed": 0.01098658223607071,
+      "hp": 74.23802762429462,
+      "zoom": 1.2156944437988624,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:48",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.61008785235154,
+      "z": 25.835472723237345,
+      "heading": -1.6421081729191422,
+      "speed": 0.010986583757663551,
+      "hp": 74.23802762429462,
+      "zoom": 1.2171017855546302,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:48",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60956365328735,
+      "z": 25.83550523008476,
+      "heading": -1.6414329708371955,
+      "speed": 0.010986602579778643,
+      "hp": 74.23802762429462,
+      "zoom": 1.21825885995178,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:48",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60876174116612,
+      "z": 25.835552141931213,
+      "heading": -1.6404028352138347,
+      "speed": 0.010986612970363178,
+      "hp": 74.23802762429462,
+      "zoom": 1.2190695780155802,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:49",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.6078596387352,
+      "z": 25.835603411794885,
+      "heading": -1.6392477423563083,
+      "speed": 0.010986614620873802,
+      "hp": 74.23802762429462,
+      "zoom": 1.2194697073791436,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:49",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60680582906664,
+      "z": 25.835661944502828,
+      "heading": -1.6379033094942177,
+      "speed": 0.010986614796327347,
+      "hp": 74.23802762429462,
+      "zoom": 1.2196575475031919,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:50",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60593034339922,
+      "z": 25.835709524871714,
+      "heading": -1.6367903567146984,
+      "speed": 0.010986614807527263,
+      "hp": 74.23802762429462,
+      "zoom": 1.219729382698211,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:50",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60512531844344,
+      "z": 25.835752444249874,
+      "heading": -1.6357701288954818,
+      "speed": 0.010986614808671781,
+      "hp": 74.23802762429462,
+      "zoom": 1.2197650550003227,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:51",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60406052345792,
+      "z": 25.835807993712187,
+      "heading": -1.6344252800232357,
+      "speed": 0.01098661480882588,
+      "hp": 74.23802762429462,
+      "zoom": 1.2197864045768299,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:51",
+      "calls": 65,
+      "geometries": 77,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.6029916087552,
+      "z": 25.83586236608954,
+      "heading": -1.6330804308210478,
+      "speed": 0.010986614808835895,
+      "hp": 74.23802762429462,
+      "zoom": 1.2197942690157157,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:52",
+      "calls": 65,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60210387525743,
+      "z": 25.835906465925973,
+      "heading": -1.6319674521534357,
+      "speed": 0.010986614808836512,
+      "hp": 74.23802762429462,
+      "zoom": 1.2197972765920089,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:52",
+      "calls": 65,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.60102743511476,
+      "z": 25.835958658697006,
+      "heading": -1.6306226029285054,
+      "speed": 0.010986614808836594,
+      "hp": 74.23802762429462,
+      "zoom": 1.2197989625790795,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:53",
+      "calls": 65,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.6001334754463,
+      "z": 25.836000939547695,
+      "heading": -1.629509624259479,
+      "speed": 0.010986614808836595,
+      "hp": 74.23802762429462,
+      "zoom": 1.2197996073465978,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:53",
+      "calls": 65,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.37788062759267,
+      "z": 25.84876624878372,
+      "heading": -1.6265774509099158,
+      "speed": 1.3184022003225528,
+      "hp": 74.23802762429462,
+      "zoom": 1.2130292404721947,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:54",
+      "calls": 65,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.25138147490847,
+      "z": 25.85587700980666,
+      "heading": -1.6262185259282447,
+      "speed": 1.6546026226927295,
+      "hp": 74.23802762429462,
+      "zoom": 1.210009727227657,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:54",
+      "calls": 65,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -142.09707089256977,
+      "z": 25.864484099346555,
+      "heading": -1.6259945452020024,
+      "speed": 1.9874988692725304,
+      "hp": 74.23802762429462,
+      "zoom": 1.2065939584655807,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:54",
+      "calls": 66,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -140.9779747059587,
+      "z": 25.92622028790073,
+      "heading": -1.6256614414388946,
+      "speed": 3.539028275134135,
+      "hp": 74.23802762429462,
+      "zoom": 1.1823292411261757,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:55",
+      "calls": 68,
+      "geometries": 85,
+      "textures": 24,
+      "chunks": 6
+    },
+    {
+      "x": -139.0004021682422,
+      "z": 26.05998475008637,
+      "heading": -1.6256258111243016,
+      "speed": 5.191974978562838,
+      "hp": 74.23802762429462,
+      "zoom": 1.1558819869841848,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:55",
+      "calls": 79,
+      "geometries": 85,
+      "textures": 25,
+      "chunks": 6
+    },
+    {
+      "x": -136.9613118890698,
+      "z": 26.171900052711493,
+      "heading": -1.6256231996440478,
+      "speed": 6.409646842267694,
+      "hp": 74.23802762429462,
+      "zoom": 1.1341734969908195,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:56",
+      "calls": 81,
+      "geometries": 85,
+      "textures": 25,
+      "chunks": 6
+    },
+    {
+      "x": -135.12827258309972,
+      "z": 26.27250101852451,
+      "heading": -1.6256228740263732,
+      "speed": 7.297651322373018,
+      "hp": 74.23802762429462,
+      "zoom": 1.1186543118809107,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:56",
+      "calls": 82,
+      "geometries": 85,
+      "textures": 25,
+      "chunks": 6
+    },
+    {
+      "x": -131.94725910203613,
+      "z": 26.447079997783543,
+      "heading": -1.625622791189812,
+      "speed": 8.565846646730703,
+      "hp": 74.23802762429462,
+      "zoom": 1.0953115237082722,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:56",
+      "calls": 89,
+      "geometries": 85,
+      "textures": 25,
+      "chunks": 6
+    },
+    {
+      "x": -127.45149223114919,
+      "z": 26.693814271753602,
+      "heading": -1.6256227821997236,
+      "speed": 9.997873042000855,
+      "hp": 74.23802762429462,
+      "zoom": 1.0672629123998567,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:57",
+      "calls": 90,
+      "geometries": 85,
+      "textures": 25,
+      "chunks": 6
+    },
+    {
+      "x": -123.77830006458208,
+      "z": 26.895404408742326,
+      "heading": -1.625622781661934,
+      "speed": 10.967992782964826,
+      "hp": 74.23802762429462,
+      "zoom": 1.0478643876338911,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:57",
+      "calls": 90,
+      "geometries": 85,
+      "textures": 25,
+      "chunks": 6
+    },
+    {
+      "x": -121.14555386643985,
+      "z": 27.039893353568555,
+      "heading": -1.625622781598831,
+      "speed": 11.584358235955067,
+      "hp": 74.23802762429462,
+      "zoom": 1.0357294192537843,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:58",
+      "calls": 96,
+      "geometries": 85,
+      "textures": 26,
+      "chunks": 6
+    },
+    {
+      "x": -117.96482175034397,
+      "z": 27.214456563131872,
+      "heading": -1.625622781580924,
+      "speed": 12.25973603139695,
+      "hp": 74.23802762429462,
+      "zoom": 1.0231033301184649,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:58",
+      "calls": 96,
+      "geometries": 85,
+      "textures": 26,
+      "chunks": 6
+    },
+    {
+      "x": -114.26281373602733,
+      "z": 27.486521320071628,
+      "heading": -1.7920180848439278,
+      "speed": 10.12139663572705,
+      "hp": 74.23802762429462,
+      "zoom": 1.0227225145196601,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:58",
+      "calls": 99,
+      "geometries": 85,
+      "textures": 26,
+      "chunks": 6
+    },
+    {
+      "x": -111.18115490010231,
+      "z": 27.96371761494942,
+      "heading": -2.2478591391340683,
+      "speed": 7.796050820175423,
+      "hp": 74.23802762429462,
+      "zoom": 1.0424430459388567,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:59",
+      "calls": 104,
+      "geometries": 85,
+      "textures": 26,
+      "chunks": 6
+    },
+    {
+      "x": -109.08641733802081,
+      "z": 28.314417452378233,
+      "heading": -2.737741539211673,
+      "speed": 5.778310492483814,
+      "hp": 74.23802762429462,
+      "zoom": 1.0687896903821377,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "17:59",
+      "calls": 110,
+      "geometries": 85,
+      "textures": 27,
+      "chunks": 6
+    },
+    {
+      "x": -106.86072450199198,
+      "z": 28.14364708204507,
+      "heading": -3.1737833366420083,
+      "speed": 3.9841894755748726,
+      "hp": 74.23802762429462,
+      "zoom": 1.10891876498941,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:00",
+      "calls": 105,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -105.81490091394639,
+      "z": 27.372921542764466,
+      "heading": -3.1627065976018085,
+      "speed": 4.038985489531898,
+      "hp": 74.23802762429462,
+      "zoom": 1.1267206082121393,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:00",
+      "calls": 93,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -105.00358492321848,
+      "z": 25.368366359986375,
+      "heading": -2.8286331306401022,
+      "speed": 5.074950396820032,
+      "hp": 74.23802762429462,
+      "zoom": 1.1313230573159556,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:01",
+      "calls": 107,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.5746858641659,
+      "z": 24.879196292959463,
+      "heading": -2.5990115024379232,
+      "speed": 1.564026309062631,
+      "hp": 71.75173162650445,
+      "zoom": 1.1527630820966515,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:01",
+      "calls": 102,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.42030060831435,
+      "z": 24.530927614575642,
+      "heading": -2.4681028951139514,
+      "speed": 0.4797032044104065,
+      "hp": 71.75173162650445,
+      "zoom": 1.1749152387275308,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:01",
+      "calls": 95,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.40739228116934,
+      "z": 24.470391432635054,
+      "heading": -2.408254074682787,
+      "speed": 0.08476721632382951,
+      "hp": 71.75173162650445,
+      "zoom": 1.190371709689516,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:02",
+      "calls": 94,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41217855863827,
+      "z": 24.454470514404356,
+      "heading": -2.3736021143523574,
+      "speed": 0.02312417082301399,
+      "hp": 71.75173162650445,
+      "zoom": 1.2020018250076208,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:02",
+      "calls": 95,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41749495320579,
+      "z": 24.44745061485231,
+      "heading": -2.351571185922925,
+      "speed": 0.06140597457770815,
+      "hp": 71.75173162650445,
+      "zoom": 1.211834502282152,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:03",
+      "calls": 93,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41778994104119,
+      "z": 24.447029861789712,
+      "heading": -2.3473761662233166,
+      "speed": 0.02164500564541829,
+      "hp": 71.75173162650445,
+      "zoom": 1.2140920642120003,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:03",
+      "calls": 94,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41841531990399,
+      "z": 24.44631534278948,
+      "heading": -2.344417038324475,
+      "speed": 0.01079401847575483,
+      "hp": 71.75173162650445,
+      "zoom": 1.216338214657395,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:03",
+      "calls": 93,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41852811652026,
+      "z": 24.44618246688856,
+      "heading": -2.343867950956799,
+      "speed": 0.010829823407367328,
+      "hp": 71.75173162650445,
+      "zoom": 1.2180824854421568,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:04",
+      "calls": 93,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41853919585564,
+      "z": 24.446169407888707,
+      "heading": -2.343813887987713,
+      "speed": 0.01082981770081346,
+      "hp": 71.75173162650445,
+      "zoom": 1.2188202668871793,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:04",
+      "calls": 94,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854084571015,
+      "z": 24.44616746277042,
+      "heading": -2.343805834550389,
+      "speed": 0.010829817569742491,
+      "hp": 71.75173162650445,
+      "zoom": 1.2192416943417264,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:04",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854112062155,
+      "z": 24.446167138624777,
+      "heading": -2.343804492503353,
+      "speed": 0.010829817566096963,
+      "hp": 71.75173162650445,
+      "zoom": 1.219482417523686,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:05",
+      "calls": 95,
+      "geometries": 88,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854116643205,
+      "z": 24.44616708460726,
+      "heading": -2.3438042688609286,
+      "speed": 0.010829817565995652,
+      "hp": 71.75173162650445,
+      "zoom": 1.2196199207871044,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:05",
+      "calls": 94,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854117420333,
+      "z": 24.44616707544355,
+      "heading": -2.3438042309218234,
+      "speed": 0.010829817565992817,
+      "hp": 71.75173162650445,
+      "zoom": 1.219703215824887,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:06",
+      "calls": 94,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.4185411753818,
+      "z": 24.446167074053932,
+      "heading": -2.3438042251685514,
+      "speed": 0.010829817565992753,
+      "hp": 71.75173162650445,
+      "zoom": 1.2197460427780327,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:06",
+      "calls": 94,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854117557057,
+      "z": 24.446167073831383,
+      "heading": -2.3438042242470876,
+      "speed": 0.010829817565992751,
+      "hp": 71.75173162650445,
+      "zoom": 1.2197747633154161,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:06",
+      "calls": 92,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854117558883,
+      "z": 24.44616707380985,
+      "heading": -2.343804224157964,
+      "speed": 0.01082981756599275,
+      "hp": 71.75173162650445,
+      "zoom": 1.2197869113531186,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:07",
+      "calls": 91,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854117559159,
+      "z": 24.446167073806595,
+      "heading": -2.343804224144473,
+      "speed": 0.010829817565992744,
+      "hp": 71.75173162650445,
+      "zoom": 1.2197929442285855,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:07",
+      "calls": 91,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41854117559234,
+      "z": 24.4461670738056,
+      "heading": -2.3438042241405923,
+      "speed": 0.010829817565992743,
+      "hp": 71.75173162650445,
+      "zoom": 1.219798053886487,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:08",
+      "calls": 90,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41861044442444,
+      "z": 24.446097401532004,
+      "heading": -2.343492305177743,
+      "speed": 0.010829824807979706,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198002151128804,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:08",
+      "calls": 90,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41874940751353,
+      "z": 24.44595514991044,
+      "heading": -2.342858929592201,
+      "speed": 0.01082984006719452,
+      "hp": 71.75173162650445,
+      "zoom": 1.219801288303881,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:08",
+      "calls": 90,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41898235684214,
+      "z": 24.445714929685007,
+      "heading": -2.341786762166839,
+      "speed": 0.010829847638758895,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198021971717885,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:09",
+      "calls": 90,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41916918671674,
+      "z": 24.44552216817144,
+      "heading": -2.3409206322202687,
+      "speed": 0.01082984856716057,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198025815804292,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:09",
+      "calls": 90,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41935537995639,
+      "z": 24.445330269327773,
+      "heading": -2.3400524922181987,
+      "speed": 0.010829848731077679,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198028011555277,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:10",
+      "calls": 91,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41958916022259,
+      "z": 24.44508967932836,
+      "heading": -2.33895545862116,
+      "speed": 0.010829848761152804,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198029484060695,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:10",
+      "calls": 94,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41977305675677,
+      "z": 24.44490071135512,
+      "heading": -2.338086923642582,
+      "speed": 0.01082984876409366,
+      "hp": 71.75173162650445,
+      "zoom": 1.219803010689143,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:10",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.41996549501162,
+      "z": 24.444703236362667,
+      "heading": -2.337172670146377,
+      "speed": 0.010829848764594384,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198030462657916,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:11",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.4201472279148,
+      "z": 24.44451700093352,
+      "heading": -2.336304128378466,
+      "speed": 0.010829848764669085,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198030665874946,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:11",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.42032790279491,
+      "z": 24.444332094466244,
+      "heading": -2.3354355864638703,
+      "speed": 0.01082984876468157,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198030781954352,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:12",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.42055460798787,
+      "z": 24.44410042493444,
+      "heading": -2.3343384808557426,
+      "speed": 0.010829848764683805,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198030859799325,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:12",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.4207328803245,
+      "z": 24.443918518874565,
+      "heading": -2.3334699389123217,
+      "speed": 0.010829848764684015,
+      "hp": 71.75173162650445,
+      "zoom": 1.2198030892725715,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:12",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.16779480186577,
+      "z": 24.684755719365352,
+      "heading": -2.330187179834942,
+      "speed": 1.6544528774972243,
+      "hp": 71.75173162650445,
+      "zoom": 1.2097830897323216,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:13",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -104.16779480186577,
+      "z": 24.684755719365352,
+      "heading": -2.330187179834942,
+      "speed": 1.6544528774972243,
+      "hp": 71.75173162650445,
+      "zoom": 1.2097830897323216,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:13",
+      "calls": 95,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -103.63609645347586,
+      "z": 25.18941101924804,
+      "heading": -2.3296915969941527,
+      "speed": 2.901777649092145,
+      "hp": 71.75173162650445,
+      "zoom": 1.1945522324048934,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:13",
+      "calls": 96,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -103.24268378001919,
+      "z": 25.562538994652652,
+      "heading": -2.329631088431226,
+      "speed": 3.538887195288829,
+      "hp": 71.75173162650445,
+      "zoom": 1.1857076343619017,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:14",
+      "calls": 97,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -101.9907704586014,
+      "z": 26.749641260889486,
+      "heading": -2.329596510574571,
+      "speed": 5.013036110602703,
+      "hp": 71.75173162650445,
+      "zoom": 1.158937595897617,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:14",
+      "calls": 99,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -100.55317037211395,
+      "z": 28.11273249898326,
+      "heading": -2.329593051278894,
+      "speed": 6.239199711248487,
+      "hp": 71.75173162650445,
+      "zoom": 1.138536437779527,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:14",
+      "calls": 100,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -98.90160318223668,
+      "z": 29.67868914361733,
+      "heading": -2.329592581465116,
+      "speed": 7.351894771583588,
+      "hp": 71.75173162650445,
+      "zoom": 1.118066951511436,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:15",
+      "calls": 100,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -97.58862796923205,
+      "z": 30.92360367740805,
+      "heading": -2.329592519911291,
+      "speed": 8.099068724009008,
+      "hp": 71.75173162650445,
+      "zoom": 1.1039251892233617,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:15",
+      "calls": 101,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -95.60896171288522,
+      "z": 32.800649612319575,
+      "heading": -2.3295925012222676,
+      "speed": 9.071816995639049,
+      "hp": 71.75173162650445,
+      "zoom": 1.0853142343061555,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:15",
+      "calls": 102,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -93.2899494787422,
+      "z": 34.99945067465562,
+      "heading": -2.3295924980518277,
+      "speed": 10.045221939070197,
+      "hp": 71.75173162650445,
+      "zoom": 1.0672384007069706,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:16",
+      "calls": 102,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -93.2899494787422,
+      "z": 34.99945067465562,
+      "heading": -2.3295924980518277,
+      "speed": 10.045221939070197,
+      "hp": 71.75173162650445,
+      "zoom": 1.0672384007069706,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:16",
+      "calls": 102,
+      "geometries": 86,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -91.15769560496638,
+      "z": 37.10285271400136,
+      "heading": -2.518883016695176,
+      "speed": 8.02483260390092,
+      "hp": 71.75173162650445,
+      "zoom": 1.064602002608439,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:16",
+      "calls": 103,
+      "geometries": 87,
+      "textures": 28,
+      "chunks": 6
+    },
+    {
+      "x": -91.03761678053408,
+      "z": 36.690146949141806,
+      "heading": -2.767339554900927,
+      "speed": 2.7237388237191653,
+      "hp": 66.5687324396545,
+      "zoom": 1.1225047559683692,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:17",
+      "calls": 105,
+      "geometries": 90,
+      "textures": 29,
+      "chunks": 6
+    },
+    {
+      "x": -91.440926960297,
+      "z": 35.67454038420543,
+      "heading": -2.682338004766194,
+      "speed": 4.093723315521616,
+      "hp": 66.5687324396545,
+      "zoom": 1.1358331848161167,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:17",
+      "calls": 112,
+      "geometries": 88,
+      "textures": 30,
+      "chunks": 6
+    },
+    {
+      "x": -92.17472105423475,
+      "z": 34.35990008264498,
+      "heading": -2.420912789164597,
+      "speed": 5.337707760533371,
+      "hp": 66.5687324396545,
+      "zoom": 1.1332451737640064,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:17",
+      "calls": 112,
+      "geometries": 87,
+      "textures": 30,
+      "chunks": 6
+    },
+    {
+      "x": -93.91896124496948,
+      "z": 32.54580924792101,
+      "heading": -1.8953577073932815,
+      "speed": 6.6518217156937585,
+      "hp": 66.5687324396545,
+      "zoom": 1.1184503882070178,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:18",
+      "calls": 111,
+      "geometries": 87,
+      "textures": 30,
+      "chunks": 6
+    },
+    {
+      "x": -95.37087942614801,
+      "z": 31.597478098784297,
+      "heading": -1.517983596174339,
+      "speed": 7.164917360982608,
+      "hp": 66.5687324396545,
+      "zoom": 1.1087303595133808,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:18",
+      "calls": 111,
+      "geometries": 87,
+      "textures": 30,
+      "chunks": 6
+    },
+    {
+      "x": -97.76867075521339,
+      "z": 30.67203518307446,
+      "heading": -0.970894895905583,
+      "speed": 7.4625420730221235,
+      "hp": 66.5687324396545,
+      "zoom": 1.0975515877900843,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:19",
+      "calls": 106,
+      "geometries": 87,
+      "textures": 30,
+      "chunks": 6
+    },
+    {
+      "x": -99.84925319864841,
+      "z": 30.376459844282483,
+      "heading": -0.5605342414438589,
+      "speed": 7.357233665957635,
+      "hp": 66.5687324396545,
+      "zoom": 1.092595176707611,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:19",
+      "calls": 93,
+      "geometries": 88,
+      "textures": 30,
+      "chunks": 6
+    },
+    {
+      "x": -102.1059685444196,
+      "z": 30.562332041431073,
+      "heading": -0.17556579154504187,
+      "speed": 6.9612425047271715,
+      "hp": 66.5687324396545,
+      "zoom": 1.0917772079474728,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:19",
+      "calls": 96,
+      "geometries": 88,
+      "textures": 31,
+      "chunks": 6
+    },
+    {
+      "x": -104.10100094015897,
+      "z": 31.24705032402483,
+      "heading": 0.12698492479509454,
+      "speed": 6.413961742749352,
+      "hp": 66.5687324396545,
+      "zoom": 1.0953203888021281,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:20",
+      "calls": 104,
+      "geometries": 88,
+      "textures": 31,
+      "chunks": 6
+    },
+    {
+      "x": -106.03570449997034,
+      "z": 32.67849824446805,
+      "heading": 0.4329485142300396,
+      "speed": 5.733556832567966,
+      "hp": 66.5687324396545,
+      "zoom": 1.1035893422458336,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:20",
+      "calls": 110,
+      "geometries": 88,
+      "textures": 31,
+      "chunks": 6
+    },
+    {
+      "x": -107.00161031779287,
+      "z": 34.1222379634049,
+      "heading": 0.6571918668453977,
+      "speed": 5.332221314075186,
+      "hp": 66.5687324396545,
+      "zoom": 1.1110457874715316,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:21",
+      "calls": 118,
+      "geometries": 89,
+      "textures": 32,
+      "chunks": 6
+    },
+    {
+      "x": -107.15209621788583,
+      "z": 35.5588376780856,
+      "heading": 0.790651851852022,
+      "speed": 3.923164306513035,
+      "hp": 66.5687324396545,
+      "zoom": 1.1246223388054952,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:21",
+      "calls": 111,
+      "geometries": 89,
+      "textures": 32,
+      "chunks": 6
+    },
+    {
+      "x": -106.57921112592803,
+      "z": 36.40115120217138,
+      "heading": 0.8102737382150161,
+      "speed": 3.0877410806958747,
+      "hp": 65.4210148483936,
+      "zoom": 1.134996860605696,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:21",
+      "calls": 111,
+      "geometries": 89,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -105.858351282785,
+      "z": 36.415606613118314,
+      "heading": 0.8265002642073681,
+      "speed": 2.1068715224626,
+      "hp": 65.4210148483936,
+      "zoom": 1.1527080941421488,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:22",
+      "calls": 113,
+      "geometries": 89,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -105.40441962770086,
+      "z": 36.424010344274606,
+      "heading": 0.8356301825999654,
+      "speed": 1.4269637163216846,
+      "hp": 65.4210148483936,
+      "zoom": 1.1669292049071445,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:22",
+      "calls": 140,
+      "geometries": 89,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -105.08546327063445,
+      "z": 36.430272374893,
+      "heading": 0.8423001911541592,
+      "speed": 1.1812406093261745,
+      "hp": 65.4210148483936,
+      "zoom": 1.1782841798941788,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:22",
+      "calls": 149,
+      "geometries": 90,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -104.60588213642369,
+      "z": 36.4395457955771,
+      "heading": 0.8519823520275707,
+      "speed": 1.0715626550184525,
+      "hp": 65.4210148483936,
+      "zoom": 1.190236518773248,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:23",
+      "calls": 140,
+      "geometries": 90,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -104.30355824294428,
+      "z": 36.44531490623201,
+      "heading": 0.8578945327635158,
+      "speed": 1.0668747077235325,
+      "hp": 65.4210148483936,
+      "zoom": 1.1944003835174641,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:23",
+      "calls": 126,
+      "geometries": 90,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -103.55907189349388,
+      "z": 36.98261321955195,
+      "heading": 0.8564082583913339,
+      "speed": 3.3680818335606735,
+      "hp": 62.26162347439608,
+      "zoom": 1.1833429185999156,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:24",
+      "calls": 109,
+      "geometries": 91,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -102.58677693598867,
+      "z": 37.82445665388084,
+      "heading": 0.8558368642710806,
+      "speed": 4.675218442192165,
+      "hp": 62.26162347439608,
+      "zoom": 1.1661326579040419,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:24",
+      "calls": 105,
+      "geometries": 91,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -101.67543738319587,
+      "z": 38.61560799681874,
+      "heading": 0.8557531171035164,
+      "speed": 5.597514024240518,
+      "hp": 62.26162347439608,
+      "zoom": 1.1514325536698387,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:24",
+      "calls": 106,
+      "geometries": 91,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -99.74615591108454,
+      "z": 40.290871480762625,
+      "heading": 0.8557257780707739,
+      "speed": 7.09889086591296,
+      "hp": 62.26162347439608,
+      "zoom": 1.1255422819798082,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:25",
+      "calls": 107,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -97.90686323758663,
+      "z": 41.88808081478887,
+      "heading": 0.8557231338657296,
+      "speed": 8.217295715486637,
+      "hp": 62.26162347439608,
+      "zoom": 1.1046711329420955,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:25",
+      "calls": 106,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -95.23448493469041,
+      "z": 44.461829075922296,
+      "heading": 0.566228166139357,
+      "speed": 9.481297658522786,
+      "hp": 62.26162347439608,
+      "zoom": 1.078239865001447,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:26",
+      "calls": 92,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -93.64953734835774,
+      "z": 47.30504039137481,
+      "heading": 0.16099504431097292,
+      "speed": 10.06956439672079,
+      "hp": 62.26162347439608,
+      "zoom": 1.061889603950662,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:26",
+      "calls": 101,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -93.07409110544322,
+      "z": 51.35106003029103,
+      "heading": -0.3281109069265552,
+      "speed": 10.41758722687224,
+      "hp": 62.26162347439608,
+      "zoom": 1.047015524062326,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:27",
+      "calls": 106,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -93.8205317474796,
+      "z": 54.73391350197069,
+      "heading": -0.7344431539884381,
+      "speed": 10.416685276116832,
+      "hp": 62.26162347439608,
+      "zoom": 1.0393988253981379,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:27",
+      "calls": 96,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -96.16319017225302,
+      "z": 58.27367153298598,
+      "heading": -1.2599892169643412,
+      "speed": 10.048938191829242,
+      "hp": 62.26162347439608,
+      "zoom": 1.0367195409453884,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:27",
+      "calls": 96,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -98.819176824657,
+      "z": 60.11960628179787,
+      "heading": -1.7158347219207593,
+      "speed": 9.432968665444061,
+      "hp": 62.26162347439608,
+      "zoom": 1.0400979822543917,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:28",
+      "calls": 86,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -100.98464111286485,
+      "z": 60.78215289613234,
+      "heading": -2.0740433113543255,
+      "speed": 8.755860809778035,
+      "hp": 62.26162347439608,
+      "zoom": 1.0463836617190254,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:28",
+      "calls": 84,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -100.98464111286485,
+      "z": 60.78215289613234,
+      "heading": -2.0740433113543255,
+      "speed": 8.755860809778035,
+      "hp": 62.26162347439608,
+      "zoom": 1.0463836617190254,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:28",
+      "calls": 84,
+      "geometries": 92,
+      "textures": 33,
+      "chunks": 6
+    },
+    {
+      "x": -103.69563357030884,
+      "z": 60.68424666249723,
+      "heading": -2.517071885129487,
+      "speed": 7.668669502342773,
+      "hp": 62.26162347439608,
+      "zoom": 1.0581790632911916,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:29",
+      "calls": 89,
+      "geometries": 93,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -105.53130083776253,
+      "z": 59.83146400614199,
+      "heading": -2.8557325780640537,
+      "speed": 6.790771542617261,
+      "hp": 62.26162347439608,
+      "zoom": 1.0724954453217066,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:29",
+      "calls": 92,
+      "geometries": 93,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -107.02817847218765,
+      "z": 57.60432648048164,
+      "heading": -3.3391156240203066,
+      "speed": 6.053460630595293,
+      "hp": 62.26162347439608,
+      "zoom": 1.0924685540940313,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:29",
+      "calls": 84,
+      "geometries": 93,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -106.80155054177058,
+      "z": 55.29652832228613,
+      "heading": -3.774643489034989,
+      "speed": 6.317326279417255,
+      "hp": 62.26162347439608,
+      "zoom": 1.100456848477344,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:30",
+      "calls": 84,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -106.00706134390987,
+      "z": 54.090640398347446,
+      "heading": -3.9973621363566516,
+      "speed": 3.1229909521993453,
+      "hp": 62.26162347439608,
+      "zoom": 1.1190598960500246,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:30",
+      "calls": 79,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -105.648644124818,
+      "z": 53.73178803994053,
+      "heading": -4.035796284990864,
+      "speed": 0.6303453044120549,
+      "hp": 62.26162347439608,
+      "zoom": 1.1511532964785265,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:31",
+      "calls": 82,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -105.75287636673369,
+      "z": 53.80586696799872,
+      "heading": -4.044472186027196,
+      "speed": 1.112632237033317,
+      "hp": 62.26162347439608,
+      "zoom": 1.1801765466053864,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:31",
+      "calls": 90,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -106.36521066993565,
+      "z": 54.28823609389495,
+      "heading": -4.0453743967932105,
+      "speed": 2.705822327965291,
+      "hp": 62.26162347439608,
+      "zoom": 1.1803254544979032,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:32",
+      "calls": 90,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -107.24948521610553,
+      "z": 54.98450443931973,
+      "heading": -4.045463228180751,
+      "speed": 3.9747499225078133,
+      "hp": 62.26162347439608,
+      "zoom": 1.168746516568399,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:32",
+      "calls": 96,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -108.45875607979241,
+      "z": 55.93652029732588,
+      "heading": -4.04547669900879,
+      "speed": 5.189816876206891,
+      "hp": 62.26162347439608,
+      "zoom": 1.1533724349663634,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:32",
+      "calls": 100,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -109.57046804873993,
+      "z": 56.81170690517007,
+      "heading": -4.045478521794686,
+      "speed": 6.065713433410322,
+      "hp": 62.26162347439608,
+      "zoom": 1.1389981320749414,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:33",
+      "calls": 111,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -109.9788624034992,
+      "z": 57.13321079671754,
+      "heading": -4.045478741791338,
+      "speed": 6.350947691260269,
+      "hp": 62.26162347439608,
+      "zoom": 1.1344949224316436,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:33",
+      "calls": 111,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -111.60105845975338,
+      "z": 58.41026441207515,
+      "heading": -4.045479040074335,
+      "speed": 7.350043507931785,
+      "hp": 62.26162347439608,
+      "zoom": 1.1164268666556247,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:33",
+      "calls": 129,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -113.02239131705856,
+      "z": 59.52919010970803,
+      "heading": -4.045479089085665,
+      "speed": 8.09728071221801,
+      "hp": 62.26162347439608,
+      "zoom": 1.1016150569031478,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:33",
+      "calls": 124,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -115.52575463222689,
+      "z": 61.4999297882951,
+      "heading": -4.045479104699815,
+      "speed": 9.219418175961545,
+      "hp": 62.26162347439608,
+      "zoom": 1.0804366191756702,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:34",
+      "calls": 126,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -118.07434945712704,
+      "z": 63.506277297979864,
+      "heading": -4.045479106602143,
+      "speed": 10.185224204915237,
+      "hp": 62.26162347439608,
+      "zoom": 1.0623029343963033,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:34",
+      "calls": 98,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -119.93702286672529,
+      "z": 64.94378539787587,
+      "heading": -4.149126586754781,
+      "speed": 8.735599423082611,
+      "hp": 62.26162347439608,
+      "zoom": 1.0591819068951394,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:35",
+      "calls": 96,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -121.4871522157831,
+      "z": 65.97987568708224,
+      "heading": -4.425843214373144,
+      "speed": 7.337414629401171,
+      "hp": 62.26162347439608,
+      "zoom": 1.0657273652211379,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:35",
+      "calls": 89,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -122.8916766555017,
+      "z": 66.80010901469969,
+      "heading": -4.7987228880663135,
+      "speed": 5.775197589136098,
+      "hp": 62.26162347439608,
+      "zoom": 1.0808585009326632,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:35",
+      "calls": 87,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -124.42389585764185,
+      "z": 67.76842809383106,
+      "heading": -5.31441168712459,
+      "speed": 3.493958572130736,
+      "hp": 62.26162347439608,
+      "zoom": 1.1124783770885975,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:36",
+      "calls": 84,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -124.98239056395214,
+      "z": 68.5245354627511,
+      "heading": -5.529281683440049,
+      "speed": 2.493101178258083,
+      "hp": 62.26162347439608,
+      "zoom": 1.138893892860755,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:36",
+      "calls": 83,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -124.89087908315504,
+      "z": 69.41587953670552,
+      "heading": -5.52269312403849,
+      "speed": 2.943370026425542,
+      "hp": 62.26162347439608,
+      "zoom": 1.1557682106217348,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:36",
+      "calls": 80,
+      "geometries": 92,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -124.17611807259486,
+      "z": 70.33855343234727,
+      "heading": -5.340832640054673,
+      "speed": 4.092326642165032,
+      "hp": 62.26162347439608,
+      "zoom": 1.1545557052205448,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:37",
+      "calls": 89,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.370482380487,
+      "z": 71.0486509883069,
+      "heading": -5.101943134612627,
+      "speed": 2.5536564106289648,
+      "hp": 60.25335861427743,
+      "zoom": 1.1523232892973472,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:37",
+      "calls": 87,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.27270713233442,
+      "z": 71.74346224826868,
+      "heading": -4.889876862793097,
+      "speed": 1.8489340845771798,
+      "hp": 60.25335861427743,
+      "zoom": 1.1646310255628287,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:38",
+      "calls": 86,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.15976150002498,
+      "z": 72.17802317063735,
+      "heading": -4.764652772624026,
+      "speed": 1.093358823604946,
+      "hp": 60.25335861427743,
+      "zoom": 1.1782694921327328,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:38",
+      "calls": 80,
+      "geometries": 93,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.11033269037182,
+      "z": 72.30271574903595,
+      "heading": -4.703829685798521,
+      "speed": 0.16079181864634948,
+      "hp": 60.25335861427743,
+      "zoom": 1.1911555897979542,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:38",
+      "calls": 80,
+      "geometries": 95,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.14741839592281,
+      "z": 72.31655179074521,
+      "heading": -4.668177261882693,
+      "speed": 0.013598283761523226,
+      "hp": 60.25335861427743,
+      "zoom": 1.2040201903971663,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:39",
+      "calls": 81,
+      "geometries": 95,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.15656882933771,
+      "z": 72.30888488622463,
+      "heading": -4.658923573804042,
+      "speed": 0.031336827714423546,
+      "hp": 60.25335861427743,
+      "zoom": 1.211061209915797,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:39",
+      "calls": 81,
+      "geometries": 95,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.15838887421245,
+      "z": 72.29500465300914,
+      "heading": -4.657058846552973,
+      "speed": 0.034592583170325236,
+      "hp": 60.25335861427743,
+      "zoom": 1.2156192019152339,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:40",
+      "calls": 81,
+      "geometries": 95,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.15874618037662,
+      "z": 72.28612174858777,
+      "heading": -4.65669180040657,
+      "speed": 0.03496041332183246,
+      "hp": 60.25335861427743,
+      "zoom": 1.2170154109374478,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:40",
+      "calls": 81,
+      "geometries": 95,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.15907441287978,
+      "z": 72.27548224387988,
+      "heading": -4.6563543386504564,
+      "speed": 0.03519217994855753,
+      "hp": 60.25335861427743,
+      "zoom": 1.2180213939135451,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:40",
+      "calls": 81,
+      "geometries": 95,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.15946502296593,
+      "z": 72.26194734927323,
+      "heading": -4.655952392747083,
+      "speed": 0.03543157355492929,
+      "hp": 60.25335861427743,
+      "zoom": 1.2186939095536475,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:41",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.15985416897588,
+      "z": 72.24831451275035,
+      "heading": -4.655551571237219,
+      "speed": 0.03566469860468241,
+      "hp": 60.25335861427743,
+      "zoom": 1.2190257282897083,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:41",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16019628840891,
+      "z": 72.23630592316144,
+      "heading": -4.655198871225195,
+      "speed": 0.03586944789199301,
+      "hp": 60.25335861427743,
+      "zoom": 1.2191808057266866,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:42",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16039258917192,
+      "z": 72.22941026234464,
+      "heading": -4.654996365727951,
+      "speed": 0.035987030297781726,
+      "hp": 60.25335861427743,
+      "zoom": 1.2192323654410033,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:42",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16078698862565,
+      "z": 72.2155452052516,
+      "heading": -4.654589204274282,
+      "speed": 0.03622355191095607,
+      "hp": 60.25335861427743,
+      "zoom": 1.2192880280130982,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:42",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.161183803211,
+      "z": 72.20158124548183,
+      "heading": -4.654179150008986,
+      "speed": 0.03646191051545442,
+      "hp": 60.25335861427743,
+      "zoom": 1.2193134935804857,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:43",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16151633660225,
+      "z": 72.18986854665444,
+      "heading": -4.653835212136229,
+      "speed": 0.03666195794806874,
+      "hp": 60.25335861427743,
+      "zoom": 1.2193231510467832,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:43",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16191761246915,
+      "z": 72.17572140627396,
+      "heading": -4.6534197972892555,
+      "speed": 0.036903724932207276,
+      "hp": 60.25335861427743,
+      "zoom": 1.2193268888139608,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:44",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16271698106655,
+      "z": 72.16086224633374,
+      "heading": -4.65259102940011,
+      "speed": 0.03728343037583404,
+      "hp": 60.25335861427743,
+      "zoom": 1.2193258987905022,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:44",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16366063564088,
+      "z": 72.14880802678165,
+      "heading": -4.651610543074033,
+      "speed": 0.03781371328746577,
+      "hp": 60.25335861427743,
+      "zoom": 1.2193213255027917,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:45",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.1645895728181,
+      "z": 72.13717482150746,
+      "heading": -4.650643084358785,
+      "speed": 0.03837176309329376,
+      "hp": 60.25335861427743,
+      "zoom": 1.219314612213617,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:45",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.165521477287,
+      "z": 72.12535617267146,
+      "heading": -4.649670261245699,
+      "speed": 0.038940515154552616,
+      "hp": 60.25335861427743,
+      "zoom": 1.2193064152254722,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:45",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16694037446821,
+      "z": 72.10695663033978,
+      "heading": -4.648184649703739,
+      "speed": 0.03981261783620391,
+      "hp": 60.25335861427743,
+      "zoom": 1.2192920849972986,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:46",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16811008183447,
+      "z": 72.09139958474563,
+      "heading": -4.646955900909706,
+      "speed": 0.0405355092951147,
+      "hp": 60.25335861427743,
+      "zoom": 1.2192798131933311,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:46",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.16946912083638,
+      "z": 72.07287221547963,
+      "heading": -4.645523625259793,
+      "speed": 0.04137964078546121,
+      "hp": 60.25335861427743,
+      "zoom": 1.2192645571003558,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:47",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.17062899216249,
+      "z": 72.05666820985779,
+      "heading": -4.644297266966217,
+      "speed": 0.042103638737525304,
+      "hp": 60.25335861427743,
+      "zoom": 1.219251589082301,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:47",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.17178405520768,
+      "z": 72.04016587006254,
+      "heading": -4.643072310305878,
+      "speed": 0.04282790153168584,
+      "hp": 60.25335861427743,
+      "zoom": 1.219238520881438,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:48",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.17274281761392,
+      "z": 72.026186188543,
+      "heading": -4.642052716358332,
+      "speed": 0.0434315521540244,
+      "hp": 60.25335861427743,
+      "zoom": 1.2192279952899125,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:48",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.1738886461919,
+      "z": 72.0091375232602,
+      "heading": -4.640830805909791,
+      "speed": 0.044155928211216854,
+      "hp": 60.25335861427743,
+      "zoom": 1.219214853866222,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:49",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.174839491547,
+      "z": 71.99470297011246,
+      "heading": -4.639814006086797,
+      "speed": 0.04475947631149239,
+      "hp": 60.25335861427743,
+      "zoom": 1.219203569213066,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:49",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.29793529387948,
+      "z": 71.99942597366635,
+      "heading": -4.637454237641944,
+      "speed": 0.9749646330110547,
+      "hp": 60.25335861427743,
+      "zoom": 1.2148609039911833,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:50",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.29793529387948,
+      "z": 71.99942597366635,
+      "heading": -4.637454237641944,
+      "speed": 0.9749646330110547,
+      "hp": 60.25335861427743,
+      "zoom": 1.2148609039911833,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:50",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -123.85704472700687,
+      "z": 72.04094194524743,
+      "heading": -4.636162030117842,
+      "speed": 2.313251878175768,
+      "hp": 60.25335861427743,
+      "zoom": 1.2024587954648036,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:50",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -124.2517650379739,
+      "z": 72.07101386253733,
+      "heading": -4.636029890888755,
+      "speed": 2.89816601929112,
+      "hp": 60.25335861427743,
+      "zoom": 1.1924354522025749,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:50",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -126.104374454325,
+      "z": 72.21278765317824,
+      "heading": -4.635937460217449,
+      "speed": 4.708934837369132,
+      "hp": 60.25335861427743,
+      "zoom": 1.163144099694474,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:51",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -128.17677233518052,
+      "z": 72.37153424812323,
+      "heading": -4.635931778833335,
+      "speed": 6.064450871379089,
+      "hp": 60.25335861427743,
+      "zoom": 1.1407759985540578,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:51",
+      "calls": 82,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -130.27000662076338,
+      "z": 72.53188924326193,
+      "heading": -4.635931167977699,
+      "speed": 7.130558178622605,
+      "hp": 60.25335861427743,
+      "zoom": 1.1219401015260873,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:52",
+      "calls": 82,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -132.69183981633913,
+      "z": 72.7174188817177,
+      "heading": -4.635931066183029,
+      "speed": 8.14851162865575,
+      "hp": 60.25335861427743,
+      "zoom": 1.103021766221209,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:52",
+      "calls": 82,
+      "geometries": 97,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -135.73271775859672,
+      "z": 72.95037216133782,
+      "heading": -4.635931048636583,
+      "speed": 9.218327426294094,
+      "hp": 60.25335861427743,
+      "zoom": 1.0817941597282703,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:52",
+      "calls": 82,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -135.87796142083965,
+      "z": 72.96149887533332,
+      "heading": -4.6359310464487695,
+      "speed": 0.09667496427672517,
+      "hp": 53.46260811861369,
+      "zoom": 1.130412966468025,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:53",
+      "calls": 85,
+      "geometries": 100,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -135.90335564884893,
+      "z": 72.96344425742578,
+      "heading": -4.635931046215228,
+      "speed": 0.4444914617633617,
+      "hp": 53.46260811861369,
+      "zoom": 1.1410609719064844,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:53",
+      "calls": 84,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -135.8098593591937,
+      "z": 72.95626249012825,
+      "heading": -4.631056335004366,
+      "speed": 0.9540967323768574,
+      "hp": 53.46260811861369,
+      "zoom": 1.1707903000245237,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:53",
+      "calls": 81,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -135.12257569743917,
+      "z": 72.88394171595549,
+      "heading": -4.538695455396374,
+      "speed": 2.5661205252129218,
+      "hp": 53.46260811861369,
+      "zoom": 1.178233442405282,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:54",
+      "calls": 79,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -134.24497152740253,
+      "z": 72.70356255205891,
+      "heading": -4.376035949731774,
+      "speed": 3.6840368437485873,
+      "hp": 53.46260811861369,
+      "zoom": 1.1705067978587076,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:54",
+      "calls": 80,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -132.91847043818336,
+      "z": 72.15130494579003,
+      "heading": -4.080166279827365,
+      "speed": 4.8746708908196315,
+      "hp": 53.46260811861369,
+      "zoom": 1.156201412077627,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:54",
+      "calls": 78,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -131.91217931495558,
+      "z": 71.44522310099768,
+      "heading": -3.8123442239733834,
+      "speed": 5.6059714967484915,
+      "hp": 53.46260811861369,
+      "zoom": 1.1444611526190889,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:55",
+      "calls": 86,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -130.29382115868518,
+      "z": 69.6147419891608,
+      "heading": -3.263657062178259,
+      "speed": 6.5341741723018485,
+      "hp": 53.46260811861369,
+      "zoom": 1.125216708460091,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:55",
+      "calls": 85,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -129.15021136084883,
+      "z": 67.16355039427611,
+      "heading": -2.6643652977922123,
+      "speed": 6.927076254506597,
+      "hp": 53.46260811861369,
+      "zoom": 1.11035517556907,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:56",
+      "calls": 86,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -128.76583484594917,
+      "z": 64.8984929489634,
+      "heading": -2.1931704371969216,
+      "speed": 6.840081127227542,
+      "hp": 53.46260811861369,
+      "zoom": 1.1032236940872915,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:56",
+      "calls": 97,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -129.08558445103145,
+      "z": 62.17622062478067,
+      "heading": -1.705017079480808,
+      "speed": 6.341734015281303,
+      "hp": 53.46260811861369,
+      "zoom": 1.1019807212028139,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:56",
+      "calls": 112,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -129.85941738164283,
+      "z": 60.420789822980566,
+      "heading": -1.412756766446445,
+      "speed": 5.832173535616846,
+      "hp": 53.46260811861369,
+      "zoom": 1.105753525466473,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:57",
+      "calls": 121,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -130.66232566823513,
+      "z": 59.383431998559836,
+      "heading": -1.2268017610467683,
+      "speed": 5.465134270194018,
+      "hp": 53.46260811861369,
+      "zoom": 1.1102310864416898,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:57",
+      "calls": 128,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -131.68552062440972,
+      "z": 58.55491917196259,
+      "heading": -1.0404108181946294,
+      "speed": 5.129844853095085,
+      "hp": 53.46260811861369,
+      "zoom": 1.1152910980429835,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:57",
+      "calls": 120,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -132.95575220211205,
+      "z": 58.23511881879369,
+      "heading": -0.9077801818124565,
+      "speed": 3.677419586090928,
+      "hp": 53.46260811861369,
+      "zoom": 1.128659175654809,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:58",
+      "calls": 122,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -134.34059589748372,
+      "z": 59.05917199814366,
+      "heading": -0.8820301434925438,
+      "speed": 4.724843926936831,
+      "hp": 53.46260811861369,
+      "zoom": 1.1359298978440344,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:58",
+      "calls": 113,
+      "geometries": 97,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -135.50936097943492,
+      "z": 60.010717346234706,
+      "heading": -0.8795396244657888,
+      "speed": 5.111500265795102,
+      "hp": 53.46260811861369,
+      "zoom": 1.1351561148213234,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:59",
+      "calls": 91,
+      "geometries": 98,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -136.28368332868268,
+      "z": 60.65045142546681,
+      "heading": -0.8792180883918213,
+      "speed": 5.781508008404763,
+      "hp": 53.46260811861369,
+      "zoom": 1.1304382801301012,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:59",
+      "calls": 85,
+      "geometries": 98,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -138.29108877234225,
+      "z": 62.312381020964736,
+      "heading": -0.8790599588309065,
+      "speed": 7.175460848446096,
+      "hp": 53.46260811861369,
+      "zoom": 1.114284215710021,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "18:59",
+      "calls": 84,
+      "geometries": 98,
+      "textures": 34,
+      "chunks": 6
+    },
+    {
+      "x": -141.04334740624913,
+      "z": 64.59195877389573,
+      "heading": -0.8790430445638644,
+      "speed": 8.634740405550906,
+      "hp": 53.46260811861369,
+      "zoom": 1.0906423329608168,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:00",
+      "calls": 98,
+      "geometries": 99,
+      "textures": 34,
+      "chunks": 9
+    },
+    {
+      "x": -143.8985934367188,
+      "z": 66.95692352535028,
+      "heading": -0.8790417559462207,
+      "speed": 9.838181116409462,
+      "hp": 53.46260811861369,
+      "zoom": 1.0695394219511773,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:00",
+      "calls": 96,
+      "geometries": 99,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -145.59591155612446,
+      "z": 68.36279506365253,
+      "heading": -0.8790416502775873,
+      "speed": 10.454426848139134,
+      "hp": 53.46260811861369,
+      "zoom": 1.0560812825265014,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:01",
+      "calls": 95,
+      "geometries": 99,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -148.19249753882497,
+      "z": 68.73633974415381,
+      "heading": -0.8977901964374639,
+      "speed": 7.274646886329998,
+      "hp": 49.052958105585795,
+      "zoom": 1.0665538082794348,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:01",
+      "calls": 100,
+      "geometries": 108,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -148.66826318490908,
+      "z": 68.73961918343888,
+      "heading": -0.9008347206227894,
+      "speed": 7.054116064514958,
+      "hp": 49.052958105585795,
+      "zoom": 1.069844613712236,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:01",
+      "calls": 97,
+      "geometries": 107,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -150.83268104129277,
+      "z": 68.75253203892248,
+      "heading": -0.9126390237588077,
+      "speed": 5.997170760232717,
+      "hp": 49.052958105585795,
+      "zoom": 1.0847834082257723,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:02",
+      "calls": 92,
+      "geometries": 106,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -152.57138338014258,
+      "z": 69.26399680471482,
+      "heading": -0.9175066060228785,
+      "speed": 5.911926243293804,
+      "hp": 49.052958105585795,
+      "zoom": 1.0997810378712427,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:02",
+      "calls": 91,
+      "geometries": 106,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -154.45828946037932,
+      "z": 70.5324515413857,
+      "heading": -1.1052866375520747,
+      "speed": 7.029985542172737,
+      "hp": 49.052958105585795,
+      "zoom": 1.099381079298374,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:02",
+      "calls": 93,
+      "geometries": 106,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -156.87760759322742,
+      "z": 71.4917163651429,
+      "heading": -1.5416451225779995,
+      "speed": 7.817527835545443,
+      "hp": 49.052958105585795,
+      "zoom": 1.091461375794708,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:03",
+      "calls": 100,
+      "geometries": 106,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -157.662833572737,
+      "z": 71.58401240539868,
+      "heading": -1.681429545706347,
+      "speed": 7.976480566056219,
+      "hp": 49.052958105585795,
+      "zoom": 1.0881421390109296,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:03",
+      "calls": 100,
+      "geometries": 106,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -159.94898330191904,
+      "z": 71.29890086110372,
+      "heading": -2.0940630957253576,
+      "speed": 8.318244367086965,
+      "hp": 49.052958105585795,
+      "zoom": 1.0810076453625728,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:03",
+      "calls": 113,
+      "geometries": 106,
+      "textures": 33,
+      "chunks": 9
+    },
+    {
+      "x": -162.80832586210002,
+      "z": 69.58405810927579,
+      "heading": -2.6917258173703376,
+      "speed": 8.435000437347767,
+      "hp": 49.052958105585795,
+      "zoom": 1.0738392173409748,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:04",
+      "calls": 88,
+      "geometries": 101,
+      "textures": 35,
+      "chunks": 6
+    },
+    {
+      "x": -164.1127810641941,
+      "z": 67.78777324529614,
+      "heading": -3.0878296583345546,
+      "speed": 8.268414080949158,
+      "hp": 49.052958105585795,
+      "zoom": 1.0716736822802817,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:04",
+      "calls": 84,
+      "geometries": 101,
+      "textures": 36,
+      "chunks": 6
+    },
+    {
+      "x": -164.7951456607983,
+      "z": 64.68780317970553,
+      "heading": -3.657796108888561,
+      "speed": 7.756907815124055,
+      "hp": 49.052958105585795,
+      "zoom": 1.073615110863279,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:04",
+      "calls": 90,
+      "geometries": 101,
+      "textures": 36,
+      "chunks": 6
+    },
+    {
+      "x": -164.20769606366378,
+      "z": 62.403609609562146,
+      "heading": -4.082605020695406,
+      "speed": 7.282916920584177,
+      "hp": 49.052958105585795,
+      "zoom": 1.0784665862635785,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:05",
+      "calls": 92,
+      "geometries": 102,
+      "textures": 36,
+      "chunks": 6
+    },
+    {
+      "x": -162.87670822662818,
+      "z": 60.76884426442322,
+      "heading": -4.467470683192713,
+      "speed": 6.926128791298535,
+      "hp": 49.052958105585795,
+      "zoom": 1.0843543076468136,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:05",
+      "calls": 96,
+      "geometries": 102,
+      "textures": 36,
+      "chunks": 6
+    },
+    {
+      "x": -161.15333964434245,
+      "z": 59.924124214586165,
+      "heading": -4.82302346324367,
+      "speed": 6.767842530697571,
+      "hp": 49.052958105585795,
+      "zoom": 1.0897574002549202,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:06",
+      "calls": 100,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -158.80506501216334,
+      "z": 59.98362918510362,
+      "heading": -5.264015582111515,
+      "speed": 6.859997443838965,
+      "hp": 49.052958105585795,
+      "zoom": 1.0927087060976903,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:06",
+      "calls": 90,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -157.26285549551284,
+      "z": 60.77476881973789,
+      "heading": -5.5870314609312075,
+      "speed": 7.085784862850046,
+      "hp": 49.052958105585795,
+      "zoom": 1.0926775400278725,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:06",
+      "calls": 80,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -156.27611213362553,
+      "z": 61.76393522522245,
+      "heading": -5.80906393614658,
+      "speed": 4.379681780597055,
+      "hp": 49.052958105585795,
+      "zoom": 1.105054071661013,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:07",
+      "calls": 64,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -155.80035949857094,
+      "z": 62.55226780063204,
+      "heading": -5.874768884853538,
+      "speed": 1.3593821132273938,
+      "hp": 49.052958105585795,
+      "zoom": 1.1361302882270234,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:07",
+      "calls": 67,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -155.74969424828606,
+      "z": 62.64932851368964,
+      "heading": -5.8823517417008,
+      "speed": 0.14539830966907072,
+      "hp": 49.052958105585795,
+      "zoom": 1.1597328975051915,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:07",
+      "calls": 73,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -155.76355354093306,
+      "z": 62.61164791334416,
+      "heading": -5.88489300058473,
+      "speed": 0.553165784827455,
+      "hp": 49.052958105585795,
+      "zoom": 1.1727104732017202,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:07",
+      "calls": 75,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -156.02472203390343,
+      "z": 61.987839676669424,
+      "heading": -5.886386746886512,
+      "speed": 2.3692579784011185,
+      "hp": 49.052958105585795,
+      "zoom": 1.181321494320493,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:08",
+      "calls": 75,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -156.3037064918986,
+      "z": 61.3220389131513,
+      "heading": -5.886482891792529,
+      "speed": 3.3363787662231723,
+      "hp": 49.052958105585795,
+      "zoom": 1.1751206353628691,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:08",
+      "calls": 65,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -156.90879354400516,
+      "z": 59.877599177764665,
+      "heading": -5.886510229039452,
+      "speed": 4.760578400903152,
+      "hp": 49.052958105585795,
+      "zoom": 1.1577535477311216,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:09",
+      "calls": 85,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -157.60227321405762,
+      "z": 58.222042374352114,
+      "heading": -5.886513221205333,
+      "speed": 5.941026379124039,
+      "hp": 49.052958105585795,
+      "zoom": 1.1411471169459722,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:09",
+      "calls": 86,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -157.7589956711933,
+      "z": 57.84789301907916,
+      "heading": -5.886513389283642,
+      "speed": 6.170648447392335,
+      "hp": 49.052958105585795,
+      "zoom": 1.1367914257883882,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:09",
+      "calls": 84,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -158.82086755148407,
+      "z": 55.31284088177031,
+      "heading": -5.8865137179188265,
+      "speed": 7.503329805398452,
+      "hp": 49.052958105585795,
+      "zoom": 1.1139520001814294,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:10",
+      "calls": 84,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -160.31139067221127,
+      "z": 51.754447771758336,
+      "heading": -5.886513753340164,
+      "speed": 8.96152095621425,
+      "hp": 49.052958105585795,
+      "zoom": 1.0857669646422898,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:10",
+      "calls": 85,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -161.21526932397128,
+      "z": 49.59657727491542,
+      "heading": -5.886513755399112,
+      "speed": 9.700631841777238,
+      "hp": 49.052958105585795,
+      "zoom": 1.0717242998327166,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:11",
+      "calls": 93,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -162.3300703716432,
+      "z": 46.75876809373471,
+      "heading": -6.096486040590326,
+      "speed": 7.807577350397076,
+      "hp": 49.052958105585795,
+      "zoom": 1.0690649480181387,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:11",
+      "calls": 94,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -162.86938502886062,
+      "z": 44.864827544192636,
+      "heading": -6.489781778766622,
+      "speed": 6.175164021385229,
+      "hp": 49.052958105585795,
+      "zoom": 1.0807082908585,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:11",
+      "calls": 96,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -162.9616755222087,
+      "z": 44.48053769182947,
+      "heading": -6.589201935442658,
+      "speed": 5.780001192835893,
+      "hp": 49.052958105585795,
+      "zoom": 1.085176340894533,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:11",
+      "calls": 90,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -163.25244379673555,
+      "z": 43.26554693830724,
+      "heading": -6.9398961618571375,
+      "speed": 4.3258871961209255,
+      "hp": 49.052958105585795,
+      "zoom": 1.1017362714870758,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:12",
+      "calls": 85,
+      "geometries": 102,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -163.54182475490785,
+      "z": 42.40803600380388,
+      "heading": -7.210190290819006,
+      "speed": 3.057909880674868,
+      "hp": 49.052958105585795,
+      "zoom": 1.1224490081030678,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:12",
+      "calls": 83,
+      "geometries": 101,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -164.0994194137864,
+      "z": 41.77195002419599,
+      "heading": -7.39605805177764,
+      "speed": 2.1587239733069357,
+      "hp": 49.052958105585795,
+      "zoom": 1.148904347370099,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:12",
+      "calls": 88,
+      "geometries": 101,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -165.28551891202332,
+      "z": 41.89839675659376,
+      "heading": -7.307927724807572,
+      "speed": 3.221078465321058,
+      "hp": 49.052958105585795,
+      "zoom": 1.1623588264647122,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:13",
+      "calls": 92,
+      "geometries": 101,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -166.5274159082334,
+      "z": 42.74915739444195,
+      "heading": -7.02240066764346,
+      "speed": 4.578774118329549,
+      "hp": 49.052958105585795,
+      "zoom": 1.1537574209726802,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:13",
+      "calls": 94,
+      "geometries": 101,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -167.87311463894886,
+      "z": 44.46498823502058,
+      "heading": -6.548150204111561,
+      "speed": 5.826746578044414,
+      "hp": 49.052958105585795,
+      "zoom": 1.1367618215631603,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:14",
+      "calls": 93,
+      "geometries": 101,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -168.35474300408677,
+      "z": 45.46586167673662,
+      "heading": -6.298475766184716,
+      "speed": 6.244751995314562,
+      "hp": 49.052958105585795,
+      "zoom": 1.1279277124315272,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:14",
+      "calls": 93,
+      "geometries": 101,
+      "textures": 37,
+      "chunks": 6
+    },
+    {
+      "x": -168.02037713924346,
+      "z": 47.86482333285954,
+      "heading": -5.686610238342116,
+      "speed": 6.70846678028165,
+      "hp": 49.052958105585795,
+      "zoom": 1.1146993798301141,
+      "cash": 1098,
+      "cargo": {
+        "Ember": 1,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "clock": "19:15",
+      "calls": 93,
+      "geometries": 101,
+      "textures": 37,
+      "chunks": 6
+    }
+  ],
+  "frameMs": {
+    "p50": 100,
+    "p95": 216.60000000000582,
+    "p99": 500
+  },
+  "longTasks": [
+    {
+      "start": 148,
+      "duration": 1095
+    },
+    {
+      "start": 1379.5999999996275,
+      "duration": 112
+    },
+    {
+      "start": 1505.8999999994412,
+      "duration": 129
+    },
+    {
+      "start": 1884.0999999996275,
+      "duration": 79
+    },
+    {
+      "start": 2058.5,
+      "duration": 90
+    },
+    {
+      "start": 4493.5999999996275,
+      "duration": 453
+    },
+    {
+      "start": 18427.799999999814,
+      "duration": 122
+    },
+    {
+      "start": 126939.89999999944,
+      "duration": 303
+    }
+  ],
+  "heap": 91700000,
+  "loadedModels": [
+    "interior/beddouble.glb",
+    "interior/loungesofa.glb",
+    "interior/table.glb",
+    "interior/chair.glb",
+    "interior/bookcaseopen.glb",
+    "interior/lamproundfloor.glb",
+    "interior/kitchencabinet.glb",
+    "interior/pottedplant.glb",
+    "city/tree.glb",
+    "city/palm.glb",
+    "buildings/building-a.glb",
+    "buildings/building-c.glb",
+    "buildings/building-skyscraper-a.glb",
+    "buildings/building-d.glb",
+    "streets/dumpster.glb",
+    "buildings/building-b.glb",
+    "streets/light-curved.glb",
+    "streets/construction-cone.glb",
+    "streets/road-sign-stop.glb",
+    "streets/electricity-pole.glb",
+    "streets/traffic-light.glb",
+    "roads/road-straight.glb",
+    "roads/road-crossroad-path.glb",
+    "streets/road-sign-warning.glb",
+    "streets/construction-fence.glb",
+    "roads/road-bend.glb",
+    "streets/construction-barrier.glb",
+    "roads/road-crossing.glb",
+    "city/house.glb",
+    "roads/road-intersection.glb",
+    "city/kay-bush.glb",
+    "city/kay-bench.glb",
+    "city/kay-watertower.glb",
+    "city/kay-building-c.glb",
+    "city/kay-building-b.glb",
+    "city/kay-building-a.glb",
+    "city/kay-streetlight.glb"
+  ],
+  "night": 1,
+  "errors": [],
+  "softwareWebGL": true
+}
