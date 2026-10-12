@@ -115,6 +115,7 @@ class EmpireEngine{
   this.save=readSave();this.player=newCar(this.save.x,this.save.z,this.save.heading,this.save.carHP);
   Object.assign(this.player,{damageFront:this.save.carDamage.front,damageRear:this.save.carDamage.rear,damageLeft:this.save.carDamage.left,damageRight:this.save.carDamage.right});
   this.currentCarStyle=this.save.car;this.world=new CrimeWorld(el);
+  this.world.setInteriorLevels(this.save.houseLevel,this.save.garageLevel);
   this.world.stream(this.player.x,this.player.z);
   this.mesh=createCarVisual(this.save.car,0xd45f3d);this.world.scene.add(this.mesh);
   this.footMesh=npcVisual();this.footMesh.visible=false;this.world.scene.add(this.footMesh);
@@ -387,7 +388,9 @@ class EmpireEngine{
  repair(){const cost=Math.max(40,Math.round((100-this.player.hp)*12));if(this.save.money<cost){this.notice('NEED $'+cost+' FOR REPAIR');return;}this.save.money-=cost;this.player.hp=100;this.player.damageFront=0;this.player.damageRear=0;this.player.damageLeft=0;this.player.damageRight=0;
   this.mesh.userData.disposed=true;this.mesh.removeFromParent();this.mesh=createCarVisual(this.save.car,0xd45f3d);this.world.scene.add(this.mesh);this.playerDamage=[0,0,0,0];this.notice('FULL REPAIR · $'+cost);this.saveNow();
  }
- upgrade(key:keyof Mods|'garage'|'house'){const r=buyUpgrade(this.save,key);this.notice(r.text);this.saveNow();}
+ upgrade(key:keyof Mods|'garage'|'house'){const r=buyUpgrade(this.save,key);
+  if(r.ok&&(key==='garage'||key==='house'))this.world.setInteriorLevels(this.save.houseLevel,this.save.garageLevel);
+  this.notice(r.text);this.saveNow();}
  purchaseCar(style:CarStyle){const r=buyCar(this.save,style);if(r.ok){this.mesh.userData.disposed=true;this.mesh.removeFromParent();this.mesh=createCarVisual(style,0xd45f3d);this.world.scene.add(this.mesh);this.player.hp=100;this.playerDamage=[0,0,0,0];this.player.damageFront=0;this.player.damageRear=0;this.player.damageLeft=0;this.player.damageRight=0;}this.notice(r.text);this.saveNow();}
  deal(market:string,good:Commodity,qty:number){const r=trade(this.save,market,good,qty,this.gameTime);this.notice(r.text);if(r.ok){this.crime(.08);this.saveNow();}}
  getData(){return this.save;}
