@@ -124,7 +124,7 @@ class EmpireEngine{
  actors:Actor[]=[];people:Ped[]=[];private sound=new Sound();private alive=true;private raf=0;private prev=performance.now();private acc=0;private gameTime=0;private displayAt=0;private saveAt=0;private noticeUntil=0;
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private npcDamage=new WeakMap<Actor,number>();private currentCarStyle:CarStyle;
- private raceRival:Actor|null=null;private raceTime=0;private rivalStep=1;private arrestProgress=0;private skidAtX=Infinity;private skidAtZ=Infinity;
+ private raceRival:Actor|null=null;private raceTime=0;private rivalStep=1;private arrestProgress=0;private houseX=0;private houseZ=4;private skidAtX=Infinity;private skidAtZ=Infinity;
  constructor(el:HTMLDivElement,private controls:Controls,private onUpdate:(v:UI)=>void){
   this.save=readSave();const active=activeBuild(this.save);this.player=newCar(this.save.x,this.save.z,this.save.heading,active.hp);
   Object.assign(this.player,{damageFront:active.damage.front,damageRear:active.damage.rear,damageLeft:active.damage.left,damageRight:active.damage.right});
@@ -292,6 +292,21 @@ class EmpireEngine{
    }
   }
  }
+ private walkInterior(dt:number){
+  const c=this.controls;
+  const dx=Number(c.right)-Number(c.left),dz=Number(c.throttle)-Number(c.brake);
+  if(!dx&&!dz)return;
+  const distance=Math.hypot(dx,dz)||1;
+  const nx=clamp(this.houseX+dx/distance*dt*4.6,-7,7);
+  const nz=clamp(this.houseZ+dz/distance*dt*4.6,-7.3,7.3);
+  // Real furniture colliders: bedroom, workbench, safes and kitchen table.
+  const blockers=[[-4,-4,2.4,1.9],[4,-5,2.4,1.1],[4,2,1.35,1.8],[-2,3,3,2]];
+  if(!blockers.some(([x,z,w,d])=>Math.abs(nx-x)<w+.4&&Math.abs(nz-z)<d+.4)){
+   this.houseX=nx;this.houseZ=nz;
+  }
+  this.footMesh.position.set(10000+this.houseX,0,10000+this.houseZ);
+  this.footMesh.rotation.y=Math.atan2(dx,dz);
+ }
  private physics(dt:number){
   this.gameTime+=dt;const c=this.controls;
   if(!this.foot){
@@ -425,13 +440,14 @@ class EmpireEngine{
   if(!this.alive)return;
   const elapsed=clamp((now-this.prev)/1000,0,.08);this.prev=now;
   if(this.house&&!this.paused)this.save.heat=Math.max(0,this.save.heat-elapsed*.17);
+  if(this.house&&!this.paused&&!this.menuOpen)this.walkInterior(elapsed);
   if(!this.paused&&!this.menuOpen&&!this.house){this.acc=Math.min(.10,this.acc+elapsed);for(let i=0;i<5&&this.acc>=1/60;i++){this.physics(1/60);this.acc-=1/60;}}
   if(!this.house){this.world.stream(this.player.x,this.player.z);}
-  this.mesh.visible=!this.foot&&!this.house;this.footMesh.visible=this.foot&&!this.house;
+  this.mesh.visible=!this.foot&&!this.house;this.footMesh.visible=this.foot||this.house;
   renderCar(this.mesh,this.player,elapsed,this.controls.brake);
   const d=[this.player.damageFront,this.player.damageRear,this.player.damageLeft,this.player.damageRight];
   if(d.some((v,i)=>Math.abs(v-this.playerDamage[i])>.015)){showCarDamage(this.mesh,{front:d[0],rear:d[1],left:d[2],right:d[3]});this.playerDamage=d;}
-  this.world.follow(this.player.x,this.player.z,speed(this.player),this.player.heading,Math.min(.05,elapsed),this.house);
+  this.world.follow(this.house?this.houseX:this.player.x,this.house?this.houseZ:this.player.z,speed(this.player),this.player.heading,Math.min(.05,elapsed),this.house);
   this.world.render();
   this.sound.tick(kmh(this.player),this.controls.throttle,this.actors.filter(a=>a.type==='police').length,this.gameTime,this.controls.handbrake||Math.abs(this.player.steerAngle*this.player.yawRate)>0.1);
   if(now-this.displayAt>130){this.displayAt=now;this.publish();}
@@ -443,8 +459,8 @@ class EmpireEngine{
   const here=this.player,near=this.world.nearMarker(here.x,here.z,7.5);
   const district=this.player.z>64?'NEON MILE':this.player.x< -64?'OLD QUARTER':this.player.z< -64?'INDUSTRIAL BELT':'DOCKSIDE';
   this.onUpdate({speed:kmh(here),hp:Math.round(here.hp),heat:this.save.heat,cash:this.save.money,nitro:Math.round(here.nitro),
-   mission:this.save.mode==='freeroam'?'FREE ROAM':mission?.title??'CAMPAIGN COMPLETE',
-   objective:this.save.mode==='freeroam'?'BUILD YOUR EMPIRE':mission?.brief??'CITY IS YOURS',
+   mission:this.house?'SAFEHOUSE INTERIOR':this.save.mode==='freeroam'?'FREE ROAM':mission?.title??'CAMPAIGN COMPLETE',
+   objective:this.house?'EXPLORE ROOMS · UPGRADE FURNITURE · EXIT WHEN READY':this.save.mode==='freeroam'?'BUILD YOUR EMPIRE':mission?.brief??'CITY IS YOURS',
    message:this.gameTime<this.noticeUntil?this.message:'',area:district,near,mode:this.save.mode,house:this.house,
    race:this.raceRival?'RACE · '+Math.max(0,Math.ceil(65-this.raceTime))+'s LEFT · RIVAL '+Math.min(3,this.rivalStep)+'/3':null,
    notice:this.player.hp<25?'ENGINE CRITICAL · REPAIR AT GARAGE':'',cargo:cargoCount(this.save),
@@ -457,14 +473,15 @@ class EmpireEngine{
  setMode(mode:'campaign'|'freeroam'){this.save.mode=mode;if(mode==='freeroam')this.finishRace();this.saveNow();this.notice(mode==='campaign'?'CAMPAIGN RESUMED':'FREE ROAM · NO STORY REQUIREMENTS');}
  action(){
   this.unlock();
-  if(this.house){this.house=false;this.paused=false;this.notice('BACK ON THE STREET');return;}
+  if(this.house){this.house=false;this.paused=false;this.footMesh.visible=false;this.notice('BACK ON THE STREET');return;}
   const m=this.world.nearMarker(this.player.x,this.player.z,7.5);
   if(m==='safehouse'){
    if(speed(this.player)>3){this.notice('PARK THE CAR FIRST');return;}
    if(this.save.heat>=1&&this.actors.some(a=>a.type==='police'&&Math.hypot(a.car.x-this.player.x,a.car.z-this.player.z)<27)){
     this.notice('POLICE WATCHING THE DOOR · LOSE YOUR TAIL');return;
    }
-   this.house=true;this.saveNow();this.notice('DOCKSIDE SAFEHOUSE');return;
+   this.house=true;this.houseX=0;this.houseZ=4;this.footMesh.visible=true;this.footMesh.position.set(10000,0,10004);
+   clearInputs(this.controls);this.saveNow();this.notice('DOCKSIDE SAFEHOUSE');return;
   }
   if(this.foot){this.foot=false;this.notice('BACK IN THE DRIVER SEAT');return;}
   if(speed(this.player)<1.5){this.foot=true;this.notice('ON FOOT · PRESS ACTION TO ENTER CAR');return;}
@@ -586,7 +603,7 @@ export default function CrimeGame(){
   {hud.message&&<div className="be-banner">{hud.message}</div>}
   {hud.race&&<div className="be-race">{hud.race}</div>}
   {hud.notice&&<div className="be-danger">{hud.notice}</div>}
-  <div className="be-worldactions"><button onClick={()=>{engine.current?.unlock();setMenu('jobs');}}>JOBS</button><button onClick={()=>{engine.current?.unlock();openNear();}}>{hud.house?'LEAVE SAFEHOUSE':hud.near===null?'ENTER / EXIT':hud.near==='safehouse'?'SAFEHOUSE':hud.near==='garage'?'GARAGE':'DEAL / ENTER'}</button></div>
+  <div className="be-worldactions"><button onClick={()=>{engine.current?.unlock();setMenu(hud.house?'house':'jobs');}}>{hud.house?'HOUSE UPGRADES':'JOBS'}</button><button onClick={()=>{engine.current?.unlock();openNear();}}>{hud.house?'LEAVE SAFEHOUSE':hud.near===null?'ENTER / EXIT':hud.near==='safehouse'?'SAFEHOUSE':hud.near==='garage'?'GARAGE':'DEAL / ENTER'}</button></div>
   <div className="be-controls"><div className="be-steer">
     <ControlButton label="◀" field="left" controls={controls} engine={engine}/>
     <ControlButton label="▶" field="right" controls={controls} engine={engine}/>
