@@ -364,7 +364,16 @@ export class CrimeWorld{
   return null;
  }
  follow(x:number,z:number,speed:number,heading:number,dt:number,interior=false){
-  if(interior){this.root.visible=false;this.interior.visible=true;this.cameraFocus.set(10000,0,10000);this.camera.position.set(this.cameraFocus.x,36,this.cameraFocus.z+11);this.camera.lookAt(this.cameraFocus.x,0,this.cameraFocus.z);this.camera.zoom=1.35;this.camera.updateProjectionMatrix();return;}
+  if(interior){
+   this.root.visible=false;this.interior.visible=true;
+   // Separate world-space safehouse, with the resident's avatar and furniture
+   // walkable in a proper top-down camera, not a freeze-frame showroom.
+   const desired=new THREE.Vector3(10000+x,0,10000+z);
+   this.cameraFocus.lerp(desired,Math.min(1,dt*4));
+   this.camera.position.set(this.cameraFocus.x,26,this.cameraFocus.z+8);
+   this.camera.lookAt(this.cameraFocus.x,0,this.cameraFocus.z);
+   this.camera.zoom=2.75;this.camera.updateProjectionMatrix();return;
+  }
   if(this.interior.visible)this.cameraFocus.set(x,0,z);
   this.root.visible=true;this.interior.visible=false;
   const fwd=new THREE.Vector3(Math.sin(heading)*Math.min(speed*.18,8),0,Math.cos(heading)*Math.min(speed*.18,8));
