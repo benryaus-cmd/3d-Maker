@@ -1,5 +1,7 @@
 import {useEffect,useRef,useState,type PointerEvent as RP} from 'react';
 import * as THREE from 'three';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {clone as cloneSkinned} from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {CrimeWorld,createCarVisual,renderCar,showCarDamage,type CarStyle} from './World';
 import {BASE_TUNE,axes,drive,newCar,collideWall,collideCars,kmh,speed,tuneWithMods,type CarState,type CarTune,type DriverInput} from './vehiclePhysics';
 import {readSave,saveGame,initial,MARKETS,GOODS,MISSIONS,quote,trade,missionUpdate,missionMarker,buyUpgrade,buyCar,cargoCount,cargoCap,type GameSave,type Commodity,type Mods} from './Systems';
@@ -14,7 +16,7 @@ const CAR_TUNES:Record<CarStyle,Partial<CarTune>>={
  race:{power:16000,topSpeed:68,grip:1.34,mass:1030,durability:85}
 };
 type Actor={car:CarState;mesh:THREE.Group;type:'police'|'traffic'|'racer';style:CarStyle;routeX:number;routeZ:number;repath:number;alert:number;stuck:number;lastX:number;lastZ:number};
-type Ped={mesh:THREE.Group;x:number;z:number;vx:number;vz:number;panic:number;down:number;alive:boolean;bleed:THREE.Mesh|null};
+type Ped={mesh:THREE.Group;x:number;z:number;vx:number;vz:number;panic:number;down:number;alive:boolean;bleed:THREE.Mesh|null;mixer:THREE.AnimationMixer|null;clips:Map<string,THREE.AnimationAction>;currentAction:string};
 type Radar={player:[number,number];cops:[number,number][];traffic:[number,number][];people:[number,number][];target:[number,number]|null};
 type UI={speed:number;hp:number;heat:number;cash:number;nitro:number;mission:string;objective:string;message:string;area:string;near:string|null;mode:'campaign'|'freeroam';house:boolean;notice:string;radar:Radar;cargo:number;race:string|null};
 const initialUi:UI={speed:0,hp:100,heat:0,cash:1200,nitro:100,mission:'LAST $200',objective:'DRIVE TO SAFEHOUSE',message:'',area:'DOCKSIDE',near:null,mode:'campaign',house:false,notice:'',radar:{player:[0,0],cops:[],traffic:[],people:[],target:null},cargo:0,race:null};
@@ -23,6 +25,18 @@ const clearInputs=(c:Controls)=>{c.throttle=false;c.brake=false;c.left=false;c.r
 const wrap=(a:number)=>Math.atan2(Math.sin(a),Math.cos(a));
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const colours=[0xdf8759,0x75b0c5,0xead5b0,0x7a9384,0xbb6573,0xc2c7c3];
+type PersonAsset={scene:THREE.Group;animations:THREE.AnimationClip[]};
+const personSources=new Map<string,Promise<PersonAsset>>();
+const personLoader=new GLTFLoader();
+function getPerson(id:string):Promise<PersonAsset>{
+ let load=personSources.get(id);if(!load){
+  load=personLoader.loadAsync(import.meta.env.BASE_URL+'assets/characters/'+id+'.glb')
+    .then(glb=>({scene:glb.scene,animations:glb.animations}));
+  personSources.set(id,load);
+ }
+ return load;
+}
+
 const cell=(x:number)=>Math.round(x/32)*32;
 function engineTune(style:CarStyle,mods:Mods){return tuneWithMods({...BASE_TUNE,...CAR_TUNES[style]},mods);}
 function npcVisual(){const group=new THREE.Group(),shirt=new THREE.MeshStandardMaterial({color:colours[Math.floor(Math.random()*colours.length)]}),skin=new THREE.MeshStandardMaterial({color:0xc99578}),pants=new THREE.MeshStandardMaterial({color:0x343942});
@@ -142,7 +156,30 @@ class EmpireEngine{
   const mesh=createCarVisual(style,colours[Math.floor(Math.random()*colours.length)]);this.world.scene.add(mesh);
   const a={car,mesh,type,style,routeX:cell(x),routeZ:cell(z),repath:0,alert:0,stuck:0,lastX:x,lastZ:z};this.actors.push(a);return a;
  }
- private makePed(x:number,z:number){const mesh=npcVisual();mesh.position.set(x,0,z);this.world.scene.add(mesh);this.people.push({mesh,x,z,vx:0,vz:0,panic:0,down:0,alive:true,bleed:null});}
+ private makePed(x:number,z:number){
+  const mesh=npcVisual();mesh.position.set(x,0,z);this.world.scene.add(mesh);
+  const p:Ped={mesh,x,z,vx:0,vz:0,panic:0,down:0,alive:true,bleed:null,mixer:null,clips:new Map(),currentAction:''};
+  this.people.push(p);
+  const names=['casual-male','casual-female','worker-male','suit-female'];
+  const id=names[Math.floor(Math.random()*names.length)];
+  void getPerson(id).then(source=>{
+   if(!this.alive||!this.people.includes(p))return;
+   const model=cloneSkinned(source.scene) as THREE.Group;
+   const bounds=new THREE.Box3().setFromObject(model),height=bounds.max.y-bounds.min.y;
+   if(!Number.isFinite(height)||height<.1)return;
+   model.scale.multiplyScalar(1.85/height);
+   const b=new THREE.Box3().setFromObject(model),center=b.getCenter(new THREE.Vector3());
+   model.position.x-=center.x;model.position.z-=center.z;model.position.y-=b.min.y;
+   for(const child of mesh.children)child.visible=false;
+   mesh.add(model);
+   const mixer=new THREE.AnimationMixer(model);p.mixer=mixer;
+   for(const name of ['Idle','Walk','Run','Death']){
+    const clip=source.animations.find(c=>c.name.toLowerCase().split('|').at(-1)===name.toLowerCase());
+    if(clip){const action=mixer.clipAction(clip);if(name==='Death'){action.clampWhenFinished=true;action.setLoop(THREE.LoopOnce,1);}p.clips.set(name,action);}
+   }
+   this.playPerson(p,p.alive?'Idle':'Death');
+  }).catch(()=>{/* fallback character is a fully playable pedestrian */});
+ }
  private canStand(x:number,z:number,r=.55){return !this.world.walls.some(w=>!w.broken&&Math.abs(x-w.x)<w.w/2+r&&Math.abs(z-w.z)<w.d/2+r);}
  private npcSpawn(){
   if(this.gameTime-this.lastActorSpawn>2.3&&this.actors.filter(a=>a.type==='traffic').length<7){
@@ -159,7 +196,7 @@ class EmpireEngine{
     if(this.canStand(x,z,2)&&this.actors.every(a=>Math.hypot(a.car.x-x,a.car.z-z)>9)){this.makeActor('police',x,z);break;}
    }
   }
-  if(this.gameTime-this.lastPedSpawn>1.1&&this.people.length<32){
+  if(this.gameTime-this.lastPedSpawn>1.1&&this.people.length<20){
    this.lastPedSpawn=this.gameTime;
    for(let i=0;i<15;i++){const x=this.player.x+(Math.random()-.5)*84,z=this.player.z+(Math.random()-.5)*84;
     if(this.canStand(x,z)&&Math.hypot(x-this.player.x,z-this.player.z)>8&&Math.abs(x-cell(x))>5&&Math.abs(z-cell(z))>5){this.makePed(x,z);break;}
@@ -214,6 +251,13 @@ class EmpireEngine{
   if(Math.hypot(s.x-a.lastX,s.z-a.lastZ)<.012)a.stuck+=dt;else a.stuck=0;
   a.lastX=s.x;a.lastZ=s.z;
   if(a.stuck>2.5){a.repath=0;a.car.heading+=Math.PI*.8;a.stuck=0;}
+ }
+ private playPerson(p:Ped,name:string){
+  if(name===p.currentAction)return;
+  const previous=p.clips.get(p.currentAction);const next=p.clips.get(name)??p.clips.get('Idle');
+  if(previous)previous.fadeOut(.12);
+  if(next){next.reset().fadeIn(.12).play();}
+  p.currentAction=name;
  }
  private hitEffect(impactSpeed:number,x:number,z:number){
   this.sound.hit(impactSpeed);
@@ -276,7 +320,7 @@ class EmpireEngine{
    if(hits&&hits[0].speed>4)this.hitEffect(hits[0].speed,(a.car.x+b.car.x)/2,(a.car.z+b.car.z)/2);
   }
   for(const p of this.people){
-   if(!p.alive){p.down+=dt;if(p.down>18)p.mesh.visible=false;continue;}
+   if(!p.alive){p.down+=dt;p.mixer?.update(dt);if(p.down>18)p.mesh.visible=false;continue;}
    const dist=Math.hypot(p.x-here.x,p.z-here.z);
    p.panic=Math.max(0,p.panic-dt);
    if((speed(here)>11&&dist<11)||this.save.heat>1&&dist<18)p.panic=Math.max(p.panic,4);
@@ -286,8 +330,10 @@ class EmpireEngine{
    if(this.canStand(nx,nz,.35)){p.x=nx;p.z=nz;}else{p.vx*=-1;p.vz*=-1;}
    p.mesh.position.set(p.x,0,p.z);
    if(Math.hypot(p.vx,p.vz)>.05)p.mesh.rotation.y=Math.atan2(p.vx,p.vz);
+   this.playPerson(p,p.panic>0?'Run':Math.hypot(p.vx,p.vz)>.15?'Walk':'Idle');
+   p.mixer?.update(dt);
    if(!this.foot&&dist<1.55&&speed(here)>3){
-    p.alive=false;p.down=0;p.mesh.rotation.z=1.4;p.mesh.position.y=.2;
+    p.alive=false;p.down=0;this.playPerson(p,'Death');if(!p.mixer)p.mesh.rotation.z=1.4;p.mesh.position.y=.2;
     const m=new THREE.Mesh(new THREE.CircleGeometry(.55+Math.random()*.8,12),new THREE.MeshBasicMaterial({color:0x7d1519,depthWrite:false,transparent:true,opacity:.75}));
     m.rotation.x=-Math.PI/2;m.position.set(p.x,.04,p.z);this.world.scene.add(m);p.bleed=m;
     this.crime(.9);this.hitEffect(speed(here),p.x,p.z);this.notice('CIVILIAN DOWN · POLICE ALERTED');
