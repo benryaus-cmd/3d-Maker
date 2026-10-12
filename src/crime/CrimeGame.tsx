@@ -136,7 +136,7 @@ class EmpireEngine{
  private crime(heat:number){this.save.heat=clamp(this.save.heat+heat,0,5);this.lastCrimeAt=this.gameTime;}
  private makeActor(type:'police'|'traffic',x:number,z:number):Actor{
   const style:CarStyle=type==='police'?'police':(['taxi','sedan-sports','suv','sedan'] as CarStyle[])[Math.floor(Math.random()*4)];
-  const car=newCar(x,z,Math.round(Math.random()*3)*Math.PI/2,type==='police'?150:100);
+  const car=newCar(x,z,Math.round(Math.random()*3)*Math.PI/2,100);
   const mesh=createCarVisual(style,colours[Math.floor(Math.random()*colours.length)]);this.world.scene.add(mesh);
   const a={car,mesh,type,style,routeX:cell(x),routeZ:cell(z),repath:0,alert:0,stuck:0,lastX:x,lastZ:z};this.actors.push(a);return a;
  }
