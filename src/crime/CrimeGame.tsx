@@ -33,26 +33,77 @@ function npcVisual(){const group=new THREE.Group(),shirt=new THREE.MeshStandardM
 }
 class Sound{
  ctx:AudioContext|null=null;engine:OscillatorNode|null=null;engineGain:GainNode|null=null;engineFilter:BiquadFilterNode|null=null;siren:OscillatorNode|null=null;sirenGain:GainNode|null=null;
+ private engineSample:HTMLAudioElement|null=null;private skidSample:HTMLAudioElement|null=null;
+ private impactSamples:HTMLAudioElement[]=[];private activeImpacts=new Set<HTMLAudioElement>();
  muted=false;lastHit=0;
- start(){if(this.ctx){void this.ctx.resume();return;}try{
-  const a=this.ctx=new AudioContext();const eng=this.engine=a.createOscillator();eng.type='sawtooth';eng.frequency.value=70;
-  const filter=this.engineFilter=a.createBiquadFilter();filter.type='lowpass';filter.frequency.value=360;
-  const volume=this.engineGain=a.createGain();volume.gain.value=.0001;
-  eng.connect(filter);filter.connect(volume);volume.connect(a.destination);eng.start();
-  const sir=this.siren=a.createOscillator();sir.type='triangle';const sv=this.sirenGain=a.createGain();sv.gain.value=.0001;sir.connect(sv);sv.connect(a.destination);sir.start();
- }catch(e){console.warn('Audio unavailable',e);}}
- tick(kmph:number,throttle:boolean,cops:number,t:number){if(!this.ctx||!this.engine||!this.engineGain||!this.engineFilter||!this.siren||!this.sirenGain)return;
- const now=this.ctx.currentTime,run=!this.muted;this.engine.frequency.setTargetAtTime(60+kmph*1.3+(throttle?45:0),now,.09);
- this.engineFilter.frequency.setTargetAtTime(210+kmph*6+(throttle?110:0),now,.10);
- this.engineGain.gain.setTargetAtTime(run?.055:0,now,.1);this.siren.frequency.setTargetAtTime(420+Math.sin(t*9)*165,now,.01);
- this.sirenGain.gain.setTargetAtTime(run&&cops>0?.035:0,now,.08);
+ private makeLoop(file:string):HTMLAudioElement{
+  const a=new Audio(import.meta.env.BASE_URL+'assets/crime/audio/'+file);a.loop=true;a.preload='auto';a.volume=0;return a;
  }
- hit(strength:number){if(!this.ctx||this.muted||performance.now()-this.lastHit<120)return;this.lastHit=performance.now();
- const ctx=this.ctx,osc=ctx.createOscillator(),vol=ctx.createGain();osc.type='sawtooth';osc.frequency.value=80+strength*8;
- osc.frequency.exponentialRampToValueAtTime(28,ctx.currentTime+.12);vol.gain.value=Math.min(.18,.035+strength*.006);
- vol.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.18);osc.connect(vol);vol.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.19);
+ start(){
+  if(this.ctx){void this.ctx.resume();this.resumeSamples();return;}
+  try{
+   const a=this.ctx=new AudioContext();
+   // Low-volume procedural blend backs up real samples and reacts to RPM.
+   const eng=this.engine=a.createOscillator();eng.type='sawtooth';eng.frequency.value=70;
+   const filter=this.engineFilter=a.createBiquadFilter();filter.type='lowpass';filter.frequency.value=360;
+   const volume=this.engineGain=a.createGain();volume.gain.value=.0001;
+   eng.connect(filter);filter.connect(volume);volume.connect(a.destination);eng.start();
+   const sir=this.siren=a.createOscillator();sir.type='triangle';const sv=this.sirenGain=a.createGain();
+   sv.gain.value=.0001;sir.connect(sv);sv.connect(a.destination);sir.start();
+  }catch(e){console.warn('AudioContext unavailable; sample-only audio',e);}
+  this.engineSample=this.makeLoop('engine.ogg');
+  this.skidSample=this.makeLoop('skid.ogg');
+  this.resumeSamples();
  }
- dispose(){void this.ctx?.close();this.ctx=null;}
+ private resumeSamples(){
+  if(this.muted)return;
+  if(this.engineSample?.paused)void this.engineSample.play().catch(()=>{});
+ }
+ tick(kmph:number,throttle:boolean,cops:number,t:number,drifting=false){
+  const run=!this.muted;
+  const rpm=clamp(.76+kmph/150+(throttle?.25:0),.72,2.15);
+  if(this.engineSample){
+   this.engineSample.playbackRate=rpm;
+   this.engineSample.volume=run?clamp(.10+kmph*.00062+(throttle?.025:0),.07,.23):0;
+   if(run&&this.engineSample.paused)this.resumeSamples();
+  }
+  if(this.skidSample){
+   const active=run&&drifting&&kmph>12;
+   this.skidSample.volume=active?clamp(.085+kmph*.0004,.08,.17):0;
+   if(active&&this.skidSample.paused)void this.skidSample.play().catch(()=>{});
+   if(!active&&!this.skidSample.paused)this.skidSample.pause();
+  }
+  if(!this.ctx||!this.engine||!this.engineGain||!this.engineFilter||!this.siren||!this.sirenGain)return;
+  const now=this.ctx.currentTime;
+  this.engine.frequency.setTargetAtTime(54+kmph*1.25+(throttle?34:0),now,.1);
+  this.engineFilter.frequency.setTargetAtTime(155+kmph*5+(throttle?100:0),now,.12);
+  // Real engine recording leads. Synth exists at a fraction of original volume.
+  this.engineGain.gain.setTargetAtTime(run?.008:0,now,.15);
+  this.siren.frequency.setTargetAtTime(420+Math.sin(t*9)*165,now,.012);
+  this.sirenGain.gain.setTargetAtTime(run&&cops>0?.03:0,now,.08);
+ }
+ hit(strength:number){
+  if(this.muted||performance.now()-this.lastHit<120)return;this.lastHit=performance.now();
+  const a=new Audio(import.meta.env.BASE_URL+'assets/crime/audio/impact.ogg');
+  a.volume=clamp(.24+strength*.019,.24,.78);a.playbackRate=clamp(.8+Math.random()*.35,.7,1.25);
+  this.activeImpacts.add(a);a.addEventListener('ended',()=>{a.removeAttribute('src');this.activeImpacts.delete(a);},{once:true});
+  void a.play().catch(()=>{this.activeImpacts.delete(a);});
+  // Additional thump for mass/force on impacts.
+  if(!this.ctx)return;
+  const ctx=this.ctx,osc=ctx.createOscillator(),vol=ctx.createGain();
+  osc.type='sine';osc.frequency.value=75+strength*5;
+  osc.frequency.exponentialRampToValueAtTime(28,ctx.currentTime+.12);
+  vol.gain.value=Math.min(.09,.02+strength*.004);
+  vol.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.18);
+  osc.connect(vol);vol.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.19);
+ }
+ dispose(){
+  this.engineSample?.pause();this.skidSample?.pause();
+  this.engineSample?.removeAttribute('src');this.skidSample?.removeAttribute('src');
+  this.activeImpacts.forEach(a=>{a.pause();a.removeAttribute('src');});this.activeImpacts.clear();
+  this.engineSample=null;this.skidSample=null;
+  void this.ctx?.close();this.ctx=null;
+ }
 }
 class EmpireEngine{
  world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;foot=false;footMesh:THREE.Group;
@@ -234,7 +285,7 @@ class EmpireEngine{
   if(d.some((v,i)=>Math.abs(v-this.playerDamage[i])>.015)){showCarDamage(this.mesh,{front:d[0],rear:d[1],left:d[2],right:d[3]});this.playerDamage=d;}
   this.world.follow(this.player.x,this.player.z,speed(this.player),this.player.heading,Math.min(.05,elapsed),this.house);
   this.world.render();
-  this.sound.tick(kmh(this.player),this.controls.throttle,this.actors.filter(a=>a.type==='police').length,this.gameTime);
+  this.sound.tick(kmh(this.player),this.controls.throttle,this.actors.filter(a=>a.type==='police').length,this.gameTime,this.controls.handbrake||Math.abs(this.player.steerAngle*this.player.yawRate)>0.1);
   if(now-this.displayAt>130){this.displayAt=now;this.publish();}
   if(now-this.saveAt>8000){this.saveAt=now;this.saveNow();}
   this.raf=requestAnimationFrame(this.tick);
