@@ -5,17 +5,19 @@ export const MARKETS=[{id:'port',name:'PORT MARKET',x:0,z:32},{id:'club',name:'N
 export type Market=typeof MARKETS[number];
 export type Mods={engine:number;tires:number;brakes:number;armor:number};
 export type GameSave={version:2;money:number;bank:number;heat:number;mode:'campaign'|'freeroam';mission:number;missionStep:number;
- x:number;z:number;heading:number;car:CarStyle;owned:CarStyle[];mods:Mods;garageLevel:number;houseLevel:number;stash:number;cargo:Record<Commodity,number>;lastSave:number;day:number;completed:number[]};
+ x:number;z:number;heading:number;car:CarStyle;carHP:number;carDamage:{front:number;rear:number;left:number;right:number};owned:CarStyle[];mods:Mods;garageLevel:number;houseLevel:number;stash:number;cargo:Record<Commodity,number>;lastSave:number;day:number;completed:number[]};
 const key='blacktop-empire-save-v2';
 const initialCargo=():Record<Commodity,number>=>({Ember:0,Glitch:0,Velvet:0,Crown:0});
 const initialMods=():Mods=>({engine:0,tires:0,brakes:0,armor:0});
 export function initial():GameSave{return {version:2,money:1200,bank:0,heat:0,mode:'campaign',mission:0,missionStep:0,x:0,z:0,heading:0,
- car:'sedan',owned:['sedan'],mods:initialMods(),garageLevel:0,houseLevel:0,stash:0,cargo:initialCargo(),lastSave:Date.now(),day:1,completed:[]};}
+ car:'sedan',carHP:100,carDamage:{front:0,rear:0,left:0,right:0},owned:['sedan'],mods:initialMods(),garageLevel:0,houseLevel:0,stash:0,cargo:initialCargo(),lastSave:Date.now(),day:1,completed:[]};}
 export function readSave():GameSave{
  try{const s=JSON.parse(localStorage.getItem(key)||'null') as Partial<GameSave>;
   if(!s||s.version!==2||!Number.isFinite(s.money)||!Number.isFinite(s.x)||!Number.isFinite(s.z))return initial();
   const def=initial(),owned=s.owned?.filter(x=>['sedan','sedan-sports','police','taxi','suv','race'].includes(x))??def.owned;
   return {...def,...s,owned:owned.length?owned:def.owned,mods:{...def.mods,...s.mods},cargo:{...def.cargo,...s.cargo},completed:Array.isArray(s.completed)?s.completed:[],
+   carHP:Number.isFinite(s.carHP)?Math.max(0,Math.min(100,s.carHP!)):100,
+   carDamage:Object.fromEntries((['front','rear','left','right'] as const).map(k=>[k,Math.max(0,Math.min(1,Number(s.carDamage?.[k])||0))])) as GameSave['carDamage'],
    money:Math.max(0,Math.min(1e9,s.money)),heat:Math.max(0,Math.min(5,s.heat??0)),stash:Math.max(0,s.stash??0)};
  }catch{return initial();}
 }
