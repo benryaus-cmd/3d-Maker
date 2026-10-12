@@ -1,4 +1,4 @@
-import {type CarStyle} from './World';
+export type CarStyle='sedan'|'sedan-sports'|'police'|'taxi'|'suv'|'race';
 export type Commodity='Ember'|'Glitch'|'Velvet'|'Crown';
 export const GOODS:Commodity[]=['Ember','Glitch','Velvet','Crown'];
 export const MARKETS=[{id:'port',name:'PORT MARKET',x:0,z:32},{id:'club',name:'NEON CLUB',x:32,z:0},{id:'yard',name:'INDUSTRIAL YARD',x:0,z:-32},{id:'tower',name:'UPTOWN BROKER',x:-32,z:0}];
