@@ -148,16 +148,22 @@ export class CrimeWorld{
   const g=new THREE.Group();g.position.set(cx*96,0,cz*96);this.root.add(g);
   const walls:Wall[]=[],props:Prop[]=[];
   box(g,48,-.22,48,96,.35,96,ground);
-  // Three cross-town and three north-south streets per chunk: exact matching seams.
+  // Three cross-town and north-south streets per chunk, no fog-dependent horizon.
+  // Each group of 36 lane markers is ONE draw call, not 36 separate tiny meshes.
+  const laneN=new THREE.InstancedMesh(new THREE.BoxGeometry(.16,.016,3),lineYellow,36);
+  const laneE=new THREE.InstancedMesh(new THREE.BoxGeometry(3,.016,.16),lineYellow,36);
+  const dummy=new THREE.Object3D();let n=0;
   for(let k=0;k<3;k++){
    const p=k*32;
    box(g,p,-.007,48,11.5,.06,96,asphalt);
    box(g,48,-.003,p,96,.06,11.5,asphalt);
    for(let t=0;t<96;t+=8){
-    box(g,p,.033,t+3,.16,.016,3,lineYellow);
-    box(g,t+3,.035,p,3,.016,.16,lineYellow);
+    dummy.position.set(p,.033,t+3);dummy.updateMatrix();laneN.setMatrixAt(n,dummy.matrix);
+    dummy.position.set(t+3,.035,p);dummy.updateMatrix();laneE.setMatrixAt(n,dummy.matrix);n++;
    }
   }
+  laneN.instanceMatrix.needsUpdate=true;laneE.instanceMatrix.needsUpdate=true;
+  laneN.userData.chunkGeometry=true;laneE.userData.chunkGeometry=true;g.add(laneN,laneE);
   for(let a=0;a<3;a++)for(let b=0;b<3;b++){
    const x=a*32+16,z=b*32+16,seed=hash(cx*3+a,cz*3+b);
    box(g,x,-.002,z,18,.10,18,walk);
