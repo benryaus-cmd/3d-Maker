@@ -110,6 +110,7 @@ export class CrimeWorld{
  readonly root=new THREE.Group();readonly map=new Map<string,Chunk>();readonly walls:Wall[]=[];
  readonly markers=new Map<string,THREE.Mesh>();
  readonly interior=new THREE.Group();
+ readonly propertyUpgrades=new THREE.Group();
  readonly props:Prop[]=[];
  readonly sky=new THREE.HemisphereLight(0xc7d7ef,0x394033,2.05);
  readonly sun=new THREE.DirectionalLight(0xffdcac,2.35);
@@ -265,6 +266,7 @@ export class CrimeWorld{
  }
  private makeInterior(){
   this.interior.position.set(10000,0,10000);
+  this.interior.add(this.propertyUpgrades);
   box(this.interior,0,-.1,0,16,.2,17,mat(0x5e5750));
   box(this.interior,0,1,-8.5,16,2,1,mat(0x343942));
   box(this.interior,-8,1,0,1,2,17,mat(0x45424a));
@@ -275,6 +277,45 @@ export class CrimeWorld{
   box(this.interior,4,.85,2,2,1.7,3.1,mat(0x41484a));
   box(this.interior,-2,.1,3,6,.1,4,mat(0x966850));
   const light=new THREE.PointLight(0xffd7a2,48,22);light.position.set(0,5,0);this.interior.add(light);
+ }
+ /** Real room dressing changes as money is invested in the property. */
+ setInteriorLevels(houseLevel:number,garageLevel:number){
+  const g=this.propertyUpgrades;
+  // Dynamic room furniture is rebuilt only on purchase, never every frame.
+  for(const child of [...g.children]){
+   g.remove(child);child.traverse(o=>{if(o instanceof THREE.Mesh){
+    o.geometry.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();
+   }});
+  }
+  const create=(x:number,y:number,z:number,w:number,h:number,d:number,color:number)=>box(g,x,y,z,w,h,d,mat(color));
+  // Functional garage workbench, laptop and money safe, then higher-end upgrades.
+  if(garageLevel>=1){
+   create(3,.48,5,3.8,.96,1.2,0x494646);create(3,1.06,5,3.6,.15,1.5,0x96918a);
+   create(4.3,1.35,5,.9,.6,.09,0x344a54);
+  }
+  if(garageLevel>=2){
+   create(6,1,1,.35,2.0,.35,0xc18532);create(7,1,1,.35,2.0,.35,0xc18532);
+   create(6.5,2.04,1,2.1,.2,.45,0xd6b076);
+   create(6.5,.12,1,2.4,.19,4.6,0x4b555d);
+  }
+  if(garageLevel>=3){
+   create(5,2.55,-4,2,.22,1,0xf1c266);create(5,1.9,-4,1.5,1,.2,0x40494c);
+   create(3,.4,5.85,4,.3,.2,0x446a52);
+  }
+  if(houseLevel>=1){
+   create(-5.5,.45,4,2.8,.9,1.1,0x733f35);create(-4.2,.52,4.65,1.1,1,.65,0x9e756d);
+   create(-4.8,.18,1.3,4,.12,2.8,0x856c52);
+  }
+  if(houseLevel>=2){
+   create(-4,2.1,-7.9,5,2.2,.22,0x232d3f);
+   create(-4,2.1,-7.72,4.5,1.7,.14,0x2f7180);
+   create(-6,1,-6.7,.9,2.0,.9,0x252b30);
+  }
+  if(houseLevel>=3){
+   create(-6.5,1.8,-1.3,.18,3.4,.18,0xd4a05a);
+   create(-6.5,3.4,-1.3,2.4,.18,1.3,0xf9cd8e);
+   const lamp=new THREE.PointLight(0x90b0ff,12,12);lamp.position.set(-4.2,2.3,-3);g.add(lamp);
+  }
  }
  render(){this.renderer.render(this.scene,this.camera);}
  dispose(){this.disposed=true;this.map.forEach(c=>c.group.removeFromParent());this.map.clear();this.renderer.dispose();this.renderer.domElement.remove();this.interior.removeFromParent();this.markers.forEach(o=>o.removeFromParent());}
