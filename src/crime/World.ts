@@ -20,7 +20,9 @@ const box=(parent:THREE.Object3D,x:number,y:number,z:number,w:number,h:number,d:
 const hash=(x:number,z:number)=>((Math.imul(x+2903,73856093)^Math.imul(z+9851,19349663))>>>0);
 const rand=(seed:number)=>((Math.imul(seed,1664525)+1013904223)>>>0)/4294967296;
 function fitted(root:THREE.Group,targetX:number,targetY:number,targetZ:number):THREE.Group{
- const model=root.clone(true);const bb=new THREE.Box3().setFromObject(model),size=bb.getSize(new THREE.Vector3());
+ const model=root.clone(true);
+ model.traverse(o=>{if(o instanceof THREE.Mesh)o.userData.sharedGeometry=true;});
+ const bb=new THREE.Box3().setFromObject(model),size=bb.getSize(new THREE.Vector3());
  if(size.x>size.z*1.25)model.rotation.y=Math.PI/2;
  model.updateMatrixWorld(true);
  const b=new THREE.Box3().setFromObject(model),s=b.getSize(new THREE.Vector3());
@@ -182,19 +184,23 @@ export class CrimeWorld{
   }
   const c={group:g,walls,props};return c;
  }
- /** Chunks are 96m; 3x3 or 4x4 loaded depending on camera/velocity. */
+ /** Only chunks touching the visible footprint plus a 34m collision safety margin are instantiated.
+  * Quantized refresh makes unloading stable while crossing local street blocks. */
  stream(x:number,z:number){
-  const cx=Math.floor(x/96),cz=Math.floor(z/96);if(cx===this.lastcx&&cz===this.lastcz)return;
-  this.lastcx=cx;this.lastcz=cz;
+  const qx=Math.floor(x/16),qz=Math.floor(z/16);if(qx===this.lastcx&&qz===this.lastcz)return;
+  this.lastcx=qx;this.lastcz=qz;
   const wanted=new Set<string>();
-  for(let dx=-1;dx<=1;dx++)for(let dz=-1;dz<=1;dz++){
-   const key=(cx+dx)+':'+(cz+dz);wanted.add(key);
-   if(!this.map.has(key))this.map.set(key,this.makeChunk(cx+dx,cz+dz));
+  const cameraDepth=Math.max(42,25/Math.max(.45,this.w/this.h));
+  const radiusX=27+34,radiusZ=cameraDepth+26;
+  for(let cx=Math.floor((x-radiusX)/96);cx<=Math.floor((x+radiusX)/96);cx++)
+   for(let cz=Math.floor((z-radiusZ)/96);cz<=Math.floor((z+radiusZ)/96);cz++){
+   const key=cx+':'+cz;wanted.add(key);
+   if(!this.map.has(key))this.map.set(key,this.makeChunk(cx,cz));
   }
   for(const [k,c]of this.map)if(!wanted.has(k)){
    this.root.remove(c.group);
    c.props.forEach(p=>{const i=this.props.indexOf(p);if(i>=0)this.props.splice(i,1);});
-   c.group.traverse(o=>{if(o instanceof THREE.Mesh && o.name!=='loaded-body')o.geometry.dispose();});
+   c.group.traverse(o=>{if(o instanceof THREE.Mesh && !o.userData.sharedGeometry)o.geometry.dispose();});
    this.map.delete(k);
   }
   this.walls.length=0;this.map.forEach(c=>this.walls.push(...c.walls));
@@ -215,7 +221,8 @@ export class CrimeWorld{
   return null;
  }
  follow(x:number,z:number,speed:number,heading:number,dt:number,interior=false){
-  if(interior){this.root.visible=false;this.interior.visible=true;this.cameraFocus.lerp(new THREE.Vector3(10000,0,10000),Math.min(1,dt*7));this.camera.position.set(this.cameraFocus.x,36,this.cameraFocus.z+11);this.camera.lookAt(this.cameraFocus.x,0,this.cameraFocus.z);this.camera.zoom=1.35;this.camera.updateProjectionMatrix();return;}
+  if(interior){this.root.visible=false;this.interior.visible=true;this.cameraFocus.set(10000,0,10000);this.camera.position.set(this.cameraFocus.x,36,this.cameraFocus.z+11);this.camera.lookAt(this.cameraFocus.x,0,this.cameraFocus.z);this.camera.zoom=1.35;this.camera.updateProjectionMatrix();return;}
+  if(this.interior.visible)this.cameraFocus.set(x,0,z);
   this.root.visible=true;this.interior.visible=false;
   const fwd=new THREE.Vector3(Math.sin(heading)*Math.min(speed*.18,8),0,Math.cos(heading)*Math.min(speed*.18,8));
   this.cameraFocus.lerp(new THREE.Vector3(x+fwd.x,0,z+fwd.z),Math.min(1,dt*4.6));
