@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {crimeAssetURL} from './assets';
 import {type CarState,type Wall} from './vehiclePhysics';
 
 type Prop={root:THREE.Group;wall:Wall;velX:number;velZ:number;life:number};
@@ -9,10 +10,10 @@ const carPaths=['sedan','sedan-sports','police','taxi','suv','race'] as const;
 export type CarStyle=typeof carPaths[number];
 const buildingPaths=['building-a','building-b','building-c','building-d','building-skyscraper-a'] as const;
 const streetPaths=['dumpster','construction-barrier','construction-fence','light-curved','traffic-light','road-sign-stop','road-sign-warning','construction-cone','electricity-pole'] as const;
-const base=import.meta.env.BASE_URL+'assets/crime/';
+// All referenced models are Vite-bundled so the Aippy host need not expose upstream/public.
 const assets=new Map<string,Promise<THREE.Group>>();
 function getModel(path:string):Promise<THREE.Group>{
- let promise=assets.get(path);if(!promise){promise=loader.loadAsync(base+path).then(r=>r.scene);assets.set(path,promise);}return promise;
+ let promise=assets.get(path);if(!promise){promise=loader.loadAsync(crimeAssetURL(path)).then(r=>r.scene);assets.set(path,promise);}return promise;
 }
 // Share per-colour materials between streamed blocks, instead of leaking a new GPU
 // material each time a 96m city chunk is built or recycled.
