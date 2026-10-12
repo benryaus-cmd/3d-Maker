@@ -13,7 +13,7 @@ const CAR_TUNES:Record<CarStyle,Partial<CarTune>>={
  suv:{power:9100,topSpeed:43,mass:2030,durability:160,grip:.9},
  race:{power:16000,topSpeed:68,grip:1.34,mass:1030,durability:85}
 };
-type Actor={car:CarState;mesh:THREE.Group;type:'police'|'traffic';style:CarStyle;routeX:number;routeZ:number;repath:number;alert:number;stuck:number;lastX:number;lastZ:number};
+type Actor={car:CarState;mesh:THREE.Group;type:'police'|'traffic'|'racer';style:CarStyle;routeX:number;routeZ:number;repath:number;alert:number;stuck:number;lastX:number;lastZ:number};
 type Ped={mesh:THREE.Group;x:number;z:number;vx:number;vz:number;panic:number;down:number;alive:boolean;bleed:THREE.Mesh|null};
 type Radar={player:[number,number];cops:[number,number][];traffic:[number,number][];people:[number,number][];target:[number,number]|null};
 type UI={speed:number;hp:number;heat:number;cash:number;nitro:number;mission:string;objective:string;message:string;area:string;near:string|null;mode:'campaign'|'freeroam';house:boolean;notice:string;radar:Radar;cargo:number};
@@ -110,6 +110,7 @@ class EmpireEngine{
  actors:Actor[]=[];people:Ped[]=[];private sound=new Sound();private alive=true;private raf=0;private prev=performance.now();private acc=0;private gameTime=0;private displayAt=0;private saveAt=0;private noticeUntil=0;
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private npcDamage=new WeakMap<Actor,number>();private currentCarStyle:CarStyle;
+ private raceRival:Actor|null=null;private raceTime=0;private rivalStep=1;
  constructor(el:HTMLDivElement,private controls:Controls,private onUpdate:(v:UI)=>void){
   this.save=readSave();this.player=newCar(this.save.x,this.save.z,this.save.heading,this.save.carHP);
   Object.assign(this.player,{damageFront:this.save.carDamage.front,damageRear:this.save.carDamage.rear,damageLeft:this.save.carDamage.left,damageRight:this.save.carDamage.right});
@@ -134,8 +135,8 @@ class EmpireEngine{
  unlock(){this.sound.start();}
  notice(s:string){this.message=s;this.noticeUntil=this.gameTime+3.5;this.publish();}
  private crime(heat:number){this.save.heat=clamp(this.save.heat+heat,0,5);this.lastCrimeAt=this.gameTime;}
- private makeActor(type:'police'|'traffic',x:number,z:number):Actor{
-  const style:CarStyle=type==='police'?'police':(['taxi','sedan-sports','suv','sedan'] as CarStyle[])[Math.floor(Math.random()*4)];
+ private makeActor(type:'police'|'traffic'|'racer',x:number,z:number):Actor{
+  const style:CarStyle=type==='police'?'police':type==='racer'?'race':(['taxi','sedan-sports','suv','sedan'] as CarStyle[])[Math.floor(Math.random()*4)];
   const car=newCar(x,z,Math.round(Math.random()*3)*Math.PI/2,100);
   const mesh=createCarVisual(style,colours[Math.floor(Math.random()*colours.length)]);this.world.scene.add(mesh);
   const a={car,mesh,type,style,routeX:cell(x),routeZ:cell(z),repath:0,alert:0,stuck:0,lastX:x,lastZ:z};this.actors.push(a);return a;
@@ -164,8 +165,30 @@ class EmpireEngine{
    }
   }
  }
+ private finishRace(){
+  if(this.raceRival){
+   this.raceRival.mesh.userData.disposed=true;this.raceRival.mesh.removeFromParent();
+   this.actors=this.actors.filter(a=>a!==this.raceRival);
+  }
+  this.raceRival=null;this.raceTime=0;this.rivalStep=1;
+ }
  private steerActor(a:Actor,dt:number){
   const s=a.car,dist=Math.hypot(this.player.x-s.x,this.player.z-s.z);
+  if(a.type==='racer'){
+   const targets:[[number,number],[number,number],[number,number]]=[[32,0],[32,-32],[0,-32]];
+   const [tx,tz]=targets[Math.min(2,this.rivalStep-1)];
+   if(Math.hypot(s.x-tx,s.z-tz)<6){this.rivalStep++;}
+   const [goalX,goalZ]=targets[Math.min(2,this.rivalStep-1)];
+   const angle=Math.atan2(goalX-s.x,goalZ-s.z),error=wrap(angle-s.heading);
+   drive(s,{
+    throttle:Math.abs(error)>1.15?.36:.72,
+    brake:Math.abs(error)>1.65?.48:0,
+    steer:clamp(error*2.5,-1,1),
+    handbrake:Math.abs(error)>1.23&&speed(s)>12,
+    nitro:false
+   },dt,engineTune('race',{engine:0,tires:0,brakes:0,armor:0}));
+   return;
+  }
   if(a.type==='police'){a.alert=this.gameTime;a.repath-=dt;}
   if(a.type==='traffic'&&Math.hypot(a.routeX-s.x,a.routeZ-s.z)<5)a.repath=0;
   if(a.repath<=0){
@@ -275,7 +298,27 @@ class EmpireEngine{
    if(nearestCop>24||this.house)this.save.heat=Math.max(0,this.save.heat-dt*(this.house?.2:.08));
   }
   if(this.save.heat<.05)this.save.heat=0;
+  const beforeMission=this.save.mission;
   const mission=missionUpdate(this.save,here.x,here.z,this.save.heat);if(mission)this.notice(mission);
+  // Street-racing campaign mission is won on real checkpoints, against an actual
+  // simulated AI rival and a strict deadline, not by opening a menu.
+  if(beforeMission===2&&this.save.mode==='campaign'){
+   if(this.save.mission!==2){this.finishRace();}
+   else{
+    if(this.save.missionStep===1&&!this.raceRival){
+     this.raceRival=this.makeActor('racer',this.player.x-2.5,this.player.z-3.2);
+     this.raceRival.car.heading=Math.PI/2;this.raceTime=0;this.rivalStep=1;
+     this.notice('RACE START · FIRST TO INDUSTRIAL YARD WINS');
+    }
+    if(this.raceRival){
+     this.raceTime+=dt;
+     if(this.rivalStep>3||this.raceTime>65){
+      this.save.missionStep=0;this.finishRace();
+      this.notice('RACE LOST · RESTART AT FIRST CHECKPOINT');
+     }
+    }
+   }
+  }else if(this.raceRival)this.finishRace();
   const marker=missionMarker(this.save),m=this.world.markers.get('mission');
   if(m){m.visible=!!marker;if(marker)m.position.set(marker.x,.21,marker.z);}
   this.world.tickProps(dt);
@@ -324,7 +367,7 @@ class EmpireEngine{
  }
  setMenuOpen(open:boolean){this.menuOpen=open;if(open)clearInputs(this.controls);this.sound.muted=this.paused||open||this.house;}
  togglePause(){this.paused=!this.paused;clearInputs(this.controls);this.sound.muted=this.paused||this.menuOpen||this.house;this.publish();}
- setMode(mode:'campaign'|'freeroam'){this.save.mode=mode;this.saveNow();this.notice(mode==='campaign'?'CAMPAIGN RESUMED':'FREE ROAM · NO STORY REQUIREMENTS');}
+ setMode(mode:'campaign'|'freeroam'){this.save.mode=mode;if(mode==='freeroam')this.finishRace();this.saveNow();this.notice(mode==='campaign'?'CAMPAIGN RESUMED':'FREE ROAM · NO STORY REQUIREMENTS');}
  action(){
   this.unlock();
   if(this.house){this.house=false;this.paused=false;this.notice('BACK ON THE STREET');return;}
