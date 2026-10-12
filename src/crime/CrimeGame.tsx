@@ -2,7 +2,7 @@ import {useEffect,useRef,useState,type PointerEvent as RP} from 'react';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {clone as cloneSkinned} from 'three/examples/jsm/utils/SkeletonUtils.js';
-import {CrimeWorld,createCarVisual,renderCar,showCarDamage,applyCarCosmetics,type CarStyle} from './World';
+import {CrimeWorld,createCarVisual,renderCar,showCarDamage,applyCarCosmetics,disposeCarVisual,type CarStyle} from './World';
 import {BASE_TUNE,axes,drive,newCar,collideWall,collideCars,kmh,speed,tuneWithMods,type CarState,type CarTune,type DriverInput} from './vehiclePhysics';
 import {readSave,saveGame,initial,MARKETS,GOODS,MISSIONS,quote,trade,missionUpdate,missionMarker,buyUpgrade,buyCar,cargoCount,cargoCap,activeBuild,type GameSave,type Commodity,type Mods} from './Systems';
 import './crime.css';
@@ -207,7 +207,7 @@ class EmpireEngine{
  }
  private finishRace(){
   if(this.raceRival){
-   this.raceRival.mesh.userData.disposed=true;this.raceRival.mesh.removeFromParent();
+   disposeCarVisual(this.raceRival.mesh);
    this.actors=this.actors.filter(a=>a!==this.raceRival);
   }
   this.raceRival=null;this.raceTime=0;this.rivalStep=1;
@@ -371,11 +371,11 @@ class EmpireEngine{
   const marker=missionMarker(this.save),m=this.world.markers.get('mission');
   if(m){m.visible=!!marker;if(marker)m.position.set(marker.x,.21,marker.z);}
   this.world.tickProps(dt);
-  if(this.gameTime-this.lastCrimeAt>5)this.npcSpawn();
+  this.npcSpawn(); // Populate/dispatch regardless of how recently a crime occurred.
   // Separate visual and simulation; actors >camera radius still retain minimal logic.
   const sight=100;this.actors=this.actors.filter(a=>{
    if(Math.hypot(a.car.x-here.x,a.car.z-here.z)>sight&&(a.type==='traffic'||this.save.heat===0)){
-    a.mesh.userData.disposed=true;a.mesh.removeFromParent();return false;
+    disposeCarVisual(a.mesh);return false;
    }return true;
   });
   this.people=this.people.filter(p=>{
@@ -434,7 +434,7 @@ class EmpireEngine{
   this.notice('SLOW DOWN BEFORE EXITING');
  }
  private rebuildPlayerVisual(){
-  this.mesh.userData.disposed=true;this.mesh.removeFromParent();
+  disposeCarVisual(this.mesh);
   const build=activeBuild(this.save);
   this.mesh=createCarVisual(this.save.car,build.paint);
   this.world.scene.add(this.mesh);
@@ -488,8 +488,8 @@ class EmpireEngine{
  getPrice(market:string,good:Commodity){return quote(market,good,this.gameTime);}
  dispose(){this.alive=false;cancelAnimationFrame(this.raf);this.saveNow();clearInputs(this.controls);
   document.removeEventListener('visibilitychange',this.visibility);window.removeEventListener('pagehide',this.saveNow);window.removeEventListener('resize',this.resize);
-  this.sound.dispose();this.actors.forEach(a=>a.mesh.removeFromParent());this.people.forEach(p=>{p.mesh.removeFromParent();p.bleed?.removeFromParent();});
-  this.mesh.userData.disposed=true;this.mesh.removeFromParent();this.footMesh.removeFromParent();this.world.dispose();}
+  this.sound.dispose();this.actors.forEach(a=>disposeCarVisual(a.mesh));this.people.forEach(p=>{p.mesh.removeFromParent();p.bleed?.removeFromParent();});
+  disposeCarVisual(this.mesh);this.footMesh.removeFromParent();this.world.dispose();}
 }
 function ControlButton({label,field,controls,engine,className=''}:{label:string;field:keyof Controls;controls:React.MutableRefObject<Controls>;engine:React.MutableRefObject<EmpireEngine|null>;className?:string}){
  const down=(e:RP<HTMLButtonElement>)=>{e.preventDefault();e.stopPropagation();e.currentTarget.setPointerCapture(e.pointerId);(controls.current as unknown as Record<string,boolean>)[field]=true;engine.current?.unlock();};
