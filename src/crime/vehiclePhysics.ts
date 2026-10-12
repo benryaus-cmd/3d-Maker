@@ -61,26 +61,68 @@ export function impact(s:CarState,nx:number,nz:number,relativeSpeed:number,wall?
  s.lastImpact=relativeSpeed;
  return {speed:relativeSpeed,nx,nz,side,wall};
 }
-/** Circle-against-AABB chassis proxy at urban top-down scale; collision is not visual-only. */
-export function collideWall(s:CarState,w:Wall,r=1.17,t:CarTune=BASE_TUNE):Contact|null{
+/** Collision hull is a 2.2m x 4.5m oriented rectangle, not a tiny radius centred on the car.
+ * SAT along car/wall axes prevents bonnets and rear bumpers penetrating scenery. */
+type Vec={x:number;z:number};
+type Hull={x:number;z:number;rx:number;rz:number;fx:number;fz:number;halfW:number;halfL:number};
+const carHull=(s:CarState):Hull=>{const a=axes(s.heading);return {x:s.x,z:s.z,...a,halfW:1.10,halfL:2.25};};
+function projectHalf(h:Hull,axis:Vec):number {
+ return h.halfW*Math.abs(h.rx*axis.x+h.rz*axis.z)+h.halfL*Math.abs(h.fx*axis.x+h.fz*axis.z);
+}
+function sat(h1:Hull,h2:Hull,axesList:Vec[]):{nx:number;nz:number;depth:number}|null{
+ let depth=Infinity,nx=0,nz=0;
+ for(const axis of axesList){
+  const proj1=projectHalf(h1,axis),proj2=projectHalf(h2,axis);
+  const distance=(h1.x-h2.x)*axis.x+(h1.z-h2.z)*axis.z;
+  const overlap=proj1+proj2-Math.abs(distance);
+  if(overlap<=0)return null;
+  if(overlap<depth){depth=overlap;const sign=distance>=0?1:-1;nx=axis.x*sign;nz=axis.z*sign;}
+ }
+ return {nx,nz,depth};
+}
+export function collideWall(s:CarState,w:Wall,_r=1.17,t:CarTune=BASE_TUNE):Contact|null{
  if(w.broken)return null;
- const minx=w.x-w.w/2,maxx=w.x+w.w/2,minz=w.z-w.d/2,maxz=w.z+w.d/2;
- const px=limit(s.x,minx,maxx),pz=limit(s.z,minz,maxz),dx=s.x-px,dz=s.z-pz;
- const d2=dx*dx+dz*dz;if(d2>=r*r)return null;
- let nx=0,nz=0,push=0;
- if(d2>1e-8){const d=Math.sqrt(d2);nx=dx/d;nz=dz/d;push=r-d;}
- else {const edges=[{d:s.x-minx,nx:-1,nz:0},{d:maxx-s.x,nx:1,nz:0},{d:s.z-minz,nx:0,nz:-1},{d:maxz-s.z,nx:0,nz:1}].sort((a,b)=>a.d-b.d);nx=edges[0].nx;nz=edges[0].nz;push=r+edges[0].d;}
- const incoming=Math.max(0,-(s.vx*nx+s.vz*nz));
- s.x+=nx*push;s.z+=nz*push;
- if(incoming>0){s.vx+=nx*incoming*1.32;s.vz+=nz*incoming*1.32;s.yawRate+=(-nz*Math.sin(s.heading)+nx*Math.cos(s.heading))*incoming*.032;}
- if(incoming>.3){const hit=impact(s,-nx,-nz,incoming,w,t); if(w.breakable&&incoming>4.5)w.broken=true;return hit;}
+ // Broadphase prevents SAT work for distant buildings.
+ if(Math.abs(s.x-w.x)>w.w/2+2.8||Math.abs(s.z-w.z)>w.d/2+2.8)return null;
+ const car=carHull(s);
+ const wall:Hull={x:w.x,z:w.z,rx:1,rz:0,fx:0,fz:1,halfW:w.w/2,halfL:w.d/2};
+ const h=sat(car,wall,[{x:1,z:0},{x:0,z:1},{x:car.rx,z:car.rz},{x:car.fx,z:car.fz}]);
+ if(!h)return null;
+ const incoming=Math.max(0,-(s.vx*h.nx+s.vz*h.nz));
+ // Breakable furniture gets displaced rather than rigidly repelling a 1.3-ton car.
+ const smashed=!!w.breakable&&incoming>4.5;
+ if(smashed)w.broken=true;
+ s.x+=h.nx*(h.depth+.001);s.z+=h.nz*(h.depth+.001);
+ if(incoming>0){
+  const restitution=smashed?.18:1.15;
+  s.vx+=h.nx*incoming*restitution;s.vz+=h.nz*incoming*restitution;
+  // Side-loaded impacts twist vehicle around a heavier contact point.
+  s.yawRate=limit(s.yawRate+(-h.nz*Math.sin(s.heading)+h.nx*Math.cos(s.heading))*incoming*.026,-3.5,3.5);
+ }
+ if(incoming>.3)return impact(s,-h.nx,-h.nz,incoming,w,t);
  return null;
 }
+/** Two full-body oriented chassis use separating-axis collision and mass-weighted impulse. */
 export function collideCars(a:CarState,b:CarState,ta:CarTune=BASE_TUNE,tb:CarTune=BASE_TUNE):[Contact,Contact]|null{
- const dx=b.x-a.x,dz=b.z-a.z,d=Math.hypot(dx,dz),radius=2.2;if(d>=radius)return null;
- const nx=d>1e-6?dx/d:1,nz=d>1e-6?dz/d:0,overlap=(radius-d)/2;
- a.x-=nx*overlap;b.x+=nx*overlap;a.z-=nz*overlap;b.z+=nz*overlap;
- const rel=(a.vx-b.vx)*nx+(a.vz-b.vz)*nz;
- if(rel>0){const ia=1/ta.mass,ib=1/tb.mass,imp=1.12*rel/(ia+ib);a.vx-=nx*imp*ia;a.vz-=nz*imp*ia;b.vx+=nx*imp*ib;b.vz+=nz*imp*ib;}
- return [impact(a,nx,nz,Math.max(0,rel),undefined,ta),impact(b,-nx,-nz,Math.max(0,rel),undefined,tb)];
+ const dx=b.x-a.x,dz=b.z-a.z;
+ if(Math.abs(dx)>5.2||Math.abs(dz)>5.2)return null;
+ const ah=carHull(a),bh=carHull(b);
+ const h=sat(ah,bh,[
+  {x:ah.rx,z:ah.rz},{x:ah.fx,z:ah.fz},
+  {x:bh.rx,z:bh.rz},{x:bh.fx,z:bh.fz}
+ ]);
+ if(!h)return null;
+ const ia=1/Math.max(1,ta.mass),ib=1/Math.max(1,tb.mass),total=ia+ib;
+ a.x+=h.nx*(h.depth+.001)*ia/total;a.z+=h.nz*(h.depth+.001)*ia/total;
+ b.x-=h.nx*(h.depth+.001)*ib/total;b.z-=h.nz*(h.depth+.001)*ib/total;
+ // h normal points from B -> A. Positive incoming means moving together.
+ const approaching=Math.max(0,(b.vx-a.vx)*h.nx+(b.vz-a.vz)*h.nz);
+ if(approaching>0){
+  const impulse=1.12*approaching/total;
+  a.vx+=h.nx*impulse*ia;a.vz+=h.nz*impulse*ia;
+  b.vx-=h.nx*impulse*ib;b.vz-=h.nz*impulse*ib;
+  a.yawRate=limit(a.yawRate+approaching*.018*(-h.nz*ah.fx+h.nx*ah.fz),-3,3);
+  b.yawRate=limit(b.yawRate-approaching*.018*(-h.nz*bh.fx+h.nx*bh.fz),-3,3);
+ }
+ return [impact(a,-h.nx,-h.nz,approaching,undefined,ta),impact(b,h.nx,h.nz,approaching,undefined,tb)];
 }
