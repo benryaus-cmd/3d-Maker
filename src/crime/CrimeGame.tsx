@@ -1,6 +1,7 @@
 import {useEffect,useRef,useState,type PointerEvent as RP} from 'react';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {crimeAssetURL} from './assets';
 import {clone as cloneSkinned} from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {CrimeWorld,createCarVisual,renderCar,showCarDamage,applyCarCosmetics,disposeCarVisual,type CarStyle} from './World';
 import {BASE_TUNE,axes,drive,newCar,collideWall,collideCars,kmh,speed,tuneWithMods,type CarState,type CarTune,type DriverInput} from './vehiclePhysics';
@@ -30,7 +31,7 @@ const personSources=new Map<string,Promise<PersonAsset>>();
 const personLoader=new GLTFLoader();
 function getPerson(id:string):Promise<PersonAsset>{
  let load=personSources.get(id);if(!load){
-  load=personLoader.loadAsync(import.meta.env.BASE_URL+'assets/characters/'+id+'.glb')
+  load=personLoader.loadAsync(crimeAssetURL('characters/'+id+'.glb'))
     .then(glb=>({scene:glb.scene,animations:glb.animations}));
   personSources.set(id,load);
  }
@@ -51,7 +52,7 @@ class Sound{
  private impactSamples:HTMLAudioElement[]=[];private activeImpacts=new Set<HTMLAudioElement>();
  muted=false;lastHit=0;
  private makeLoop(file:string):HTMLAudioElement{
-  const a=new Audio(import.meta.env.BASE_URL+'assets/crime/audio/'+file);a.loop=true;a.preload='auto';a.volume=0;return a;
+  const a=new Audio(crimeAssetURL('audio/'+file));a.loop=true;a.preload='auto';a.volume=0;return a;
  }
  start(){
   if(this.ctx){void this.ctx.resume();this.resumeSamples();return;}
@@ -98,7 +99,7 @@ class Sound{
  }
  hit(strength:number){
   if(this.muted||performance.now()-this.lastHit<120)return;this.lastHit=performance.now();
-  const a=new Audio(import.meta.env.BASE_URL+'assets/crime/audio/impact.ogg');
+  const a=new Audio(crimeAssetURL('audio/impact.ogg'));
   a.volume=clamp(.24+strength*.019,.24,.78);a.playbackRate=clamp(.8+Math.random()*.35,.7,1.25);
   this.activeImpacts.add(a);a.addEventListener('ended',()=>{a.removeAttribute('src');this.activeImpacts.delete(a);},{once:true});
   void a.play().catch(()=>{this.activeImpacts.delete(a);});
