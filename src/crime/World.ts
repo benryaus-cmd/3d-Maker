@@ -113,6 +113,21 @@ export function applyCarCosmetics(root:THREE.Group,options:{paint:number;spoiler
   p.rotation.x=-Math.PI/2;p.position.y=.065;glow.add(p);root.add(glow);
  }
 }
+/** Dispose per-car meshes and copied paint without invalidating shared model/texture caches. */
+export function disposeCarVisual(root:THREE.Group){
+ root.userData.disposed=true;root.removeFromParent();
+ const ownedMaterials=new Set<THREE.Material>();
+ root.traverse(obj=>{
+  if(!(obj instanceof THREE.Mesh))return;
+  if(!obj.userData.sharedGeometry)obj.geometry.dispose();
+  const materials=Array.isArray(obj.material)?obj.material:[obj.material];
+  if(obj.userData.ownPaint)for(const material of materials)ownedMaterials.add(material);
+  // Transparent neon is uniquely allocated for each player car.
+  if(obj.parent?.name==='custom-neon')for(const material of materials)ownedMaterials.add(material);
+ });
+ for(const material of ownedMaterials)material.dispose();
+ root.clear();
+}
 /** Visibly deform actual GLB mesh vertices in the direction of the collision. */
 export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;left:number;right:number}){
  root.userData.currentDamage={...damage};
@@ -121,7 +136,7 @@ export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;
   model.traverse(o=>{
    if(!(o instanceof THREE.Mesh))return;
    if(!o.userData.damagePositions){
-    o.geometry=o.geometry.clone();
+    o.geometry=o.geometry.clone();o.userData.sharedGeometry=false;
     o.userData.damagePositions=new Float32Array((o.geometry.getAttribute('position') as THREE.BufferAttribute).array);
    }
    const attr=o.geometry.getAttribute('position') as THREE.BufferAttribute,initial=o.userData.damagePositions as Float32Array;
