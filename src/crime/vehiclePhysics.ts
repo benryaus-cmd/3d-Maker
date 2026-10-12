@@ -4,7 +4,7 @@
 export type DriverInput={throttle:number;brake:number;steer:number;handbrake:boolean;nitro:boolean;reverse?:boolean};
 export type CarTune={mass:number;power:number;grip:number;brakeForce:number;steerLock:number;drag:number;wheelbase:number;topSpeed:number;durability:number};
 export type CarState={x:number;z:number;heading:number;vx:number;vz:number;yawRate:number;steerAngle:number;hp:number;damageFront:number;damageRear:number;damageLeft:number;damageRight:number;nitro:number;odometer:number;lastImpact:number;throttlePedal?:number;brakePedal?:number;longitudinalAccel?:number;reverseEngaged?:boolean};
-export type Wall={x:number;z:number;w:number;d:number;breakable?:boolean;broken?:boolean;kind?:string};
+export type Wall={x:number;z:number;w:number;d:number;breakable?:boolean;broken?:boolean;kind?:string;mass?:number;hitThreshold?:number};
 export type Contact={speed:number;nx:number;nz:number;side:'front'|'rear'|'left'|'right';wall?:Wall};
 export const BASE_TUNE:CarTune={mass:1320,power:8200,grip:1.05,brakeForce:11700,steerLock:.60,drag:.42,wheelbase:2.7,topSpeed:49,durability:100};
 const limit=(x:number,a:number,b:number)=>Math.min(b,Math.max(a,x));
@@ -124,6 +124,11 @@ function sat(h1:Hull,h2:Hull,axesList:Vec[]):{nx:number;nz:number;depth:number}|
  }
  return {nx,nz,depth};
 }
+/** Geometry-only overlap used when validating a saved stationary chassis. */
+export function carOverlapsWall(s:CarState,w:Wall):boolean{
+ if(w.broken)return false;const car=carHull(s),wall:Hull={x:w.x,z:w.z,rx:1,rz:0,fx:0,fz:1,halfW:w.w/2,halfL:w.d/2};
+ return !!sat(car,wall,[{x:1,z:0},{x:0,z:1},{x:car.rx,z:car.rz},{x:car.fx,z:car.fz}]);
+}
 export function collideWall(s:CarState,w:Wall,_r=1.17,t:CarTune=BASE_TUNE):Contact|null{
  if(w.broken)return null;
  // Broadphase prevents SAT work for distant buildings.
@@ -134,16 +139,17 @@ export function collideWall(s:CarState,w:Wall,_r=1.17,t:CarTune=BASE_TUNE):Conta
  if(!h)return null;
  const incoming=Math.max(0,-(s.vx*h.nx+s.vz*h.nz));
  // Breakable furniture gets displaced rather than rigidly repelling a 1.3-ton car.
- const smashed=!!w.breakable&&incoming>4.5;
+ const smashed=!!w.breakable&&incoming>(w.hitThreshold??4.5);
  if(smashed)w.broken=true;
  s.x+=h.nx*(h.depth+.001);s.z+=h.nz*(h.depth+.001);
  if(incoming>0){
-  const restitution=smashed?.18:1.15;
+  const propRatio=(w.mass??120)/(t.mass+(w.mass??120));
+  const restitution=smashed?Math.min(.42,propRatio+.025):1.15;
   s.vx+=h.nx*incoming*restitution;s.vz+=h.nz*incoming*restitution;
   // Side-loaded impacts twist vehicle around a heavier contact point.
   s.yawRate=limit(s.yawRate+(-h.nz*Math.sin(s.heading)+h.nx*Math.cos(s.heading))*incoming*.026,-3.5,3.5);
  }
- if(incoming>.3)return impact(s,-h.nx,-h.nz,incoming,w,t);
+ if(incoming>.3){const effective=smashed?incoming*Math.sqrt((w.mass??120)/(t.mass+(w.mass??120))):incoming;return {...impact(s,-h.nx,-h.nz,effective,w,t),speed:incoming};}
  return null;
 }
 /** Two full-body oriented chassis use separating-axis collision and mass-weighted impulse. */
@@ -171,3 +177,11 @@ export function collideCars(a:CarState,b:CarState,ta:CarTune=BASE_TUNE,tb:CarTun
  return [impact(a,-h.nx,-h.nz,approaching,undefined,ta),impact(b,h.nx,h.nz,approaching,undefined,tb)];
 }
 
+
+/** Clamp the actual oriented hull to the physical map perimeter, not its centre to an inset. */
+export function constrainCarToBounds(s:CarState,edge:number):void{
+ const c=Math.abs(Math.cos(s.heading)),a=Math.abs(Math.sin(s.heading));
+ const halfX=c*1.1+a*2.25,halfZ=a*1.1+c*2.25;
+ const x=limit(s.x,-edge+halfX,edge-halfX),z=limit(s.z,-edge+halfZ,edge-halfZ);
+ if(x!==s.x){s.x=x;s.vx*=-.12;}if(z!==s.z){s.z=z;s.vz*=-.12;}
+}

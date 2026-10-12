@@ -39,19 +39,46 @@ for(const [kind,[name,sha]] of Object.entries(sources)){
  assert.equal(rotated,CITY_ROAD_SOURCE_OPENINGS[kind].canonicalMask,`${name}: graph canonical openings`);
  console.log(`${kind}: source ${measured}, canonical ${rotated}, correction ${quarterTurns} quarter turns`);
 }
-const root=new THREE.Group();attachVehicleLights(root);attachVehicleLights(root);
-assert.equal(root.children.length,1,'attachment is idempotent');
-const group=root.children[0],beam=group.getObjectByName('headlight-footprint');
-const positions=beam.geometry.getAttribute('position');for(let i=0;i<positions.count;i++){assert.ok(positions.getZ(i)>2,'beam projects ahead of +Z front');assert.equal(Math.round(positions.getY(i)*1000),45,'footprint is grounded');}
-assert.ok(beam.material.transparent&&beam.material.depthTest&&!beam.material.depthWrite,'gradient never forms an opaque road overlay');
-updateVehicleLights(root,1,false);assert.ok(beam.visible&&beam.material.opacity>0);
-const tail=group.getObjectByName('taillamp'),running=tail.material.emissiveIntensity;updateVehicleLights(root,1,true);assert.ok(tail.material.emissiveIntensity>running,'braking intensifies tail lights');
-root.rotation.y=Math.PI/2;root.updateMatrixWorld(true);assert.ok(beam.localToWorld(new THREE.Vector3(0,.045,10)).x>9,'heading rotates forward footprint');
-const scene=new THREE.Scene();scene.add(root);const rig=new VehicleLightRig(scene);rig.update(root,1);
-assert.equal(scene.children.filter(o=>o instanceof THREE.SpotLight).length,2,'real lights are bounded');assert.ok(rig.lights.every(light=>light.target.position.x>light.position.x),'real headlights follow rotated heading');
-rig.update(null,1);assert.ok(rig.lights.every(light=>!light.visible),'on-foot player releases real illumination');rig.dispose();rig.dispose();assert.equal(scene.children.length,1,'rig removes light targets and lights');
-const geometryCounts=new Map(),materialCounts=new Map();let textureDisposals=0;
-group.traverse(o=>{if(!(o instanceof THREE.Mesh))return;if(!geometryCounts.has(o.geometry)){geometryCounts.set(o.geometry,0);o.geometry.addEventListener('dispose',()=>geometryCounts.set(o.geometry,geometryCounts.get(o.geometry)+1));}if(!materialCounts.has(o.material)){materialCounts.set(o.material,0);o.material.addEventListener('dispose',()=>materialCounts.set(o.material,materialCounts.get(o.material)+1));}});
-beam.material.map.addEventListener('dispose',()=>textureDisposals++);
-disposeVehicleLights(root);disposeVehicleLights(root);assert.equal(root.children.length,0);assert.ok([...geometryCounts.values(),...materialCounts.values(),textureDisposals].every(count=>count===1),'owned GPU resources disposed exactly once');
-console.log('Original GLB openings, canonical rotations, grounded beams, brake response and bounded light cleanup passed.');
+// Build all six actual GLB mesh hierarchies (without browser image decoding).
+function sourceCar(name){
+ const bytes=fs.readFileSync(new URL(`../src/crime/bundled/vehicles/${name}.glb`,import.meta.url)),length=bytes.readUInt32LE(12),json=JSON.parse(bytes.subarray(20,20+length)),bin=bytes.subarray(28+length);
+ const read=(id)=>{const a=json.accessors[id],v=json.bufferViews[a.bufferView],n={SCALAR:1,VEC2:2,VEC3:3}[a.type],size=a.componentType===5126?4:2;return {n,values:Array.from({length:a.count*n},(_,i)=>{const at=(v.byteOffset??0)+(a.byteOffset??0)+Math.floor(i/n)*(v.byteStride??n*size)+(i%n)*size;return a.componentType===5126?bin.readFloatLE(at):bin.readUInt16LE(at);})};};
+ const nodes=json.nodes.map(n=>{const p=json.meshes[n.mesh].primitives[0],g=new THREE.BufferGeometry();for(const [key,attr] of [['POSITION','position'],['TEXCOORD_0','uv']]){const a=read(p.attributes[key]);g.setAttribute(attr,new THREE.Float32BufferAttribute(a.values,a.n));}g.setIndex(read(p.indices).values);const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial());m.name=n.name;m.position.fromArray(n.translation??[0,0,0]);return m;});
+ json.nodes.forEach((n,i)=>n.children?.forEach(child=>nodes[i].add(nodes[child])));
+ const body=new THREE.Group();body.name='loaded-body';json.scenes[json.scene??0].nodes.forEach(i=>body.add(nodes[i]));body.updateMatrixWorld(true);
+ const b=new THREE.Box3().setFromObject(body),size=b.getSize(new THREE.Vector3());body.scale.set(2.2/size.x,Math.min(2.2/size.x,1.65/size.y,4.5/size.z),4.5/size.z);body.updateMatrixWorld(true);const fitted=new THREE.Box3().setFromObject(body),mid=fitted.getCenter(new THREE.Vector3());body.position.set(-mid.x,-fitted.min.y,-mid.z);
+ const root=new THREE.Group();root.add(body);return {root,body};
+}
+for(const name of ['sedan','sedan-sports','taxi','police','race','suv']){
+ const {root,body}=sourceCar(name);attachVehicleLights(root);attachVehicleLights(root);assert.equal(root.children.filter(c=>c.name==='custom-vehicle-lights').length,1);
+ updateVehicleLights(root,1,false);root.updateMatrixWorld(true);const group=root.getObjectByName('custom-vehicle-lights'),heads=[],tails=[],beams=[];group.traverse(o=>{if(o.name==='headlamp')heads.push(o);if(o.name==='taillamp')tails.push(o);if(o.name==='headlight-footprint')beams.push(o);});
+ assert.equal(heads.length,2,`${name}: two geometry-derived headlamps`);assert.equal(tails.length,2,`${name}: two geometry-derived tails`);
+ const bounds=new THREE.Box3().setFromObject(body);
+ for(const lamp of [...heads,...tails]){const p=lamp.geometry.getAttribute('position');if(name!=='race')assert.ok(p.count>=6,`${name}: ${lamp.name} ${p.count} vertices use source triangles instead of generic planes`);for(let i=0;i<p.count;i++){const v=lamp.localToWorld(new THREE.Vector3().fromBufferAttribute(p,i));assert.ok(bounds.clone().expandByScalar(1e-6).containsPoint(v),`${name}: lamp lies inside real hull`);}}
+ const running=tails[0].material.emissiveIntensity;updateVehicleLights(root,1,true);assert.ok(tails[0].material.emissiveIntensity>running,'braking brightens');updateVehicleLights(root,0,true);assert.equal(heads[0].material.emissiveIntensity,0);assert.ok(beams.every(b=>!b.visible));assert.ok(tails[0].material.emissiveIntensity>running,'daytime brakes brighten');
+ root.rotation.y=Math.PI/2;body.rotation.z=.1;body.rotation.x=.05;root.position.set(3,.13,-2);updateVehicleLights(root,1,false);root.updateMatrixWorld(true);
+ for(const beam of beams){assert.ok(beam.visible&&beam.material.transparent&&beam.material.depthTest&&!beam.material.depthWrite);const p=beam.geometry.getAttribute('position');for(let i=0;i<p.count;i++)assert.ok(Math.abs(beam.localToWorld(new THREE.Vector3().fromBufferAttribute(p,i)).y-.045)<1e-6,'grounded regardless of pitch/roll');}
+ const scene=new THREE.Scene();scene.add(root);const rig=new VehicleLightRig(scene);rig.update(root,1);assert.equal(rig.lights.length,2);assert.ok(rig.lights.every(l=>l.visible&&l.target.position.x>l.position.x));rig.update(root,0);assert.ok(rig.lights.every(l=>!l.visible&&l.intensity===0));rig.update(null,1);assert.ok(rig.lights.every(l=>!l.visible));rig.dispose();rig.dispose();assert.equal(scene.children.length,1);
+ const counts=new Map();group.traverse(o=>{if(o instanceof THREE.Mesh)for(const r of [o.geometry,o.material])if(!counts.has(r)){counts.set(r,0);r.addEventListener('dispose',()=>counts.set(r,counts.get(r)+1));}});counts.set(beams[0].material.map,0);beams[0].material.map.addEventListener('dispose',()=>counts.set(beams[0].material.map,counts.get(beams[0].material.map)+1));disposeVehicleLights(root);disposeVehicleLights(root);assert.ok([...counts.values()].every(n=>n===1));console.log(`${name}: actual hull anchors, day/night, brakes, roll, ground projection and resource disposal passed`);
+}
+// Async body replacement refreshes lamps while preserving the custom group.
+const {root,body}=sourceCar('sedan');body.name='body';attachVehicleLights(root);const group=root.getObjectByName('custom-vehicle-lights'),replacement=sourceCar('race').body;root.add(replacement);updateVehicleLights(root,1,false);assert.equal(root.getObjectByName('custom-vehicle-lights'),group);assert.equal(group.children[0].children.length,4);disposeVehicleLights(root);
+// Collision damage edits source positions in place: the render update refreshes
+// overlays on revision, without allocating materials or real lights per impact.
+const damaged=sourceCar('sedan');attachVehicleLights(damaged.root);updateVehicleLights(damaged.root,1,false);
+const damageGroup=damaged.root.getObjectByName('custom-vehicle-lights'),sourceBody=damaged.body.getObjectByName('body'),sourcePositions=sourceBody.geometry.getAttribute('position');
+const disposalCounts=new Map(),ownedMaterials=new Set();
+const watchLamps=()=>damageGroup.children[0].traverse(o=>{if(!(o instanceof THREE.Mesh))return;ownedMaterials.add(o.material);if(!disposalCounts.has(o.geometry)){disposalCounts.set(o.geometry,0);o.geometry.addEventListener('dispose',()=>disposalCounts.set(o.geometry,disposalCounts.get(o.geometry)+1));}});
+watchLamps();let lamp=damageGroup.getObjectByName('headlamp'),before=lamp.geometry.boundingBox.getCenter(new THREE.Vector3()).z;
+for(let revision=1;revision<=3;revision++){
+ for(let i=0;i<sourcePositions.count;i++)if(sourcePositions.getZ(i)>0)sourcePositions.setZ(i,sourcePositions.getZ(i)-.025);
+ sourcePositions.needsUpdate=true;sourceBody.geometry.computeBoundingBox();damaged.root.userData.damageRevision=revision;
+ updateVehicleLights(damaged.root,1,true);lamp=damageGroup.getObjectByName('headlamp');const after=lamp.geometry.boundingBox.getCenter(new THREE.Vector3()).z;
+ assert.ok(Math.abs(after-before+.025)<1e-6,'in-place source deformation moves actual lamp center');before=after;
+ assert.equal(damageGroup.children[0].children.length,4,'damage refresh keeps exactly four lamps');watchLamps();
+}
+assert.equal(ownedMaterials.size,2,'head/tail materials are reused across damage revisions');
+assert.equal([...disposalCounts.values()].filter(n=>n===1).length,12,'every replaced lamp geometry disposed once');
+disposeVehicleLights(damaged.root);assert.ok([...disposalCounts.values()].every(n=>n===1),'final damage geometry resources disposed exactly once');
+console.log('Actual GLB deformation refresh and bounded lamp disposal passed.');
+console.log('Original GLB openings, geometry-derived vehicle lamps and async replacement checks passed.');

@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';import * as THREE from 'three';import fs from 'node:fs/promises';import ts from 'typescript';
+const file=new URL('../src/crime/.skid-check.mjs',import.meta.url);
+try{const src=await fs.readFile(new URL('../src/crime/TimedSkids.ts',import.meta.url),'utf8');await fs.writeFile(file,ts.transpileModule(src,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText);const {TimedSkids,skidOpacity}=await import(file.href);
+assert.equal(skidOpacity(0),1);assert.equal(skidOpacity(10),1);assert.equal(skidOpacity(15),.5);assert.equal(skidOpacity(20),0);assert.equal(skidOpacity(99),0);
+const scene=new THREE.Scene(),s=new TimedSkids(scene,()=>.055);s.add(0,0,0);s.add(1,0,0);s.tick(.05);s.add(0,1,0);s.add(1,1,0);assert.equal(s.mesh.count,2);const m=new THREE.Matrix4();s.mesh.getMatrixAt(0,m);assert.ok(Math.abs(m.elements[13]-.067)<1e-6,'marks float only12mm above road');s.tick(10);assert.equal(s.liveCount,2);s.tick(5);assert.equal(skidOpacity(s.time-.05),.5);s.tick(5);assert.equal(s.liveCount,0);assert.equal(s.mesh.count,0,'expiredpoolstopsdraw');
+for(let t=0;t<60;t++){for(let i=0;i<60;i++){s.tick(1/60);s.add(0,t+i/60,0);s.add(1,t+i/60,0);}}assert.ok(s.liveCount<=2400&&s.mesh.count<=2560,'longdriftsremainbounded');let n=0;s.mesh.addEventListener('dispose',()=>n++);s.dispose();assert.equal(n,1);assert.ok(!scene.children.includes(s.mesh));console.log('Skid10s hold/10s fade,20s expiry,boundedpool anddisposal: PASS');
+}finally{await fs.unlink(file).catch(()=>{});}

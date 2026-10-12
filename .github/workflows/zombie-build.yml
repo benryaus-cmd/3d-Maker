@@ -25,4 +25,7 @@ jobs:
       - run: node --experimental-strip-types scripts/check-road-assets.mjs
       - run: node --experimental-strip-types scripts/check-traffic.mjs
       - run: node --experimental-strip-types scripts/check-street-combat.mjs
+      - run: node --experimental-strip-types scripts/check-daylight.mjs
+      - run: node --experimental-strip-types scripts/check-skid-lifetime.mjs
+      - run: node --experimental-strip-types scripts/check-impact-immersion.mjs
       - run: pnpm build

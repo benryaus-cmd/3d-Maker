@@ -1,12 +1,17 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {crimeAssetURL} from './assets';
+import {TimedSkids} from './TimedSkids';
+import {daylightAt} from './Daylight';
 import {CITY_MODELS,CITY_ROAD_ORIENTATION} from './CityModels';
-import {ROAD_TILES,CITY_BLOCKS,districtAt,isRoad,roadRoute} from './CityLayout';
+import {ROAD_TILES,CITY_BLOCKS,ROAD_TILE_SIZE,CITY_EDGE,districtAt,isRoad,roadRoute} from './CityLayout';
+import {SCENERY_RESPONSE,sceneryKind,solidFootprint,stepFallingScenery,type FallingScenery} from './SceneryPhysics';
 import {attachVehicleLights,updateVehicleLights,disposeVehicleLights} from './VehicleLights';
 import {type CarState,type Wall} from './vehiclePhysics';
 
-type Prop={root:THREE.Group;wall:Wall;velX:number;velZ:number;life:number};
+type SceneryWall=Wall&{mass?:number;hitThreshold?:number};
+type InstanceRef={mesh:THREE.InstancedMesh;index:number};
+type Prop={root:THREE.Group;wall:SceneryWall;fall?:FallingScenery};
 type Chunk={group:THREE.Group;walls:Wall[];props:Prop[]};
 const loader=new GLTFLoader();
 const carPaths=['sedan','sedan-sports','police','taxi','suv','race'] as const;
@@ -49,7 +54,7 @@ const box=(parent:THREE.Object3D,x:number,y:number,z:number,w:number,h:number,d:
 const hash=(x:number,z:number)=>((Math.imul(x+2903,73856093)^Math.imul(z+9851,19349663))>>>0);
 // Lamps sit beyond tile corners, including bends and tees, rather than on a phantom grid.
 export const ROAD_LAMPS=ROAD_TILES.filter(t=>t.kind!=='straight' || hash(Math.round(t.x),Math.round(t.z))%5===0).flatMap(t=>
- [{x:t.x+6,z:t.z+6},{x:t.x-6,z:t.z-6}]).filter((p,i,all)=>!isRoad(p.x,p.z)&&all.findIndex(q=>q.x===p.x&&q.z===p.z)===i);
+ [{x:t.x+6.3,z:t.z+6.3},{x:t.x-6.3,z:t.z-6.3}]).filter((p,i,all)=>!isRoad(p.x,p.z)&&all.findIndex(q=>q.x===p.x&&q.z===p.z)===i);
 
 const rand=(seed:number)=>((Math.imul(seed,1664525)+1013904223)>>>0)/4294967296;
 function fitted(root:THREE.Group,targetX:number,targetY:number,targetZ:number):THREE.Group{
@@ -175,7 +180,7 @@ export function disposeCarVisual(root:THREE.Group){
 }
 /** Visibly deform actual GLB mesh vertices in the direction of the collision. */
 export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;left:number;right:number}){
- root.userData.currentDamage={...damage};
+ root.userData.currentDamage={...damage};root.userData.damageRevision=(root.userData.damageRevision??0)+1;
  const model=root.getObjectByName('loaded-body');
  if(model){
   model.traverse(o=>{
@@ -211,7 +216,7 @@ export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;
 }
 /** Car view must be updated independently from physics cadence. */
 export function renderCar(root:THREE.Group,s:CarState,dt:number,braking=false,night=0){
- updateVehicleLights(root,night,braking);
+ updateVehicleLights(root,night,braking||(s.brakePedal??0)>.05);
  root.position.set(s.x,.055,s.z);root.rotation.y=s.heading;
  const bar=root.getObjectByName('emergency-bar');
  if(bar)for(const child of bar.children){
@@ -248,9 +253,10 @@ export class CrimeWorld{
  readonly interior=new THREE.Group();
  readonly propertyUpgrades=new THREE.Group();
  readonly props:Prop[]=[];
+ private activeProps=new Set<Prop>();
+ private brokenLamps=new Set<string>();
  private tyreMarks:THREE.InstancedMesh;
- private skidCursor=0;private skidSide=0;private skidPrevious:Array<{x:number;z:number;time:number}|null>=[null,null];
- private skidDummy=new THREE.Object3D();
+ private skids:TimedSkids;
  private environmentTime=17.5*3600;clockLabel='17:30';
  private night=0;private cameraHeading=0;private cameraReady=false;
  private navigation=new THREE.Group();private navigationKey='';
@@ -277,11 +283,7 @@ export class CrimeWorld{
  private buildingAssets=new Map<string,THREE.Group>();
  constructor(private mount:HTMLElement){
   this.scene.background=new THREE.Color(0x4a555b);this.scene.add(this.root,this.sky,this.sun,this.sun.target,this.interior,this.navigation);
-  // Fixed-size 3D roadway skid decals: one GPU draw call regardless of how far user drives.
-  this.tyreMarks=new THREE.InstancedMesh(new THREE.PlaneGeometry(.20,1),
-   new THREE.MeshBasicMaterial({color:0x14191e,transparent:true,opacity:.61,depthWrite:false,side:THREE.DoubleSide}),420);
-  this.tyreMarks.count=0;this.tyreMarks.frustumCulled=false;
-  this.tyreMarks.renderOrder=2;this.scene.add(this.tyreMarks);
+  this.skids=new TimedSkids(this.scene,(x,z)=>this.surfaceHeight(x,z));this.tyreMarks=this.skids.mesh;
   this.interior.visible=false;
   this.sun.position.set(-45,80,18);
   this.sun.castShadow=true;this.sun.shadow.mapSize.set(1024,1024);this.sun.shadow.camera.left=-45;this.sun.shadow.camera.right=45;this.sun.shadow.camera.top=45;this.sun.shadow.camera.bottom=-45;this.sun.shadow.bias=-.001;
@@ -309,7 +311,7 @@ export class CrimeWorld{
   this.renderer.setSize(this.w,this.h,false);
  }
  private attachModels(group:THREE.Group){
-  const buckets=new Map<string,{geometry:THREE.BufferGeometry;material:THREE.Material|THREE.Material[];matrices:THREE.Matrix4[];road:boolean}>();
+  const buckets=new Map<string,{geometry:THREE.BufferGeometry;material:THREE.Material|THREE.Material[];matrices:THREE.Matrix4[];owners:THREE.Object3D[];road:boolean}>();
   group.updateMatrixWorld(true);const inverse=group.matrixWorld.clone().invert();
   const slots:THREE.Object3D[]=[];group.traverse(o=>{if(o.userData.streetSlot&&!o.userData.visualAttached)slots.push(o);});
   for(const obj of slots){
@@ -320,16 +322,31 @@ export class CrimeWorld{
     clone.updateMatrixWorld(true);const fittedBounds=new THREE.Box3().setFromObject(clone),fittedCentre=fittedBounds.getCenter(new THREE.Vector3());clone.position.x-=fittedCentre.x;clone.position.z-=fittedCentre.z;clone.position.y-=fittedBounds.min.y;
     if(obj.userData.roadSlot)obj.position.y=.03;
    }
-   const wall=obj.userData.wall as Wall|undefined;
-   if(wall&&!obj.userData.buildingSlot){const bounds=new THREE.Box3().setFromObject(clone).getSize(new THREE.Vector3());const rot=Math.abs(Math.sin(obj.rotation.y))>.5;wall.w=rot?bounds.z:bounds.x;wall.d=rot?bounds.x:bounds.z;}
-   obj.userData.visualAttached=true;const fallback=obj.getObjectByName('fallback');if(fallback)fallback.visible=false;
+   const wall=obj.userData.wall as SceneryWall|undefined;
+   if(wall){
+    const solid=solidFootprint(clone,obj.userData.buildingSlot?'building':sceneryKind(spec.name));
+    obj.updateWorldMatrix(true,false);const worldSolid=solid.clone().applyMatrix4(obj.matrixWorld),centre=worldSolid.getCenter(new THREE.Vector3());
+    wall.x=centre.x;wall.z=centre.z;wall.w=Math.max(.12,worldSolid.max.x-worldSolid.min.x);wall.d=Math.max(.12,worldSolid.max.z-worldSolid.min.z);
+   }
+   if(obj.userData.lampKey&&!wall?.broken){
+    // Anchor the visible bulb and projected pool to the fitted GLB's lamp head.
+    const full=new THREE.Box3().setFromObject(clone),head=new THREE.Box3(),point=new THREE.Vector3();
+    clone.traverse(o=>{if(!(o instanceof THREE.Mesh))return;const positions=o.geometry.getAttribute('position');if(!positions)return;for(let i=0;i<positions.count;i++){point.fromBufferAttribute(positions,i).applyMatrix4(o.matrixWorld);if(point.y>=full.max.y-.16)head.expandByPoint(point);}});
+    const centre=(head.isEmpty()?full:head).getCenter(new THREE.Vector3()).applyMatrix4(obj.matrixWorld).applyMatrix4(inverse);
+    const dummy=new THREE.Object3D();
+    for(const ref of (obj.userData.lampGlowRefs??[]) as Array<InstanceRef&{bulb:boolean}>){dummy.position.set(centre.x,ref.bulb?centre.y:.12,centre.z);dummy.rotation.set(ref.bulb?0:-Math.PI/2,0,0);dummy.scale.set(ref.bulb?.3:1,ref.bulb?.13:1,ref.bulb?.3:1);dummy.updateMatrix();ref.mesh.setMatrixAt(ref.index,dummy.matrix);ref.mesh.instanceMatrix.needsUpdate=true;ref.mesh.computeBoundingSphere();}
+    obj.userData.lampHead=new THREE.Vector3(centre.x+group.position.x,centre.y+group.position.y,centre.z+group.position.z);
+   }
+   obj.userData.visualAttached=true;obj.userData.propTemplate=clone;
+   const fallback=obj.getObjectByName('fallback');if(fallback)fallback.visible=false;
    const roadFallback=obj.userData.roadFallback as THREE.Mesh|undefined;if(roadFallback)roadFallback.visible=false;
-   if(obj.userData.dynamicProp){obj.add(clone);continue;}
+   // Loading after an impact still produces the correctly toppled object.
+   if(wall?.broken){const fall=obj.userData.fallingBody as FallingScenery|undefined;if(fall)fall.bounds.copy(new THREE.Box3().setFromObject(clone));obj.add(clone);continue;}
    // Static GLB primitives share GPU buffers and are batched per material in each chunk.
    obj.updateWorldMatrix(true,false);clone.updateMatrixWorld(true);const transform=inverse.clone().multiply(obj.matrixWorld);
-   clone.traverse(o=>{if(!(o instanceof THREE.Mesh))return;const materials=Array.isArray(o.material)?o.material:[o.material],key=o.geometry.uuid+materials.map(m=>m.uuid).join();let bucket=buckets.get(key);if(!bucket){bucket={geometry:o.geometry,material:o.material,matrices:[],road:!!obj.userData.roadSlot};buckets.set(key,bucket);}bucket.matrices.push(transform.clone().multiply(o.matrixWorld));});
+   clone.traverse(o=>{if(!(o instanceof THREE.Mesh))return;const materials=Array.isArray(o.material)?o.material:[o.material],key=o.geometry.uuid+materials.map(m=>m.uuid).join();let bucket=buckets.get(key);if(!bucket){bucket={geometry:o.geometry,material:o.material,matrices:[],owners:[],road:!!obj.userData.roadSlot};buckets.set(key,bucket);}bucket.matrices.push(transform.clone().multiply(o.matrixWorld));bucket.owners.push(obj);});
   }
-  for(const bucket of buckets.values()){const mesh=new THREE.InstancedMesh(bucket.geometry,bucket.material,bucket.matrices.length);bucket.matrices.forEach((m,i)=>mesh.setMatrixAt(i,m));mesh.userData.sharedGeometry=true;mesh.castShadow=!bucket.road;mesh.receiveShadow=true;mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();group.add(mesh);}
+  for(const bucket of buckets.values()){const mesh=new THREE.InstancedMesh(bucket.geometry,bucket.material,bucket.matrices.length);bucket.matrices.forEach((m,i)=>{mesh.setMatrixAt(i,m);const owner=bucket.owners[i];if(owner.userData.dynamicProp){const refs=(owner.userData.instanceRefs??=[]) as InstanceRef[];refs.push({mesh,index:i});}});mesh.userData.sharedGeometry=true;mesh.castShadow=!bucket.road;mesh.receiveShadow=true;mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();group.add(mesh);}
  }
  private batchBoxes(group:THREE.Group){
   group.updateMatrixWorld(true);const inverse=group.matrixWorld.clone().invert();const buckets=new Map<THREE.Material,{meshes:THREE.Mesh[];matrices:THREE.Matrix4[]}>();
@@ -339,9 +356,10 @@ export class CrimeWorld{
  private makeChunk(cx:number,cz:number):Chunk{
   const g=new THREE.Group();g.position.set(cx*CHUNK_SIZE,0,cz*CHUNK_SIZE);this.root.add(g);
   const walls:Wall[]=[],props:Prop[]=[];
-  box(g,30,-.24,30,60,.35,60,ground);
+  const minX=cx===-3?-CITY_EDGE:cx*60,maxX=cx===2?CITY_EDGE:(cx+1)*60,minZ=cz===-3?-CITY_EDGE:cz*60,maxZ=cz===2?CITY_EDGE:(cz+1)*60;
+  box(g,(minX+maxX)/2-cx*60,-.24,(minZ+maxZ)/2-cz*60,maxX-minX,.35,maxZ-minZ,ground);
   const local=(x:number,z:number)=>({x:x-cx*CHUNK_SIZE,z:z-cz*CHUNK_SIZE});
-  const belongs=(x:number,z:number)=>Math.min(2,Math.floor(x/CHUNK_SIZE))===cx&&Math.min(2,Math.floor(z/CHUNK_SIZE))===cz;
+  const belongs=(x:number,z:number)=>Math.max(-3,Math.min(2,Math.floor(x/CHUNK_SIZE)))===cx&&Math.max(-3,Math.min(2,Math.floor(z/CHUNK_SIZE)))===cz;
   const palette=CITY_MODELS as Record<string,string>;
   const model=(path:string,x:number,z:number,w:number,h:number,d:number,rotation=0,road=false)=>{
    const p=local(x,z),slot=new THREE.Group();slot.position.set(p.x,road?.03:.09,p.z);slot.rotation.y=rotation;
@@ -350,15 +368,16 @@ export class CrimeWorld{
   const roads={straight:palette.roadStraight,bend:palette.roadBend,tee:palette.roadIntersection,cross:palette.roadCross,end:palette.roadEnd??palette.roadStraight};
   for(const tile of ROAD_TILES){
    if(!belongs(tile.x,tile.z))continue;
-   const p=local(tile.x,tile.z),fall=box(g,p.x,.015,p.z,10,.04,10,asphalt);fall.name='fallback-road';
-   const slot=model(roads[tile.kind],tile.x,tile.z,10,.025,10,tile.rotation+CITY_ROAD_ORIENTATION[tile.kind],true);
+   const p=local(tile.x,tile.z),fall=box(g,p.x,.015,p.z,ROAD_TILE_SIZE,.04,ROAD_TILE_SIZE,asphalt);fall.name='fallback-road';
+   const slot=model(roads[tile.kind],tile.x,tile.z,ROAD_TILE_SIZE,.025,ROAD_TILE_SIZE,tile.rotation+CITY_ROAD_ORIENTATION[tile.kind],true);
    slot.userData.roadFallback=fall;
   }
-  const prop=(path:string,x:number,z:number,w:number,h:number,d:number,rotation=0,breakable=false)=>{
+  const prop=(path:string,x:number,z:number,w:number,h:number,d:number,rotation=0,breakable=true)=>{
    if(!clearFootprint(x,z,w,d)||isRoad(x,z))return;
    const obj=model(path,x,z,w,h,d,rotation);obj.userData.dynamicProp=breakable;
-   const turned=Math.abs(Math.sin(rotation))>.5,wall:Wall={x,z,w:turned?d:w,d:turned?w:d,kind:path,breakable};obj.userData.wall=wall;walls.push(wall);
-   if(breakable){const entry={root:obj,wall,velX:0,velZ:0,life:0};props.push(entry);this.props.push(entry);}return obj;
+   const response=SCENERY_RESPONSE[sceneryKind(path)],slender=/tree|palm|light|pole|sign/.test(path);
+   const turned=Math.abs(Math.sin(rotation))>.5,wall:SceneryWall={x,z,w:slender?.24:turned?d:w,d:slender?.24:turned?w:d,kind:path,breakable,...response};obj.userData.wall=wall;walls.push(wall);
+   if(breakable){const entry:Prop={root:obj,wall};props.push(entry);this.props.push(entry);}return obj;
   };
   const building=(path:string,x:number,z:number,w:number,h:number,d:number,seed:number,rot=0)=>{
    const turned=Math.abs(Math.sin(rot))>.5,fw=turned?d:w,fd=turned?w:d;
@@ -369,6 +388,7 @@ export class CrimeWorld{
    for(const side of [-1,1])for(let n=-1;n<=1;n++)box(obj,n*w*.25,2,side*(d/2+.025),w*.12,.7,.025,this.windowMaterial);
    return obj;
   };
+  const cellModel=model,cellProp=prop,cellBuilding=building;
   for(const block of CITY_BLOCKS){
    const bx=(block.minX+block.maxX)/2,bz=(block.minZ+block.maxZ)/2;
    // Ownership by block centre keeps merged-block colliders alive together.
@@ -386,36 +406,40 @@ export class CrimeWorld{
    }
    for(const cell of block.cells){
     const {x,z}=cell,p=local(x,z),seed=hash(Math.round(x),Math.round(z)),rot=(seed%4)*Math.PI/2;
-    box(g,p.x,.015,p.z,20,.15,20,theme==='park'?mat(0x527953):theme==='suburb'?mat(0x63745a):walk);
+    const model=(path:string,mx:number,mz:number,w:number,h:number,d:number,rotation=0)=>cellModel(path,x+(mx-x)*.75,z+(mz-z)*.75,w*.75,h,d*.75,rotation);
+    const prop=(path:string,mx:number,mz:number,w:number,h:number,d:number,rotation=0,breakable=true)=>cellProp(path,x+(mx-x)*.75,z+(mz-z)*.75,w*.75,h,d*.75,rotation,breakable);
+    const building=(path:string,mx:number,mz:number,w:number,h:number,d:number,seed:number,rotation=0)=>cellBuilding(path,x+(mx-x)*.75,z+(mz-z)*.75,w*.75,h,d*.75,seed,rotation);
+    const dress=(parent:THREE.Object3D,mx:number,y:number,mz:number,w:number,h:number,d:number,m:THREE.Material)=>box(parent,p.x+(mx-p.x)*.75,y,p.z+(mz-p.z)*.75,w*.75,h,d*.75,m);
+    box(g,p.x,.015,p.z,15,.15,15,theme==='park'?mat(0x527953):theme==='suburb'?mat(0x63745a):walk);
     // Removed internal roads become green walks/courts between the joined cells.
-    for(const q of block.cells)if(q.x===x+30&&q.z===z){const c=local(x+15,z);box(g,c.x,.015,c.z,10,.15,20,theme==='park'?mat(0x527953):walk);}
-    else if(q.z===z+30&&q.x===x){const c=local(x,z+15);box(g,c.x,.015,c.z,20,.15,10,theme==='park'?mat(0x527953):walk);}
+    for(const q of block.cells)if(q.x===x+30&&q.z===z){const c=local(x+15,z);box(g,c.x,.015,c.z,15,.15,15,theme==='park'?mat(0x527953):walk);}
+    else if(q.z===z+30&&q.x===x){const c=local(x,z+15);box(g,c.x,.015,c.z,15,.15,15,theme==='park'?mat(0x527953):walk);}
     if(landmark){
      const dx=Math.sign(x-bx)*7,dz=Math.sign(z-bz)*7;prop(palette.tree,x+dx,z+dz,3,5,3);
     }else if(theme==='park'){
-     box(g,p.x,.15,p.z,2.6,.035,20,mat(0xb3a995));box(g,p.x,.15,p.z,20,.035,2.6,mat(0xb3a995));
+     dress(g,p.x,.15,p.z,2.6,.035,20,mat(0xb3a995));dress(g,p.x,.15,p.z,20,.035,2.6,mat(0xb3a995));
      for(const dx of [-6,6])for(const dz of [-6,6])prop(palette.tree,x+dx,z+dz,4.4,7+rand(seed+dx)*3,4.4);
      prop(palette.bench,x+3,z+4,2.5,1.2,1,Math.PI/2);
     }else if(theme==='suburb'){
      building(palette.house,x-3,z-2,9,5.5+rand(seed),8,seed,rot);
-     box(g,p.x+5,.105,p.z+3,3,.035,12,mat(0xb2ada0));
-     prop(palette.tree,x+6,z-6,3.5,5,3.5);model(palette.hedge,x,z+8,13,1.3,.9);
+     dress(g,p.x+5,.105,p.z+3,3,.035,12,mat(0xb2ada0));
+     prop(palette.tree,x+6,z-6,3.5,5,3.5);prop(palette.hedge,x,z+8,13,1.3,.9);
     }else if(theme==='industrial'){
      building('buildings/building-a.glb',x-3,z-2,11,5.5,12,seed,rot);
-     for(const dz of [-5,0,5]){const wx=x+6,wz=z+dz;if(!clearFootprint(wx,wz,3,4))continue;box(g,p.x+6,1.35,p.z+dz,3,2.6,4,mat(dz===0?0xa15c47:0x456c77,.2));walls.push({x:wx,z:wz,w:3,d:4,kind:'freight'});}
+     for(const dz of [-5,0,5]){const wx=x+4.5,wz=z+dz*.75;if(!clearFootprint(wx,wz,3,4))continue;dress(g,p.x+6,1.35,p.z+dz,3,2.6,4,mat(dz===0?0xa15c47:0x456c77,.2));walls.push({x:wx,z:wz,w:2.25,d:3,kind:'freight'});}
      if(seed%3===0){const tower=model(palette.waterTower,x-3,z-2,4,5,4);tower.position.y=5.5;}
      prop('streets/dumpster.glb',x-6,z+7,2,1.4,1.5,0,true);
     }else if(theme==='commercial'){
      building(palette.store,x,z-4,15,5+rand(seed)*3,8,seed,rot);
-     box(g,p.x,.1,p.z+5,16,.025,8,asphalt);
-     for(const dx of [-6,-2,2,6])box(g,p.x+dx,.125,p.z+5,.08,.01,6,mat(0xabb3b2));
+     dress(g,p.x,.1,p.z+5,16,.025,8,asphalt);
+     for(const dx of [-6,-2,2,6])dress(g,p.x+dx,.125,p.z+5,.08,.01,6,mat(0xabb3b2));
      prop(palette.tree,x-8,z+8,2.5,4,2.5);
     }else if(theme==='historic'){
      building('buildings/building-d.glb',x-5,z,7,6,15,seed);building(palette.store,x+5,z-4,7,5,7,seed+1,Math.PI);
      prop(palette.tree,x+3,z+5,3,5,3);prop(palette.bench,x,z+3,2.2,1,1);
     }else if(theme==='waterfront'){
      building(palette.store,x-4,z-3,9,6,10,seed,rot);prop(palette.palm,x+6,z+6,3.5,7,3.5);
-     box(g,p.x+5,.1,p.z-4,4,.025,11,mat(0x8c8069));
+     dress(g,p.x+5,.1,p.z-4,4,.025,11,mat(0x8c8069));
      prop(palette.bench,x+5,z+3,2.5,1,1,Math.PI/2);
     }else{
      const tall=theme==='downtown',club=theme==='nightlife';
@@ -428,13 +452,26 @@ export class CrimeWorld{
     }
    }
   }
-  const pools:THREE.Matrix4[]=[];
+  const pools:THREE.Matrix4[]=[],bulbs:THREE.Matrix4[]=[],lampSlots:THREE.Group[]=[];
   for(const lamp of ROAD_LAMPS){if(!belongs(lamp.x,lamp.z))continue;
-   model(palette.streetlight??'streets/light-curved.glb',lamp.x,lamp.z,1.5,5.8,1.5);
-   const p=local(lamp.x,lamp.z);box(g,p.x,5.25,p.z,.3,.13,.3,this.windowMaterial);
+   const slot=prop(palette.streetlight??'streets/light-curved.glb',lamp.x,lamp.z,1.5,5.8,1.5);if(!slot)continue;
+   slot.userData.lampKey=lamp.x+':'+lamp.z;lampSlots.push(slot);
+   const p=local(lamp.x,lamp.z),bulb=new THREE.Object3D();bulb.position.set(p.x,5.25,p.z);bulb.scale.set(.3,.13,.3);bulb.updateMatrix();bulbs.push(bulb.matrix.clone());
    const pool=new THREE.Object3D();pool.rotation.x=-Math.PI/2;pool.position.set(p.x,.12,p.z);pool.updateMatrix();pools.push(pool.matrix.clone());
   }
-  if(pools.length){const glow=new THREE.InstancedMesh(lampPoolGeometry,this.lampMaterial,pools.length);pools.forEach((m,i)=>glow.setMatrixAt(i,m));glow.userData.sharedGeometry=true;glow.instanceMatrix.needsUpdate=true;glow.computeBoundingSphere();g.add(glow);}
+  if(pools.length){
+   const glow=new THREE.InstancedMesh(lampPoolGeometry,this.lampMaterial,pools.length),bulb=new THREE.InstancedMesh(unitBox,this.windowMaterial,bulbs.length);
+   for(const mesh of [glow,bulb]){const matrices=mesh===glow?pools:bulbs;matrices.forEach((m,i)=>{mesh.setMatrixAt(i,m);const refs=(lampSlots[i].userData.instanceRefs??=[]) as InstanceRef[];refs.push({mesh,index:i});const glowRefs=(lampSlots[i].userData.lampGlowRefs??=[]) as Array<InstanceRef&{bulb:boolean}>;glowRefs.push({mesh,index:i,bulb:mesh===bulb});});mesh.userData.sharedGeometry=true;mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();g.add(mesh);}
+  }
+  // Roadside furniture is rooted on the sidewalk, never on a driving lane.
+  for(const tile of ROAD_TILES){if(!belongs(tile.x,tile.z)||tile.kind==='straight')continue;const seed=hash(Math.round(tile.x),Math.round(tile.z));
+   const sx=tile.x+6.35,sz=tile.z-6.35;
+   prop(seed%2?'streets/road-sign-stop.glb':'streets/road-sign-warning.glb',sx,sz,.9,2.7,.8,tile.rotation);
+   if(seed%3===0)prop('streets/traffic-light.glb',tile.x-6.35,tile.z+6.35,1,4.7,1,tile.rotation);
+   if(seed%5===0)prop('streets/electricity-pole.glb',tile.x+6.9,tile.z+6.9,1.6,6.5,1.6);
+   if(seed%4===0)prop('streets/construction-cone.glb',tile.x-6.35,tile.z-6.35,.65,.8,.65);
+   if(seed%7===0)prop('streets/construction-fence.glb',tile.x+8,tile.z-6.5,2.4,1.5,.4,tile.rotation);
+  }
   // A visible harbour edge: promenade, water, and collision rail beyond the city.
   if(cx===-3&&cz< -1){box(g,-13,-.07,30,26,.15,60,mat(0x416d7b,.2));box(g,-6,.4,30,.3,.6,60,mat(0xb1afa0));walls.push({x:cx*60-6,z:cz*60+30,w:.3,d:60,kind:'harbour-rail'});for(const dz of [12,42])box(g,-12,.1,dz,20,.22,4,mat(0x8c8069));}
   this.batchBoxes(g);this.attachModels(g);return {group:g,walls,props};
@@ -454,6 +491,7 @@ export class CrimeWorld{
    if(!this.map.has(key))this.map.set(key,this.makeChunk(cx,cz));
   }
   for(const [k,c]of this.map)if(!wanted.has(k)){
+   c.props.forEach(p=>{this.activeProps.delete(p);if(p.root.userData.lampKey)this.brokenLamps.delete(p.root.userData.lampKey);});
    this.root.remove(c.group);
    c.props.forEach(p=>{const i=this.props.indexOf(p);if(i>=0)this.props.splice(i,1);});
    disposeWorldVisuals(c.group);
@@ -462,12 +500,25 @@ export class CrimeWorld{
   this.walls.length=0;this.map.forEach(c=>this.walls.push(...c.walls));
  }
  destroyProp(w:Wall,vx:number,vz:number){
-  const p=this.props.find(p=>p.wall===w);if(!p)return;
-  p.wall.broken=true;p.velX=vx*.55+(Math.random()-.5)*2;p.velZ=vz*.55+(Math.random()-.5)*2;p.life=2.5;
-  p.root.rotation.x=.5;p.root.rotation.z=.6;
+  const p=this.props.find(p=>p.wall===w);if(!p||p.fall)return;
+  p.wall.broken=true;
+  // Release just this object's instances; all other lamps/models retain their shared materials.
+  const zero=new THREE.Matrix4().makeScale(0,0,0);
+  for(const ref of (p.root.userData.instanceRefs??[]) as InstanceRef[]){ref.mesh.setMatrixAt(ref.index,zero);ref.mesh.instanceMatrix.needsUpdate=true;}
+  const template=p.root.userData.propTemplate as THREE.Group|undefined;
+  if(template){const clone=template.clone(true);clone.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}});p.root.add(clone);}
+  const key=p.root.userData.lampKey as string|undefined;if(key){this.brokenLamps.add(key);this.lampRefresh=Infinity;}
+  p.root.updateWorldMatrix(true,true);const inv=p.root.matrixWorld.clone().invert(),bounds=new THREE.Box3();
+  p.root.traverse(o=>{if(!(o instanceof THREE.Mesh))return;o.geometry.computeBoundingBox();if(o.geometry.boundingBox)bounds.union(o.geometry.boundingBox.clone().applyMatrix4(inv.clone().multiply(o.matrixWorld)));});
+  if(bounds.isEmpty()){const spec=p.root.userData.streetSlot;bounds.set(new THREE.Vector3(-spec.w/2,0,-spec.d/2),new THREE.Vector3(spec.w/2,spec.h,spec.d/2));}
+  const direction=new THREE.Vector3(vx,0,vz);if(direction.lengthSq()<.01)direction.set(1,0,0);direction.normalize();
+  const momentum=Math.min(9,Math.hypot(vx,vz)*130/(p.wall.mass??50));
+  p.fall={root:p.root,bounds,velX:direction.x*momentum,velY:Math.min(1.4,momentum*.15),velZ:direction.z*momentum,angle:.06,angularSpeed:.9,axis:new THREE.Vector3(direction.z,0,-direction.x),baseRotation:p.root.quaternion.clone(),age:0,settled:false,ground:.09};
+  p.root.userData.fallingBody=p.fall;this.activeProps.add(p);
  }
  tickProps(dt:number){
-  for(const p of this.props)if(p.life>0){p.life-=dt;p.root.position.x+=p.velX*dt;p.root.position.z+=p.velZ*dt;p.root.rotation.x+=dt*3;p.root.rotation.z+=dt*4;p.velX*=.95;p.velZ*=.95;p.root.visible=p.life>0;}
+  let budget=96;
+  for(const p of this.activeProps){if(!p.fall){this.activeProps.delete(p);continue;}const px=p.root.position.x+(p.root.parent?.position.x??0),pz=p.root.position.z+(p.root.parent?.position.z??0);if(Math.hypot(px-this.cameraFocus.x,pz-this.cameraFocus.z)>90)continue;if(budget--<=0)break;stepFallingScenery(p.fall,dt);if(p.fall.settled)this.activeProps.delete(p);}
  }
  marker(id:string,x:number,z:number,color:number){
   const o=new THREE.Mesh(new THREE.TorusGeometry(2,.2,6,30),new THREE.MeshBasicMaterial({color,depthWrite:false}));o.rotation.x=-Math.PI/2;o.position.set(x,.2,z);this.scene.add(o);this.markers.set(id,o);
@@ -499,7 +550,7 @@ export class CrimeWorld{
   if(this.lampRefresh>=.5||Math.hypot(x-this.lampX,z-this.lampZ)>4){
    this.lampRefresh=0;this.lampX=x;this.lampZ=z;
    // Anchors are deterministic, so no scene traversal/matrix update is required.
-   const candidates=ROAD_LAMPS.filter(p=>Math.hypot(p.x-x,p.z-z)<28).map(p=>new THREE.Vector3(p.x,4.5,p.z));
+   const candidates=this.props.filter(p=>p.root.userData.lampKey&&!p.wall.broken&&Math.hypot(p.wall.x-x,p.wall.z-z)<28).map(p=>(p.root.userData.lampHead as THREE.Vector3|undefined)?.clone()??new THREE.Vector3(p.wall.x,4.5,p.wall.z));
    candidates.sort((a,b)=>a.distanceToSquared(this.cameraFocus)-b.distanceToSquared(this.cameraFocus));this.lampAnchors=candidates.slice(0,3);
   }
   this.streetLights.forEach((l,i)=>{const anchor=this.lampAnchors[i];l.intensity=anchor?this.night*18:0;if(anchor)l.position.copy(anchor);});
@@ -507,10 +558,13 @@ export class CrimeWorld{
  updateEnvironment(dt:number){
   this.environmentTime=(this.environmentTime+Math.max(0,dt)*72)%86400;
   const hours=this.environmentTime/3600;this.clockLabel=String(Math.floor(hours)).padStart(2,'0')+':'+String(Math.floor(hours%1*60)).padStart(2,'0');
-  const daylight=THREE.MathUtils.smoothstep(Math.sin((hours-6)/24*Math.PI*2),-.15,.35);this.night=1-daylight;
-  this.sky.intensity=.9+daylight*1.05;this.sky.color.set(0x9bb6e2).lerp(new THREE.Color(0xcbddea),daylight);this.sky.groundColor.set(0x3a4965).lerp(new THREE.Color(0x636858),daylight);
-  this.sun.intensity=.32+daylight*2.35;this.sun.color.set(hours>15&&hours<20?0xffbd79:0xffebce);
-  (this.scene.background as THREE.Color).set(0x17243d).lerp(new THREE.Color(0x849da8),daylight);
+  this.skids.tick(dt);
+  const light=daylightAt(hours),daylight=light.day;this.night=light.night;
+  this.sky.intensity=.9+daylight*1.05;this.sky.color.set(0x9bb6e2).lerp(new THREE.Color(0xcbddea),daylight);
+  this.sky.color.lerp(new THREE.Color(0xffda8b),(light.dawn+light.golden)*.22).lerp(new THREE.Color(0xe696af),light.dusk*.22);
+  this.sky.groundColor.set(0x3a4965).lerp(new THREE.Color(0x636858),daylight).lerp(new THREE.Color(0xaa8750),(light.dawn+light.golden)*.20).lerp(new THREE.Color(0x9b6571),light.dusk*.18);
+  this.sun.intensity=.32+daylight*2.35;this.sun.color.set(0xffebce).lerp(new THREE.Color(0xffd473),light.dawn+light.golden).lerp(new THREE.Color(0xfa919e),light.dusk);
+  (this.scene.background as THREE.Color).set(0x17243d).lerp(new THREE.Color(0x849da8),daylight).lerp(new THREE.Color(0xdcc59b),(light.dawn+light.golden)*.18).lerp(new THREE.Color(0xba91a3),light.dusk*.20);
   this.lampMaterial.opacity=this.night*.23;this.windowMaterial.opacity=this.night*.85;
   this.routeMaterial.opacity=.58+Math.sin(this.environmentTime*.07)*.14;
   this.renderer.toneMappingExposure=1.16+daylight*.12;
@@ -563,14 +617,7 @@ export class CrimeWorld{
   const fill=new THREE.PointLight(0xadc8d5,25,16,2);fill.position.set(5,3,5);room.add(fill);
   this.batchBoxes(room);this.attachModels(room);
  }
- addSkidMark(x:number,z:number,heading:number){
-  const side=this.skidSide++%2,now=performance.now(),prior=this.skidPrevious[side];this.skidPrevious[side]={x,z,time:now};
-  if(!prior||now-prior.time>250)return;
-  const distance=Math.hypot(x-prior.x,z-prior.z);if(distance<.025||distance>4)return;
-  const index=this.skidCursor%420,dummy=this.skidDummy;
-  dummy.position.set((x+prior.x)/2,.115,(z+prior.z)/2);dummy.rotation.set(-Math.PI/2,0,Math.atan2(x-prior.x,z-prior.z));dummy.scale.set(1,distance+.03,1);dummy.updateMatrix();this.tyreMarks.setMatrixAt(index,dummy.matrix);
-  this.skidCursor++;this.tyreMarks.count=Math.min(420,this.skidCursor);this.tyreMarks.instanceMatrix.needsUpdate=true;
- }
+ addSkidMark(x:number,z:number,heading:number){this.skids.add(x,z,heading);}
  /** Real room dressing changes as money is invested in the property. */
  setInteriorLevels(houseLevel:number,garageLevel:number){
   const g=this.propertyUpgrades;
@@ -615,9 +662,8 @@ export class CrimeWorld{
   this.disposed=true;
   this.mountResize?.disconnect();
   this.map.forEach(c=>{disposeWorldVisuals(c.group);c.group.removeFromParent();});
-  this.map.clear();
-  this.tyreMarks.dispose();this.tyreMarks.geometry.dispose();for(const mat of (Array.isArray(this.tyreMarks.material)?this.tyreMarks.material:[this.tyreMarks.material]))mat.dispose();
-  this.tyreMarks.removeFromParent();
+  this.map.clear();this.activeProps.clear();this.brokenLamps.clear();this.props.length=0;this.walls.length=0;
+  this.skids.dispose();
   this.renderer.dispose();this.renderer.domElement.remove();
   disposeWorldVisuals(this.navigation);this.navigation.clear();this.routeMaterial.dispose();this.lampMaterial.dispose();this.windowMaterial.dispose();
   disposeWorldVisuals(this.interior);this.interior.removeFromParent();

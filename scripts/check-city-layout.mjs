@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 assert.ok(existsSync(new URL('../src/crime/CityLayout.ts', import.meta.url)), 'CityLayout.ts provides the authored street graph');
-const { DISTRICTS, districtAt, ROAD_TILES, STREET_NODES, CITY_BLOCKS, nearestStreet, roadRoute, isRoad, roadHeight, roadDistance } = await import('../src/crime/CityLayout.ts');
+const { DISTRICTS, districtAt, ROAD_TILES, STREET_NODES, CITY_BLOCKS, nearestStreet, roadRoute, isRoad, roadHeight, roadDistance, ROAD_TILE_SIZE, ROAD_HALF_WIDTH, CITY_LIMIT, CITY_EDGE } = await import('../src/crime/CityLayout.ts');
 assert.equal(DISTRICTS.length, 9);
 assert.equal(new Set(DISTRICTS.map(d => d.theme)).size, 9);
 for (const d of DISTRICTS) {
@@ -15,7 +15,11 @@ while (queue.length) {
   reached.add(id); queue.push(...STREET_NODES.get(id).neighbors);
 }
 assert.equal(reached.size, STREET_NODES.size, 'every street connects to the city network');
-const deltaBits = [[0, 10, 1], [10, 0, 2], [0, -10, 4], [-10, 0, 8]];
+assert.equal(ROAD_TILE_SIZE, 15, 'square road tiles are 50% wider without overlap');
+assert.equal(ROAD_HALF_WIDTH, 5.25, 'asphalt is 10.5 m wide');
+assert.equal(CITY_LIMIT, 180);
+assert.equal(CITY_EDGE, 187.5);
+const deltaBits = [[0, ROAD_TILE_SIZE, 1], [ROAD_TILE_SIZE, 0, 2], [0, -ROAD_TILE_SIZE, 4], [-ROAD_TILE_SIZE, 0, 8]];
 const rotate = mask => ((mask << 1) & 15) | ((mask >> 3) & 1);
 const canonical = { straight: 5, bend: 3, tee: 11, cross: 15, end: 1 };
 assert.ok(ROAD_TILES.some(t => t.kind === 'bend'), 'merged blocks create real street bends');
@@ -32,12 +36,12 @@ for (const tile of ROAD_TILES) {
   assert.ok(Math.abs(tile.x) <= 180 && Math.abs(tile.z) <= 180);
   for (const neighbor of node.neighbors) assert.ok(STREET_NODES.get(neighbor).neighbors.includes(node.id), 'edges are reciprocal');
 }
-for (const seam of [-60, 60]) for (let p = -180; p <= 180; p += 10) {
+for (const seam of [-60, 60]) for (let p = -180; p <= 180; p += ROAD_TILE_SIZE) {
   const v = STREET_NODES.get(`${seam}:${p}`); const h = STREET_NODES.get(`${p}:${seam}`);
   assert.ok(v && h, 'seam arterials have continuous tile centers');
   if (p < 180) {
-    assert.ok(v.neighbors.includes(`${seam}:${p + 10}`));
-    assert.ok(h.neighbors.includes(`${p + 10}:${seam}`));
+    assert.ok(v.neighbors.includes(`${seam}:${p + ROAD_TILE_SIZE}`));
+    assert.ok(h.neighbors.includes(`${p + ROAD_TILE_SIZE}:${seam}`));
   }
 }
 for (const block of CITY_BLOCKS) for (const a of block.cells) for (const b of block.cells) {
@@ -61,8 +65,8 @@ for (const target of [{ x: 32, z: 0 }, { x: 64, z: 32 }, { x: -177, z: 177 }, { 
 }
 assert.equal(isRoad(0, 0), true);
 assert.equal(isRoad(190, 0), false);
-assert.equal(isRoad(0, 184, 0), false);
-assert.equal(isRoad(0, 184, 2), true);
+assert.equal(isRoad(0, CITY_LIMIT + ROAD_HALF_WIDTH + .1, 0), false);
+assert.equal(isRoad(0, CITY_LIMIT + ROAD_HALF_WIDTH + .1, 2), true);
 assert.equal(roadHeight(0, 0), 0);
 assert.equal(typeof roadDistance, 'function', 'roadDistance measures the actual road centerline');
 assert.equal(roadDistance(0, 5), 0, 'intermediate segment points are on centerline');

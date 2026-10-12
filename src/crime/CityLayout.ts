@@ -15,10 +15,14 @@ export const DISTRICTS: District[] = [
   { id: 'industrial', name: 'Industrial Belt', theme: 'industrial', x: 0, z: -120, color: 0x9e8b5e },
   { id: 'market', name: 'Market Ward', theme: 'commercial', x: 120, z: -120, color: 0xb69b63 },
 ];
-const LIMIT = 180;
+export const CITY_LIMIT = 180;
+export const ROAD_TILE_SIZE = 15;
+export const ROAD_HALF_WIDTH = 5.25;
+/** Outer square road tile edge, including its pavement. */
+export const CITY_EDGE = CITY_LIMIT + ROAD_TILE_SIZE / 2;
+const LIMIT = CITY_LIMIT;
 const CELL = 30;
-const STEP = 10;
-const ROAD_HALF_WIDTH = 3.5;
+const STEP = ROAD_TILE_SIZE;
 const key = (x: number, z: number) => `${x}:${z}`;
 export function districtAt(x: number, z: number): District {
   const col = Math.max(0, Math.min(2, Math.floor((x + LIMIT) / 120)));
@@ -161,7 +165,7 @@ export function isRoad(x: number, z: number, margin = 0): boolean {
 }
 export function roadHeight(_x: number, _z: number): number { return 0; }
 
-/** Distance to the nearest centerline, including between the 10 m tile centers. */
+/** Distance to the nearest centerline, including between the 15 m tile centers. */
 export function roadDistance(x: number, z: number): number {
   let best = Infinity;
   for (const bucket of segments.values()) for (const s of bucket) {
