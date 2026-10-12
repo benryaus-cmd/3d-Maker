@@ -8,6 +8,7 @@ const loader=new GLTFLoader();
 const carPaths=['sedan','sedan-sports','police','taxi','suv','race'] as const;
 export type CarStyle=typeof carPaths[number];
 const buildingPaths=['building-a','building-b','building-c','building-d','building-skyscraper-a'] as const;
+const streetPaths=['dumpster','construction-barrier','construction-fence','light-curved','traffic-light','road-sign-stop','road-sign-warning','construction-cone','electricity-pole'] as const;
 const base=import.meta.env.BASE_URL+'assets/crime/';
 const assets=new Map<string,Promise<THREE.Group>>();
 function getModel(path:string):Promise<THREE.Group>{
@@ -124,6 +125,7 @@ export class CrimeWorld{
   this.resize();
   this.makeInterior();
   for(const name of buildingPaths){void getModel('buildings/'+name+'.glb').then(m=>{this.buildingAssets.set(name,m);this.map.forEach(ch=>this.attachModels(ch.group));}).catch(()=>{});}
+  for(const name of streetPaths){void getModel('streets/'+name+'.glb').then(m=>{this.buildingAssets.set(name,m);this.map.forEach(ch=>this.attachModels(ch.group));}).catch(()=>{});}
  }
  resize(){this.w=Math.max(1,this.mount.clientWidth);this.h=Math.max(1,this.mount.clientHeight);
   const halfH=25,halfW=halfH*this.w/this.h;
@@ -132,11 +134,12 @@ export class CrimeWorld{
  }
  private attachModels(group:THREE.Group){
   group.traverse(obj=>{
-   if(!obj.userData.buildingSlot||obj.userData.visualAttached)return;
-   const spec=obj.userData.buildingSlot as {w:number;h:number;d:number;name:string};
+   const spec=(obj.userData.buildingSlot??obj.userData.streetSlot) as {w:number;h:number;d:number;name:string}|undefined;
+   if(!spec||obj.userData.visualAttached)return;
    const source=this.buildingAssets.get(spec.name);
    if(!source)return;
-   const clone=fitted(source,spec.w,spec.h,spec.d);clone.position.y-=spec.h/2;
+   // fitted() already translates bottom of 3D model to y=0; don't bury it half underground.
+   const clone=fitted(source,spec.w,spec.h,spec.d);
    obj.add(clone);obj.userData.visualAttached=true;
    const fallback=obj.getObjectByName('fallback');if(fallback)fallback.visible=false;
   });
@@ -171,10 +174,30 @@ export class CrimeWorld{
    if(seed%3!==0){
     const px=a*32+7.2,pz=b*32+7.2;
     const cone=new THREE.Group();g.add(cone);cone.position.set(px,0,pz);
-    box(cone,0,.07,0,.8,.14,.8,mat(0x25252a));
-    const orange=new THREE.Mesh(new THREE.ConeGeometry(.39,.89,8),mat(0xf27631));orange.position.y=.48;cone.add(orange);
+    const fallback=new THREE.Group();fallback.name='fallback';cone.add(fallback);
+    box(fallback,0,.07,0,.8,.14,.8,mat(0x25252a));
+    const orange=new THREE.Mesh(new THREE.ConeGeometry(.39,.89,8),mat(0xf27631));orange.position.y=.48;fallback.add(orange);
+    cone.userData.streetSlot={name:'construction-cone',w:.8,h:.95,d:.8};
+    if(this.buildingAssets.has('construction-cone'))this.attachModels(cone);
     const body:Wall={x:cx*96+px,z:cz*96+pz,w:.8,d:.8,kind:'cone',breakable:true};
     walls.push(body);const entry={root:cone,wall:body,velX:0,velZ:0,life:0};props.push(entry);this.props.push(entry);
+   }
+   // CC0 imported street signs, lighting, fences and smashable roadside furniture.
+   if(seed%4!==3){
+    const fname=seed%9===0?'dumpster':seed%9===1?'construction-barrier':seed%9===2?'traffic-light':seed%9===3?'light-curved':
+      seed%9===4?'road-sign-stop':seed%9===5?'electricity-pole':seed%9===6?'road-sign-warning':seed%9===7?'construction-fence':'construction-cone';
+    const tall=fname==='light-curved'||fname==='electricity-pole'||fname==='traffic-light';
+    const ww=fname==='dumpster'?2.0:fname==='construction-fence'?2.5:fname==='construction-barrier'?2.0:tall?.55:.7;
+    const hh=fname==='dumpster'?1.35:fname==='construction-fence'?1.8:fname==='construction-barrier'?.8:tall?6:2.15;
+    const dd=fname==='dumpster'?1.45:fname==='construction-fence'?.4:fname==='construction-barrier'?.6:.65;
+    const px=x+7.3,pz=z+7.1;
+    const furniture=new THREE.Group();furniture.position.set(px,0,pz);furniture.rotation.y=(seed%4)*Math.PI/2;g.add(furniture);
+    const fall=box(furniture,0,hh/2,0,ww,hh,dd,mat(tall?0x515961:fname==='dumpster'?0x2d5450:0xe9a24c));fall.name='fallback';
+    furniture.userData.streetSlot={name:fname,w:ww,h:hh,d:dd};
+    if(this.buildingAssets.has(fname))this.attachModels(furniture);
+    const body:Wall={x:cx*96+px,z:cz*96+pz,w:ww,d:dd,kind:fname,breakable:!tall};
+    walls.push(body);
+    if(body.breakable){const entry={root:furniture,wall:body,velX:0,velZ:0,life:0};props.push(entry);this.props.push(entry);}
    }
    if(seed%4===1){
     const tree=new THREE.Group();g.add(tree);tree.position.set(x+7.3,0,z+6.8);
