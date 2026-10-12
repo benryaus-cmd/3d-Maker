@@ -179,6 +179,8 @@ export class CrimeWorld{
  readonly interior=new THREE.Group();
  readonly propertyUpgrades=new THREE.Group();
  readonly props:Prop[]=[];
+ private tyreMarks:THREE.InstancedMesh;
+ private skidCursor=0;
  readonly sky=new THREE.HemisphereLight(0xc7d7ef,0x394033,2.05);
  readonly sun=new THREE.DirectionalLight(0xffdcac,2.35);
  readonly maxChunks=16;
@@ -187,6 +189,11 @@ export class CrimeWorld{
  private buildingAssets=new Map<string,THREE.Group>();
  constructor(private mount:HTMLElement){
   this.scene.background=new THREE.Color(0x4a555b);this.scene.add(this.root,this.sky,this.sun,this.interior);
+  // Fixed-size 3D roadway skid decals: one GPU draw call regardless of how far user drives.
+  this.tyreMarks=new THREE.InstancedMesh(new THREE.PlaneGeometry(.20,.65),
+   new THREE.MeshBasicMaterial({color:0x14191e,transparent:true,opacity:.61,depthWrite:false,side:THREE.DoubleSide}),420);
+  this.tyreMarks.count=0;this.tyreMarks.frustumCulled=false;
+  this.tyreMarks.renderOrder=2;this.scene.add(this.tyreMarks);
   this.interior.visible=false;
   this.sun.position.set(-45,80,18);
   this.camera.position.set(0,67,21);this.camera.lookAt(0,0,0);
@@ -345,6 +352,16 @@ export class CrimeWorld{
   box(this.interior,-2,.1,3,6,.1,4,mat(0x966850));
   const light=new THREE.PointLight(0xffd7a2,48,22);light.position.set(0,5,0);this.interior.add(light);
  }
+ addSkidMark(x:number,z:number,heading:number){
+  const index=this.skidCursor%420;
+  const dummy=new THREE.Object3D();
+  dummy.position.set(x,.045,z);
+  dummy.rotation.set(-Math.PI/2,0,heading);dummy.updateMatrix();
+  this.tyreMarks.setMatrixAt(index,dummy.matrix);
+  this.skidCursor++;
+  this.tyreMarks.count=Math.min(420,this.skidCursor);
+  this.tyreMarks.instanceMatrix.needsUpdate=true;
+ }
  /** Real room dressing changes as money is invested in the property. */
  setInteriorLevels(houseLevel:number,garageLevel:number){
   const g=this.propertyUpgrades;
@@ -383,5 +400,14 @@ export class CrimeWorld{
   }
  }
  render(){this.renderer.render(this.scene,this.camera);}
- dispose(){this.disposed=true;this.map.forEach(c=>c.group.removeFromParent());this.map.clear();this.renderer.dispose();this.renderer.domElement.remove();this.interior.removeFromParent();this.markers.forEach(o=>o.removeFromParent());}
+ dispose(){
+  this.disposed=true;
+  this.map.forEach(c=>{c.group.traverse(o=>{if(o instanceof THREE.Mesh&&!o.userData.sharedGeometry)o.geometry.dispose();});c.group.removeFromParent();});
+  this.map.clear();
+  this.tyreMarks.geometry.dispose();for(const mat of (Array.isArray(this.tyreMarks.material)?this.tyreMarks.material:[this.tyreMarks.material]))mat.dispose();
+  this.tyreMarks.removeFromParent();
+  this.renderer.dispose();this.renderer.domElement.remove();
+  this.interior.removeFromParent();
+  this.markers.forEach(o=>{o.geometry.dispose();(o.material as THREE.Material).dispose();o.removeFromParent();});
+ }
 }
