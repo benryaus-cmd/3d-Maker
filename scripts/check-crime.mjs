@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {newCar,drive,kmh,collideWall,impact,speed,tuneWithMods} from '../src/crime/vehiclePhysics.ts';
+import {initial,trade,quote,cargoCount,missionUpdate,buyUpgrade,buyCar,MARKETS} from '../src/crime/Systems.ts';
+const input={throttle:1,brake:0,steer:0,handbrake:false,nitro:false};
+const simulate=(dt,total,steer=0)=>{const s=newCar();let acc=0;for(let i=0;i<Math.ceil(total/dt);i++){acc+=dt;while(acc>=1/60){drive(s,{...input,steer},1/60);acc-=1/60;}}return s;};
+const s30=simulate(1/30,4),s60=simulate(1/60,4);
+assert.ok(kmh(s60)>30,'car must accelerate');
+assert.ok(Math.abs(kmh(s60)-kmh(s30))<2,'handling must not depend on frame rate');
+assert.ok(simulate(1/60,4,1).x>3,'steering must produce a turn');
+const crashed=newCar();crashed.vz=18;crashed.z=7;
+const wall={x:0,z:8,w:5,d:2};
+const hit=collideWall(crashed,wall);assert.ok(hit&&hit.speed>5,'solid collision returns meaningful impact');
+assert.ok(crashed.hp<100&&crashed.damageFront>0,'contact damages physical front');
+const upgrades=tuneWithMods({mass:1000,power:8000,grip:1,brakeForce:10000,steerLock:.6,drag:.4,wheelbase:2.7,topSpeed:55,durability:100},{engine:1,tires:1,brakes:1,armor:1});
+assert.ok(upgrades.mass>1000&&upgrades.power>8000&&upgrades.grip>1,'upgrades affect dynamics');
+const state=initial();const start=state.money;
+assert.ok(trade(state,'port','Ember',1,0).ok);assert.equal(cargoCount(state),1);
+assert.ok(trade(state,'club','Ember',-1,0).ok);assert.equal(cargoCount(state),0);
+assert.ok(quote('port','Ember',0)!==quote('club','Ember',0),'different markets have different prices');
+assert.ok(MARKETS.length>=4);assert.ok(start>0);
+assert.ok(!trade(state,'club','Crown',-1,0).ok,'no selling inventory not held');
+const story=initial();assert.equal(story.mission,0);assert.ok(missionUpdate(story,7,7,0)?.includes('COMPLETE'));assert.equal(story.mission,1);
+const upgradeSave=initial();assert.ok(buyUpgrade(upgradeSave,'engine').ok);assert.equal(upgradeSave.mods.engine,1);
+const owned=initial();owned.money=10000;assert.ok(buyCar(owned,'sedan-sports').ok);assert.ok(owned.owned.includes('sedan-sports'));
+for(const f of ['vehicles/sedan.glb','vehicles/police.glb','vehicles/race.glb','buildings/building-a.glb'])
+ assert.ok(fs.statSync('public/assets/crime/'+f).size>10000,'Missing GLB '+f);
+console.log('BLACKTOP EMPIRE physics/economy/mission/assets checks passed');
