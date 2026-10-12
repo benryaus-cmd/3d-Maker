@@ -68,7 +68,7 @@ All from `Hidencod/tge-assets/packs/city-kit-roads/`, same verified repository C
 | construction-cone.glb | packs/city-kit-roads/construction-cone.glb | 463e1930ef71ee9b09e88562b7e4fc921f9ffb09 |
 | electricity-pole.glb | packs/city-kit-roads/electricity-pole.glb | 6f71ae0b5d06aaf3acfc6ed867c56edcae89cee8 |
 
-These are used as local 3D street dressing with physical proxy collisions; select items have destructible behaviour. The road surface geometry remains custom/instanced rather than imported road tiles.
+These are used as local 3D street dressing with physical proxy collisions; select items have destructible behaviour. The road surface uses imported road tiles with their original curb and lane geometry; street dressing retains physical proxies.
 
 
 ## Mobile presentation palette — 13 October 2026
@@ -95,7 +95,7 @@ Every GitHub file was fetched through the repository contents API, decoded from 
 | `city/palm.glb` | 13616 | 0.93549 / 1.51459 / 1.01276 | 2 |
 | `city/tree.glb` | 31412 | 0.84712 / 1.33242 / 0.76160 | 3 |
 
-All roads are centred at X/Z zero, cover X/Z -0.5 to +0.5, and Y 0–0.02. Scale 8 makes an 8m tile. KayKit buildings have source minY 0.09993; normalize their base before placement. Tree/palm minY is -0.05. `CITY_MODEL_BOUNDS` exposes full scene-space min/max and dimensions. Road orientation should be checked visually when choosing tile rotations.
+All roads are centred at X/Z zero, cover X/Z -0.5 to +0.5, and Y 0–0.02. Scale 8 makes an 8m tile. KayKit buildings have source minY 0.09993; normalize their base before placement. Tree/palm minY is -0.05. `CITY_MODEL_BOUNDS` exposes full scene-space min/max and dimensions. Measured source road openings and canonical rotation corrections are recorded below and exported by CityModels.
 
 ### Original source identity
 
@@ -157,3 +157,21 @@ Eight additional Kenney Furniture Kit CC0 GLBs from the same verified `Hidencod/
 | `interior/table.glb` | 8196 | 0.84149 / 0.32673 / 0.44737 | `packs/furniture-kit/table.glb` | `8add1baf8a97bd813524a441c947a9e1457f4b13` |
 
 Bounds include node transforms, including the bed cover/pillows and scaled plant. All minY values are zero; most furniture uses a corner origin, so centre X/Z before placement. Full bounds are included in `CITY_MODEL_BOUNDS`. GLB chunk length, buffer bounds and embedded-image packaging were verified; integrated safehouse rendering is covered by the game playtest.
+
+## Road direction and vehicle light verification — 12 October 2026
+
+The source Kenney road geometry uses the following openings. These are measured from original GLB triangles, rather than inferred from names: asphalt edge samples at X/Z ±0.49 and lateral offsets -0.15, 0, +0.15 sit at Y 0.01; sidewalk edge samples sit at Y 0.02. The bend's closed edges have no central surface. Embedded palette sampling additionally distinguishes asphalt `(102,107,128)` from sidewalk `(189,198,238)` at these samples. N means +Z, E +X, S -Z, W -X. Positive Three.js Y rotation maps N to E.
+
+| Source model | Original openings | Graph canonical openings | Source correction about Y |
+| --- | --- | --- | --- |
+| road-straight | E, W | N, S | +π/2 |
+| road-crossing | E, W | N, S | +π/2 |
+| road-bend | N, W | N, E | +π/2 |
+| road-intersection | N, E, W | N, E, W | 0 |
+| road-crossroad-path | N, E, S, W | N, E, S, W | 0 |
+
+`CITY_ROAD_ORIENTATION` supplies numeric corrections separately from graph rotations; `CITY_ROAD_SOURCE_OPENINGS` records source and canonical masks. Runtime tiles should retain their source asphalt, curb, lane and crossing details without a procedural asphalt or lane-marking layer covering the original mesh. The original five GLBs remain byte-identical to the licensed sources recorded above. A straight fallback for a dead end retains both source openings; it must be visibly capped at the graph endpoint by the city placement code.
+
+`VehicleLights.ts` adds two textured, feathered, ground-level headlight footprints per car, white emissive front lamps and red rear lamps with stronger brake response. Footprints use transparency, additive blending, depth testing and no depth writes. All follow the root's +Z forward direction. The separately managed player `VehicleLightRig` has exactly two reusable, non-shadow-casting spotlights; traffic cars have no real dynamic lights. Its update accepts a car or null, so getting out disables both spots. The persistent `custom-vehicle-lights` group survives asynchronous GLB body replacement. Call `disposeVehicleLights` before the general car disposer: it removes the group and disposes its unique geometry, materials and texture once. The rig has its own idempotent disposer.
+
+Verification: `node scripts/check-road-assets.mjs` verifies source Git blob hashes, actual source openings, all five canonical rotations, grounded +Z footprints, rotation with vehicle heading, brake intensity, the two-light limit, disabling on foot, and complete resource cleanup. This verifies geometry and lifecycle behavior; final appearance is assessed through the integrated browser playtest.

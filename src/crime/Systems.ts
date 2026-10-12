@@ -1,7 +1,17 @@
 export type CarStyle='sedan'|'sedan-sports'|'police'|'taxi'|'suv'|'race';
 export type Commodity='Ember'|'Glitch'|'Velvet'|'Crown';
 export const GOODS:Commodity[]=['Ember','Glitch','Velvet','Crown'];
-export const MARKETS=[{id:'port',name:'PORT MARKET',x:0,z:32},{id:'club',name:'NEON CLUB',x:32,z:0},{id:'yard',name:'INDUSTRIAL YARD',x:0,z:-32},{id:'tower',name:'UPTOWN BROKER',x:-32,z:0}];
+export const MARKETS=[
+ {id:'port',name:'PORT MARKET',x:-120,z:-120},
+ {id:'club',name:'NEON CLUB',x:120,z:0},
+ {id:'yard',name:'INDUSTRIAL YARD',x:0,z:-120},
+ {id:'tower',name:'FINANCIAL BROKER',x:0,z:120},
+ {id:'hills',name:'HILLS CONTACT',x:-120,z:120},
+ {id:'gardens',name:'GARDENS EXCHANGE',x:120,z:120},
+ {id:'quarter',name:'OLD QUARTER MARKET',x:-120,z:0},
+ {id:'midtown',name:'MIDTOWN DEALER',x:0,z:30},
+ {id:'market',name:'MARKET WARD',x:120,z:-120}
+];
 export type Market=typeof MARKETS[number];
 export type Mods={engine:number;tires:number;brakes:number;armor:number};
 export type Damage={front:number;rear:number;left:number;right:number};
@@ -72,19 +82,19 @@ export function trade(s:GameSave,marketId:string,good:Commodity,qty:number,clock
  return {ok:true,text:`SOLD ${-qty} ${good.toUpperCase()} · +$${price*-qty}`};
 }
 export const MISSIONS=[
- {title:'LAST $200',brief:'Get to your Dockside safehouse.',reward:400,marker:'safehouse'},
+ {title:'LAST $200',brief:'Get to your Midtown safehouse.',reward:400,marker:'safehouse'},
  {title:'HOT DELIVERY',brief:'Pick up the package at Port Market, drop it at Neon Club.',reward:750,marker:'port'},
- {title:'BURN RUBBER',brief:'Race checkpoints to the Industrial Yard.',reward:950,marker:'race'},
+ {title:'BURN RUBBER',brief:'Win the Midtown street circuit.',reward:950,marker:'race'},
  {title:'BLUE LIGHT SPECIAL',brief:'Get police attention, then lose the pursuit.',reward:1300,marker:'chase'},
  {title:'THE TAKE',brief:'Secure the industrial pickup and deliver it Uptown.',reward:2250,marker:'yard'}
 ] as const;
 export function missionMarker(s:GameSave):{x:number;z:number;label:string}|null{
  if(s.mode==='freeroam'||s.mission>=MISSIONS.length)return null;
  if(s.mission===0)return {x:7,z:7,label:'SAFEHOUSE'};
- if(s.mission===1)return s.missionStep===0?{x:0,z:32,label:'PICK UP'}:{x:32,z:0,label:'DELIVER'};
+ if(s.mission===1){const m=MARKETS.find(m=>m.id===(s.missionStep===0?'port':'club'))!;return {...m,label:s.missionStep===0?'PICK UP':'DELIVER'};}
  if(s.mission===2){const checkpoints=[[0,0],[32,0],[32,-32],[0,-32]];const [x,z]=checkpoints[Math.min(s.missionStep,3)];return {x,z,label:'RACE '+(s.missionStep+1)+'/4'};}
  if(s.mission===3)return {x:0,z:0,label:s.missionStep?'ESCAPE THE POLICE':'GET WANTED'};
- if(s.mission===4)return s.missionStep===0?{x:0,z:-32,label:'TAKE THE PACKAGE'}:{x:-32,z:0,label:'UPTOWN DELIVERY'};
+ if(s.mission===4){const m=MARKETS.find(m=>m.id===(s.missionStep===0?'yard':'tower'))!;return {...m,label:s.missionStep===0?'TAKE THE PACKAGE':'FINANCIAL DELIVERY'};}
  return null;
 }
 export function missionUpdate(s:GameSave,x:number,z:number,heat:number):string|null{
@@ -114,3 +124,4 @@ export function buyCar(s:GameSave,car:CarStyle):{ok:boolean;text:string}{
  if(s.money<costs[car])return {ok:false,text:'NOT ENOUGH CASH · $'+costs[car]};
  s.money-=costs[car];s.owned.push(car);s.car=car;s.mods={...activeBuild(s,car).mods};return {ok:true,text:'PURCHASED '+car.toUpperCase()};
 }
+

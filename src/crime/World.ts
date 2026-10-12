@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {crimeAssetURL} from './assets';
-import {CITY_MODELS} from './CityModels';
+import {CITY_MODELS,CITY_ROAD_ORIENTATION} from './CityModels';
+import {ROAD_TILES,CITY_BLOCKS,districtAt,isRoad,roadRoute} from './CityLayout';
+import {attachVehicleLights,updateVehicleLights,disposeVehicleLights} from './VehicleLights';
 import {type CarState,type Wall} from './vehiclePhysics';
 
 type Prop={root:THREE.Group;wall:Wall;velX:number;velZ:number;life:number};
@@ -26,8 +28,16 @@ const mat=(color:number,metalness=0)=>{
  return existing;
 };
 const asphalt=mat(0x252a34),walk=mat(0x77736f),buildingMats=[mat(0x807d73),mat(0x6b777d),mat(0x947f70),mat(0x6b656a),mat(0x606f69)];
-const ground=mat(0x4c5750),lineWhite=new THREE.MeshBasicMaterial({color:0xb5b5a9}),lineYellow=new THREE.MeshBasicMaterial({color:0xe9b95b});
+const ground=mat(0x4c5750);
+const glowPixels=new Uint8Array(32*32*4);
+for(let y=0;y<32;y++)for(let x=0;x<32;x++){const i=(y*32+x)*4,r=Math.hypot((x-15.5)/15.5,(y-15.5)/15.5);glowPixels[i]=glowPixels[i+1]=glowPixels[i+2]=255;glowPixels[i+3]=Math.round(Math.pow(Math.max(0,1-r),2)*255);}
+const glowTexture=new THREE.DataTexture(glowPixels,32,32);glowTexture.needsUpdate=true;glowTexture.magFilter=THREE.LinearFilter;glowTexture.minFilter=THREE.LinearFilter;
+
+const CHUNK_SIZE=60;
+const protectedPlaces=[{x:7,z:7},{x:-8,z:0},{x:0,z:-12},{x:0,z:32},{x:32,z:0},{x:-32,z:0},{x:0,z:-32}];
+const clearFootprint=(x:number,z:number,w:number,d:number)=>!protectedPlaces.some(p=>Math.abs(x-p.x)<w/2+4&&Math.abs(z-p.z)<d/2+4);
 const unitBox=new THREE.BoxGeometry(1,1,1);
+const lampPoolGeometry=new THREE.PlaneGeometry(8,8);
 // InstancedMesh owns matrix buffers even when its geometry/material are cached.
 function disposeWorldVisuals(root:THREE.Object3D){
  root.traverse(o=>{
@@ -37,6 +47,10 @@ function disposeWorldVisuals(root:THREE.Object3D){
 }
 const box=(parent:THREE.Object3D,x:number,y:number,z:number,w:number,h:number,d:number,m:THREE.Material)=>{const o=new THREE.Mesh(unitBox,m);o.scale.set(w,h,d);o.userData.sharedGeometry=true;o.position.set(x,y,z);o.receiveShadow=true;parent.add(o);return o;};
 const hash=(x:number,z:number)=>((Math.imul(x+2903,73856093)^Math.imul(z+9851,19349663))>>>0);
+// Lamps sit beyond tile corners, including bends and tees, rather than on a phantom grid.
+export const ROAD_LAMPS=ROAD_TILES.filter(t=>t.kind!=='straight' || hash(Math.round(t.x),Math.round(t.z))%5===0).flatMap(t=>
+ [{x:t.x+6,z:t.z+6},{x:t.x-6,z:t.z-6}]).filter((p,i,all)=>!isRoad(p.x,p.z)&&all.findIndex(q=>q.x===p.x&&q.z===p.z)===i);
+
 const rand=(seed:number)=>((Math.imul(seed,1664525)+1013904223)>>>0)/4294967296;
 function fitted(root:THREE.Group,targetX:number,targetY:number,targetZ:number):THREE.Group{
  const model=root.clone(true);
@@ -96,6 +110,7 @@ export function createCarVisual(style:CarStyle='sedan',color=0xdf6b35):THREE.Gro
   const cosmetic=root.userData.cosmetics as {paint:number;spoiler:boolean;neon:boolean}|undefined;
   if(cosmetic)applyCarCosmetics(root,cosmetic);
  }).catch(e=>console.warn('Car GLB fallback:',style,e));
+ attachVehicleLights(root);
  return root;
 }
 
@@ -144,6 +159,7 @@ export function applyCarCosmetics(root:THREE.Group,options:{paint:number;spoiler
 }
 /** Dispose per-car meshes and copied paint without invalidating shared model/texture caches. */
 export function disposeCarVisual(root:THREE.Group){
+ disposeVehicleLights(root);
  root.userData.disposed=true;root.removeFromParent();
  const ownedMaterials=new Set<THREE.Material>();
  root.traverse(obj=>{
@@ -194,7 +210,8 @@ export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;
  }
 }
 /** Car view must be updated independently from physics cadence. */
-export function renderCar(root:THREE.Group,s:CarState,dt:number,braking=false){
+export function renderCar(root:THREE.Group,s:CarState,dt:number,braking=false,night=0){
+ updateVehicleLights(root,night,braking);
  root.position.set(s.x,.055,s.z);root.rotation.y=s.heading;
  const bar=root.getObjectByName('emergency-bar');
  if(bar)for(const child of bar.children){
@@ -237,22 +254,20 @@ export class CrimeWorld{
  private environmentTime=17.5*3600;clockLabel='17:30';
  private night=0;private cameraHeading=0;private cameraReady=false;
  private navigation=new THREE.Group();private navigationKey='';
- private routeMaterial=new THREE.MeshBasicMaterial({color:0xf5ba59,transparent:true,opacity:.7,depthWrite:false});
- private lampMaterial=new THREE.MeshBasicMaterial({color:0xffcc82,transparent:true,opacity:0,depthWrite:false});
+ private routeMaterial=new THREE.MeshBasicMaterial({color:0x67e2f5,transparent:true,opacity:.72,depthWrite:false});
+ private lampMaterial=new THREE.MeshBasicMaterial({color:0xffcc82,map:glowTexture,transparent:true,opacity:0,depthWrite:false});
  private windowMaterial=new THREE.MeshBasicMaterial({color:0xffcf8c,transparent:true,opacity:0,depthWrite:false});
  private streetLights:THREE.PointLight[]=[];
  private lampAnchors:THREE.Vector3[]=[];private lampRefresh=Infinity;private lampX=Infinity;private lampZ=Infinity;
+ get nightAmount():number{return this.night;}
  get viewHeading():number{return this.interior.visible?0:this.cameraHeading;}
  surfaceHeight(x:number,z:number):number{
-  const nearestX=Math.round(x/32)*32,nearestZ=Math.round(z/32)*32;
-  if(Math.abs(x-nearestX)<=5.75||Math.abs(z-nearestZ)<=5.75)return .055;
-  const blockX=Math.floor(x/32),blockZ=Math.floor(z/32),localX=x-(blockX*32+16),localZ=z-(blockZ*32+16);
-  const kind=hash(blockX,blockZ)%7;
-  if(kind===0&&Math.abs(localX)<8.5&&Math.abs(localZ)<8.5){if(Math.abs(localX)<1.5||Math.abs(localZ)<1.3)return .17;return .135;}
-  if((kind===1||kind===2)&&Math.abs(localX)<9&&Math.abs(localZ)<9)return .14;
-  if(Math.abs(localX)>10.1||Math.abs(localZ)>10.1)return -.065;
+  if(isRoad(x,z))return .055;
+  const theme=districtAt(x,z).theme;
+  if(theme==='park' && Math.abs(x%30)>2 && Math.abs(z%30)>2)return .135;
   return .09;
  }
+
  readonly sky=new THREE.HemisphereLight(0xc7d7ef,0x394033,2.05);
  readonly sun=new THREE.DirectionalLight(0xffdcac,2.35);
  readonly maxChunks=16;
@@ -322,78 +337,106 @@ export class CrimeWorld{
   for(const [material,b]of buckets){if(b.meshes.length<2)continue;const mesh=new THREE.InstancedMesh(unitBox,material,b.meshes.length);b.matrices.forEach((m,i)=>mesh.setMatrixAt(i,m));mesh.userData.sharedGeometry=true;mesh.receiveShadow=true;mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();group.add(mesh);b.meshes.forEach(o=>o.removeFromParent());}
  }
  private makeChunk(cx:number,cz:number):Chunk{
-  const g=new THREE.Group();g.position.set(cx*96,0,cz*96);this.root.add(g);
-  const walls:Wall[]=[],props:Prop[]=[];box(g,48,-.24,48,96,.35,96,ground);
+  const g=new THREE.Group();g.position.set(cx*CHUNK_SIZE,0,cz*CHUNK_SIZE);this.root.add(g);
+  const walls:Wall[]=[],props:Prop[]=[];
+  box(g,30,-.24,30,60,.35,60,ground);
+  const local=(x:number,z:number)=>({x:x-cx*CHUNK_SIZE,z:z-cz*CHUNK_SIZE});
+  const belongs=(x:number,z:number)=>Math.min(2,Math.floor(x/CHUNK_SIZE))===cx&&Math.min(2,Math.floor(z/CHUNK_SIZE))===cz;
+  const palette=CITY_MODELS as Record<string,string>;
   const model=(path:string,x:number,z:number,w:number,h:number,d:number,rotation=0,road=false)=>{
-   const slot=new THREE.Group();slot.position.set(x,road?-.10:0,z);slot.rotation.y=rotation;
+   const p=local(x,z),slot=new THREE.Group();slot.position.set(p.x,road?.03:.09,p.z);slot.rotation.y=rotation;
    slot.userData.streetSlot={name:path,w,h,d};slot.userData.roadSlot=road;g.add(slot);return slot;
   };
-  const palette=CITY_MODELS as Record<string,string>;
-  // The 32m street graph remains exact; detailed tiles occupy its 11.5m road width.
-  for(let a=0;a<3;a++)for(let b=0;b<3;b++){
-   const x=a*32,z=b*32;
-   box(g,x,.0,z,11.5,.045,11.5,asphalt);
-   model(palette.roadCross??'roads/road-crossroad-path.glb',x,z,11.5,.3,11.5,0,true);
-   for(const turn of [false,true]){
-    const sx=turn?x+16:x,sz=turn?z:z+16;
-    const fall=box(g,sx,.0,sz,turn?20.5:11.5,.045,turn?11.5:20.5,asphalt);
-    const tile=model(palette.roadStraight??'roads/road-straight.glb',sx,sz,11.5,.3,20.5,turn?Math.PI/2:0,true);
-    fall.name='fallback-road';tile.userData.roadFallback=fall;
-    // Painted central dashes remain legible under the imported dark road surface.
-    for(let n=-6;n<=6;n+=6)box(g,sx+(turn?n:0),.13,sz+(turn?0:n),turn?2.5:.13,.012,turn?.13:2.5,lineYellow);
-   }
+  const roads={straight:palette.roadStraight,bend:palette.roadBend,tee:palette.roadIntersection,cross:palette.roadCross,end:palette.roadEnd??palette.roadStraight};
+  for(const tile of ROAD_TILES){
+   if(!belongs(tile.x,tile.z))continue;
+   const p=local(tile.x,tile.z),fall=box(g,p.x,.015,p.z,10,.04,10,asphalt);fall.name='fallback-road';
+   const slot=model(roads[tile.kind],tile.x,tile.z,10,.025,10,tile.rotation+CITY_ROAD_ORIENTATION[tile.kind],true);
+   slot.userData.roadFallback=fall;
   }
   const prop=(path:string,x:number,z:number,w:number,h:number,d:number,rotation=0,breakable=false)=>{
-   const obj=model(path,x,z,w,h,d,rotation);obj.userData.dynamicProp=breakable;const wall:Wall={x:cx*96+x,z:cz*96+z,w:rotation?d:w,d:rotation?w:d,kind:path,breakable};obj.userData.wall=wall;walls.push(wall);
+   if(!clearFootprint(x,z,w,d)||isRoad(x,z))return;
+   const obj=model(path,x,z,w,h,d,rotation);obj.userData.dynamicProp=breakable;
+   const turned=Math.abs(Math.sin(rotation))>.5,wall:Wall={x,z,w:turned?d:w,d:turned?w:d,kind:path,breakable};obj.userData.wall=wall;walls.push(wall);
    if(breakable){const entry={root:obj,wall,velX:0,velZ:0,life:0};props.push(entry);this.props.push(entry);}return obj;
   };
   const building=(path:string,x:number,z:number,w:number,h:number,d:number,seed:number,rot=0)=>{
-   const obj=model(path,x,z,w,h,d,rot);const shell=box(obj,0,h/2,0,w,h,d,buildingMats[seed%5]);shell.name='fallback';
-   const wall:Wall={x:cx*96+x,z:cz*96+z,w:rot?d:w,d:rot?w:d,kind:'building'};obj.userData.buildingSlot=true;obj.userData.wall=wall;walls.push(wall);
-   // Contact shadow and emissive shop/window accents are inexpensive shared geometry.
-   box(g,x,.07,z,w+.5,.015,d+.5,mat(0x343a3c));
+   const turned=Math.abs(Math.sin(rot))>.5,fw=turned?d:w,fd=turned?w:d;
+   if(!clearFootprint(x,z,fw,fd)||[-1,1].some(dx=>[-1,1].some(dz=>isRoad(x+dx*(fw/2+.4),z+dz*(fd/2+.4)))))return;
+   const obj=model(path,x,z,w,h,d,rot),shell=box(obj,0,h/2,0,w,h,d,buildingMats[seed%5]);shell.name='fallback';
+   obj.userData.buildingSlot=true;const wall:Wall={x,z,w:fw,d:fd,kind:'building'};obj.userData.wall=wall;walls.push(wall);
+   const p=local(x,z);box(g,p.x,.07,p.z,fw+.5,.015,fd+.5,mat(0x343a3c));
    for(const side of [-1,1])for(let n=-1;n<=1;n++)box(obj,n*w*.25,2,side*(d/2+.025),w*.12,.7,.025,this.windowMaterial);
    return obj;
   };
-  for(let a=0;a<3;a++)for(let b=0;b<3;b++){
-   const x=a*32+16,z=b*32+16,seed=hash(cx*3+a,cz*3+b),kind=seed%7;
-   box(g,x,.015,z,20.2,.15,20.2,walk);
-   if(kind===0){
-    // A planted neighbourhood pocket, traversable paths, real benches and trees.
-    box(g,x,.105,z,17,.06,17,mat(0x526d51));box(g,x,.15,z,3,.04,18,mat(0xa49b87));box(g,x,.15,z,18,.04,2.6,mat(0xa49b87));
-    for(const dx of [-6,6])for(const dz of [-6,6])prop(palette.tree,x+dx,z+dz,3.8,5,3.8);
-    for(const dz of [-4.5,4.5])prop(palette.bench,x+3,z+dz,2.3,1.2,1,Math.PI/2);
-    for(const dx of [-8,8])model(palette.hedge,x+dx,z,1.1,1,8);
-   }else if(kind===1||kind===2){
-    // Freight yards alternate with service warehouses; open loading space is a shortcut.
-    box(g,x,.11,z,18,.06,18,mat(0x535958));
-    building('buildings/building-a.glb',x-4,z-3,8,5.5,12,seed);
-    if(kind===2){const tower=model(palette.waterTower,x-4,z-3,3,4,3);tower.position.y=5.5;}
-    for(const dz of [-5,0,5]){
-     box(g,x+4,1.35,z+dz,3.5,2.6,4.2,mat(dz===0?0x895145:0x426f72,.2));
-     walls.push({x:cx*96+x+4,z:cz*96+z+dz,w:3.5,d:4.2,kind:'freight'});
-     for(const offset of [-1.4,-.7,0,.7,1.4])box(g,x+4+offset,1.35,z+dz+2.12,.07,2.4,.035,mat(0x334e51));
-    }
-    prop('streets/construction-fence.glb',x,z+8.4,8,1.8,.35,0,true);
-    prop('streets/dumpster.glb',x-7,z+6.5,2,1.4,1.5,0,true);
-   }else{
-    // Closely grouped shopfronts/apartments leave a proper 3m service alley.
-    building(palette.store,x-5,z-4.8,7.7,6.3,9,seed);
-    building(kind===3?palette.apartmentTall:palette.apartment,x+5,z-4,7.6,kind===3?11:8,10.5,seed+2);
-    building('buildings/'+buildingPaths[(seed>>>3)%4]+'.glb',x-4.8,z+5.5,8,6+rand(seed)*4,6.8,seed+1);
-    if(kind===6)building(palette.house,x+5,z+6,7,5,6,seed+3);
-    else{box(g,x+5,.13,z+5.5,7,.025,7,asphalt);for(const dz of [3.3,5.5,7.7])box(g,x+5,.15,z+dz,6,.02,.08,lineWhite);}
-    prop('streets/dumpster.glb',x,z+6,1.7,1.3,1.2,0,true);
-    prop(palette.tree,x+8,z+8,2.4,3.7,2.4);
+  for(const block of CITY_BLOCKS){
+   const bx=(block.minX+block.maxX)/2,bz=(block.minZ+block.maxZ)/2;
+   // Ownership by block centre keeps merged-block colliders alive together.
+   if(!belongs(bx,bz))continue;
+   const district=districtAt(bx,bz),theme=district.theme;
+   let landmark:THREE.Group|undefined;
+   if(block.cells.length===4){
+    const seed=hash(Math.round(bx),Math.round(bz));
+    if(theme==='downtown')landmark=building('buildings/building-skyscraper-a.glb',bx,bz,25,30,25,seed);
+    if(theme==='industrial')landmark=building('buildings/building-a.glb',bx,bz,30,8,24,seed);
+    if(theme==='commercial')landmark=building(palette.store,bx,bz,28,8,26,seed);
+    if(theme==='nightlife')landmark=building(palette.store,bx,bz,26,9,24,seed);
+    if(landmark&&theme==='nightlife'){const neon=mat(0x804eb1);neon.emissive.set(0xa148d0);neon.emissiveIntensity=1.6;box(landmark,0,4.7,12.08,23,.5,.1,neon);}
+    if(theme==='park'){const p=local(bx,bz);box(g,p.x,.24,p.z,8,.3,8,mat(0xbbb8a3));box(g,p.x,.42,p.z,6.6,.05,6.6,mat(0x528b9e,.3));box(g,p.x,1.2,p.z,1.3,1.6,1.3,mat(0xc6c3b0));}
    }
-   // Consistent curbs and corner lamps make roads read as one district.
-   for(const dx of [-10,10])box(g,x+dx,.16,z,.19,.19,20.2,mat(0xaaa594));
-   for(const dz of [-10,10])box(g,x,.16,z+dz,20.2,.19,.19,mat(0xaaa594));
-   model(palette.streetlight??'streets/light-curved.glb',x-8.4,z-8.4,.9,5.8,.9);
-   const glow=new THREE.Mesh(new THREE.CircleGeometry(3.5,16),this.lampMaterial);glow.rotation.x=-Math.PI/2;glow.position.set(x-8.4,.19,z-8.4);glow.userData.lampPool=true;g.add(glow);
-   box(g,x-8.4,5.25,z-8.4,.28,.13,.3,this.windowMaterial);
-   if(seed%2===0)prop('streets/construction-cone.glb',x+8.1,z-8.1,.7,.9,.7,0,true);
+   for(const cell of block.cells){
+    const {x,z}=cell,p=local(x,z),seed=hash(Math.round(x),Math.round(z)),rot=(seed%4)*Math.PI/2;
+    box(g,p.x,.015,p.z,20,.15,20,theme==='park'?mat(0x527953):theme==='suburb'?mat(0x63745a):walk);
+    // Removed internal roads become green walks/courts between the joined cells.
+    for(const q of block.cells)if(q.x===x+30&&q.z===z){const c=local(x+15,z);box(g,c.x,.015,c.z,10,.15,20,theme==='park'?mat(0x527953):walk);}
+    else if(q.z===z+30&&q.x===x){const c=local(x,z+15);box(g,c.x,.015,c.z,20,.15,10,theme==='park'?mat(0x527953):walk);}
+    if(landmark){
+     const dx=Math.sign(x-bx)*7,dz=Math.sign(z-bz)*7;prop(palette.tree,x+dx,z+dz,3,5,3);
+    }else if(theme==='park'){
+     box(g,p.x,.15,p.z,2.6,.035,20,mat(0xb3a995));box(g,p.x,.15,p.z,20,.035,2.6,mat(0xb3a995));
+     for(const dx of [-6,6])for(const dz of [-6,6])prop(palette.tree,x+dx,z+dz,4.4,7+rand(seed+dx)*3,4.4);
+     prop(palette.bench,x+3,z+4,2.5,1.2,1,Math.PI/2);
+    }else if(theme==='suburb'){
+     building(palette.house,x-3,z-2,9,5.5+rand(seed),8,seed,rot);
+     box(g,p.x+5,.105,p.z+3,3,.035,12,mat(0xb2ada0));
+     prop(palette.tree,x+6,z-6,3.5,5,3.5);model(palette.hedge,x,z+8,13,1.3,.9);
+    }else if(theme==='industrial'){
+     building('buildings/building-a.glb',x-3,z-2,11,5.5,12,seed,rot);
+     for(const dz of [-5,0,5]){const wx=x+6,wz=z+dz;if(!clearFootprint(wx,wz,3,4))continue;box(g,p.x+6,1.35,p.z+dz,3,2.6,4,mat(dz===0?0xa15c47:0x456c77,.2));walls.push({x:wx,z:wz,w:3,d:4,kind:'freight'});}
+     if(seed%3===0){const tower=model(palette.waterTower,x-3,z-2,4,5,4);tower.position.y=5.5;}
+     prop('streets/dumpster.glb',x-6,z+7,2,1.4,1.5,0,true);
+    }else if(theme==='commercial'){
+     building(palette.store,x,z-4,15,5+rand(seed)*3,8,seed,rot);
+     box(g,p.x,.1,p.z+5,16,.025,8,asphalt);
+     for(const dx of [-6,-2,2,6])box(g,p.x+dx,.125,p.z+5,.08,.01,6,mat(0xabb3b2));
+     prop(palette.tree,x-8,z+8,2.5,4,2.5);
+    }else if(theme==='historic'){
+     building('buildings/building-d.glb',x-5,z,7,6,15,seed);building(palette.store,x+5,z-4,7,5,7,seed+1,Math.PI);
+     prop(palette.tree,x+3,z+5,3,5,3);prop(palette.bench,x,z+3,2.2,1,1);
+    }else if(theme==='waterfront'){
+     building(palette.store,x-4,z-3,9,6,10,seed,rot);prop(palette.palm,x+6,z+6,3.5,7,3.5);
+     box(g,p.x+5,.1,p.z-4,4,.025,11,mat(0x8c8069));
+     prop(palette.bench,x+5,z+3,2.5,1,1,Math.PI/2);
+    }else{
+     const tall=theme==='downtown',club=theme==='nightlife';
+     const shop=building(palette.store,x-5,z-4,8,club?6:7,9,seed,seed%2?Math.PI:0);
+     building(tall?palette.apartmentTall:palette.apartment,x+5,z-3,8,tall?15+rand(seed)*13:8+rand(seed)*5,10,seed+1,rot);
+     if(seed%3===0)building(tall?'buildings/building-skyscraper-a.glb':palette.house,x-4,z+6,8,tall?20+rand(seed)*9:5,6,seed+2);
+     else prop(palette.tree,x-5,z+6,3.8,6,3.8);
+     prop('streets/dumpster.glb',x+5,z+7,1.8,1.3,1.3,0,true);
+     if(club&&shop){const neon=mat(seed%2?0xdf49c0:0x39d6e2);neon.emissive.set(seed%2?0xd92eb5:0x24c5dd);neon.emissiveIntensity=1.2;box(shop,0,3.3,4.56,6,.35,.08,neon);}
+    }
+   }
   }
+  const pools:THREE.Matrix4[]=[];
+  for(const lamp of ROAD_LAMPS){if(!belongs(lamp.x,lamp.z))continue;
+   model(palette.streetlight??'streets/light-curved.glb',lamp.x,lamp.z,1.5,5.8,1.5);
+   const p=local(lamp.x,lamp.z);box(g,p.x,5.25,p.z,.3,.13,.3,this.windowMaterial);
+   const pool=new THREE.Object3D();pool.rotation.x=-Math.PI/2;pool.position.set(p.x,.12,p.z);pool.updateMatrix();pools.push(pool.matrix.clone());
+  }
+  if(pools.length){const glow=new THREE.InstancedMesh(lampPoolGeometry,this.lampMaterial,pools.length);pools.forEach((m,i)=>glow.setMatrixAt(i,m));glow.userData.sharedGeometry=true;glow.instanceMatrix.needsUpdate=true;glow.computeBoundingSphere();g.add(glow);}
+  // A visible harbour edge: promenade, water, and collision rail beyond the city.
+  if(cx===-3&&cz< -1){box(g,-13,-.07,30,26,.15,60,mat(0x416d7b,.2));box(g,-6,.4,30,.3,.6,60,mat(0xb1afa0));walls.push({x:cx*60-6,z:cz*60+30,w:.3,d:60,kind:'harbour-rail'});for(const dz of [12,42])box(g,-12,.1,dz,20,.22,4,mat(0x8c8069));}
   this.batchBoxes(g);this.attachModels(g);return {group:g,walls,props};
  }
  /** Only chunks touching the visible footprint plus a 34m collision safety margin are instantiated.
@@ -402,10 +445,11 @@ export class CrimeWorld{
   const qx=Math.floor(x/16),qz=Math.floor(z/16);if(qx===this.lastcx&&qz===this.lastcz)return;
   this.lastcx=qx;this.lastcz=qz;
   const wanted=new Set<string>();
-  const cameraDepth=Math.max(42,25/Math.max(.45,this.w/this.h));
-  const radiusX=27+34,radiusZ=cameraDepth+26;
-  for(let cx=Math.floor((x-radiusX)/96);cx<=Math.floor((x+radiusX)/96);cx++)
-   for(let cz=Math.floor((z-radiusZ)/96);cz<=Math.floor((z+radiusZ)/96);cz++){
+  // Four by four bounds include the complete ownership chunk of every visible merged block.
+  const baseX=Math.floor(x/CHUNK_SIZE),baseZ=Math.floor(z/CHUNK_SIZE);
+  const startX=baseX-(x-baseX*60<30?2:1),startZ=baseZ-(z-baseZ*60<30?2:1);
+  for(let cx=startX;cx<startX+4;cx++)for(let cz=startZ;cz<startZ+4;cz++){
+   if(cx< -3||cx>2||cz< -3||cz>2)continue;
    const key=cx+':'+cz;wanted.add(key);
    if(!this.map.has(key))this.map.set(key,this.makeChunk(cx,cz));
   }
@@ -455,10 +499,7 @@ export class CrimeWorld{
   if(this.lampRefresh>=.5||Math.hypot(x-this.lampX,z-this.lampZ)>4){
    this.lampRefresh=0;this.lampX=x;this.lampZ=z;
    // Anchors are deterministic, so no scene traversal/matrix update is required.
-   const candidates:THREE.Vector3[]=[];
-   for(let bx=Math.floor((x-24)/32);bx<=Math.floor((x+24)/32);bx++)for(let bz=Math.floor((z-24)/32);bz<=Math.floor((z+24)/32);bz++){
-    const lx=bx*32+7.6,lz=bz*32+7.6;if(Math.hypot(lx-x,lz-z)<25)candidates.push(new THREE.Vector3(lx,4.5,lz));
-   }
+   const candidates=ROAD_LAMPS.filter(p=>Math.hypot(p.x-x,p.z-z)<28).map(p=>new THREE.Vector3(p.x,4.5,p.z));
    candidates.sort((a,b)=>a.distanceToSquared(this.cameraFocus)-b.distanceToSquared(this.cameraFocus));this.lampAnchors=candidates.slice(0,3);
   }
   this.streetLights.forEach((l,i)=>{const anchor=this.lampAnchors[i];l.intensity=anchor?this.night*18:0;if(anchor)l.position.copy(anchor);});
@@ -467,17 +508,26 @@ export class CrimeWorld{
   this.environmentTime=(this.environmentTime+Math.max(0,dt)*72)%86400;
   const hours=this.environmentTime/3600;this.clockLabel=String(Math.floor(hours)).padStart(2,'0')+':'+String(Math.floor(hours%1*60)).padStart(2,'0');
   const daylight=THREE.MathUtils.smoothstep(Math.sin((hours-6)/24*Math.PI*2),-.15,.35);this.night=1-daylight;
-  this.sky.intensity=.48+daylight*1.25;this.sky.color.set(0x798cb4).lerp(new THREE.Color(0xcbddea),daylight);this.sky.groundColor.set(0x252a39).lerp(new THREE.Color(0x636858),daylight);
-  this.sun.intensity=.18+daylight*2.35;this.sun.color.set(hours>15&&hours<20?0xffbd79:0xffebce);
+  this.sky.intensity=.9+daylight*1.05;this.sky.color.set(0x9bb6e2).lerp(new THREE.Color(0xcbddea),daylight);this.sky.groundColor.set(0x3a4965).lerp(new THREE.Color(0x636858),daylight);
+  this.sun.intensity=.32+daylight*2.35;this.sun.color.set(hours>15&&hours<20?0xffbd79:0xffebce);
   (this.scene.background as THREE.Color).set(0x17243d).lerp(new THREE.Color(0x849da8),daylight);
-  this.lampMaterial.opacity=this.night*.17;this.windowMaterial.opacity=this.night*.85;
-  this.renderer.toneMappingExposure=1.05+daylight*.12;
+  this.lampMaterial.opacity=this.night*.23;this.windowMaterial.opacity=this.night*.85;
+  this.routeMaterial.opacity=.58+Math.sin(this.environmentTime*.07)*.14;
+  this.renderer.toneMappingExposure=1.16+daylight*.12;
  }
  setNavigation(target:{x:number;z:number;label?:string}|null,player:{x:number;z:number;heading:number}):void{
   const key=target?`${Math.round(player.x/4)},${Math.round(player.z/4)}:${target.x},${target.z}`:'';if(key===this.navigationKey)return;this.navigationKey=key;disposeWorldVisuals(this.navigation);this.navigation.clear();if(!target)return;
-  const start={x:player.x,z:player.z},end={x:target.x,z:target.z};const nx=Math.round(start.x/32)*32,nz=Math.round(start.z/32)*32,tx=Math.round(end.x/32)*32,tz=Math.round(end.z/32)*32;
-  const points=Math.abs(start.x-nx)<Math.abs(start.z-nz)?[start,{x:nx,z:start.z},{x:nx,z:tz},{x:tx,z:tz},end]:[start,{x:start.x,z:nz},{x:tx,z:nz},{x:tx,z:tz},end];
-  for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],length=Math.hypot(b.x-a.x,b.z-a.z);if(length<.1)continue;const route=box(this.navigation,(a.x+b.x)/2,.24,(a.z+b.z)/2,.19,.012,length,this.routeMaterial);route.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);}
+  const points=roadRoute({x:player.x,z:player.z},{x:target.x,z:target.z});
+  for(let i=1;i<points.length;i++){
+   const a=points[i-1],b=points[i],length=Math.hypot(b.x-a.x,b.z-a.z);if(length<.1)continue;
+   const angle=Math.atan2(b.x-a.x,b.z-a.z);
+   for(let distance=2;distance<length;distance+=7){
+    const t=distance/length,arrow=new THREE.Group();arrow.position.set(a.x+(b.x-a.x)*t,.15,a.z+(b.z-a.z)*t);arrow.rotation.y=angle;
+    for(const side of [-1,1]){const arm=box(arrow,side*.25,0,-.22,.09,.012,.72,this.routeMaterial);arm.rotation.y=-side*Math.PI/4;}
+    this.navigation.add(arrow);
+   }
+  }
+
  }
  private interiorModel(parent:THREE.Group,path:string,x:number,z:number,w:number,h:number,d:number,rotation=0,y=0){
   const slot=new THREE.Group();slot.position.set(x,y,z);slot.rotation.y=rotation;slot.userData.streetSlot={name:path,w,h,d};slot.userData.buildingSlot=true;parent.add(slot);

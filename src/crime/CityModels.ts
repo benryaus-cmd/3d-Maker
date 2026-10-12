@@ -421,3 +421,16 @@ export const CITY_MODEL_BOUNDS: Record<string, { min: readonly number[]; max: re
     ]
   }
 };
+
+/** Measured from the original GLB top triangles: N=+Z, E=+X, S=-Z, W=-X.
+ * Positive Three.js Y rotation maps N to E. Keep this source correction separate
+ * from the graph's canonical tile rotation. scripts/check-road-assets.mjs verifies it. */
+export const CITY_ROAD_SOURCE_OPENINGS = {
+  straight: {sourceMask: 10, canonicalMask: 5, rotation: Math.PI / 2},
+  crossing: {sourceMask: 10, canonicalMask: 5, rotation: Math.PI / 2},
+  bend: {sourceMask: 9, canonicalMask: 3, rotation: Math.PI / 2},
+  tee: {sourceMask: 11, canonicalMask: 11, rotation: 0},
+  cross: {sourceMask: 15, canonicalMask: 15, rotation: 0},
+} as const;
+
+export const CITY_ROAD_ORIENTATION = {straight: Math.PI / 2, crossing: Math.PI / 2, bend: Math.PI / 2, tee: 0, cross: 0, end: Math.PI / 2} as const;

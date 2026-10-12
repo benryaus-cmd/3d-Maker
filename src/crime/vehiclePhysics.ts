@@ -1,9 +1,9 @@
 /** BLACKTOP EMPIRE — fixed-step planar chassis/tire model (world units = metres).
  * Vehicle direction uses heading=0 towards +Z; local X is right. No frame-dependent movement.
  * Core simulation intentionally independent of Three.js so physics can be unit-tested. */
-export type DriverInput={throttle:number;brake:number;steer:number;handbrake:boolean;nitro:boolean};
+export type DriverInput={throttle:number;brake:number;steer:number;handbrake:boolean;nitro:boolean;reverse?:boolean};
 export type CarTune={mass:number;power:number;grip:number;brakeForce:number;steerLock:number;drag:number;wheelbase:number;topSpeed:number;durability:number};
-export type CarState={x:number;z:number;heading:number;vx:number;vz:number;yawRate:number;steerAngle:number;hp:number;damageFront:number;damageRear:number;damageLeft:number;damageRight:number;nitro:number;odometer:number;lastImpact:number};
+export type CarState={x:number;z:number;heading:number;vx:number;vz:number;yawRate:number;steerAngle:number;hp:number;damageFront:number;damageRear:number;damageLeft:number;damageRight:number;nitro:number;odometer:number;lastImpact:number;throttlePedal?:number;brakePedal?:number;longitudinalAccel?:number;reverseEngaged?:boolean};
 export type Wall={x:number;z:number;w:number;d:number;breakable?:boolean;broken?:boolean;kind?:string};
 export type Contact={speed:number;nx:number;nz:number;side:'front'|'rear'|'left'|'right';wall?:Wall};
 export const BASE_TUNE:CarTune={mass:1320,power:8200,grip:1.05,brakeForce:11700,steerLock:.60,drag:.42,wheelbase:2.7,topSpeed:49,durability:100};
@@ -22,42 +22,73 @@ export function pointTouchesCar(s:CarState,x:number,z:number,radius=.35):boolean
 export function tuneWithMods(base:CarTune,mods:{engine:number;tires:number;brakes:number;armor:number}):CarTune{
  return {...base,power:base.power*(1+.15*mods.engine),grip:base.grip*(1+.11*mods.tires),brakeForce:base.brakeForce*(1+.13*mods.brakes),mass:base.mass+mods.armor*95,durability:base.durability*(1+.23*mods.armor)};
 }
-/** Slip-limited bicycle handling with yaw inertia. Must be called at 1/60s timestep. */
+/** Two-axle planar chassis, informed by oseiskar/js-car's MIT model:
+ * https://github.com/oseiskar/js-car/blob/master/physics/car.js
+ * Original implementation here uses continuous slip-angle tire forces rather than
+ * its no-slip matrix solver. Front/rear contact velocity includes rotational velocity;
+ * their force moments accelerate a physical yaw inertia, never a target yaw rate.
+ * Small internal substeps keep low-speed tire damping stable at the fixed 60 Hz tick. */
 export function drive(s:CarState,c:DriverInput,dt:number,t:CarTune=BASE_TUNE,wet=false):void{
- dt=limit(dt,0,1/30); const a=axes(s.heading),long=s.vx*a.fx+s.vz*a.fz,lat=s.vx*a.rx+s.vz*a.rz;
- const k=limit(1-s.hp/100,0,1);
- const maxAngle=t.steerLock/(1+Math.abs(long)*.035);
- const target=limit(c.steer,-1,1)*maxAngle;
- const steeringRate=(c.handbrake?4.2:3.6)/(1+Math.abs(long)*.015);
- s.steerAngle+=limit(target-s.steerAngle,-dt*steeringRate,dt*steeringRate);
- // Stronger initial torque, then a gentle roll-off rather than a constant shove.
- const torque=1.16-.24*limit(Math.abs(long)/t.topSpeed,0,1);
- const engine=limit(c.throttle,0,1)*(t.power/t.mass)*torque*(1-k*.5);
- const reverse=c.throttle<.1&&c.brake>0&&(long<-.3||(c.brake>.8&&Math.abs(long)<.5));
- const motor=reverse ? -c.brake*4.2:engine;
- const braking=reverse?0:c.brake*t.brakeForce/t.mass;
- const resistance=.0025*long*Math.abs(long)+t.drag*long/t.mass+(.11*long);
- let flong=motor-resistance-(Math.abs(long)>.08?Math.sign(long)*braking:0);
- if(!reverse&&Math.abs(long)<.25&&c.brake>.6&&!c.throttle)flong=0;
- const grip=t.grip*(wet?.78:1)*(c.handbrake?.36:1)*9.81;
- const latForce=limit(-lat*7.6,-grip,grip);
- const steerYaw=long*Math.tan(s.steerAngle)/t.wheelbase;
- // Limit ordinary turning by tyre acceleration; handbrake permits yaw/slip to separate.
- const yawLimit=t.grip*(wet?.78:1)*9.81*(c.handbrake?1.8:1.25)/Math.max(4,Math.abs(long));
- const targetYaw=limit(steerYaw*(c.handbrake?1.35:1),-yawLimit,yawLimit);
- const yawResponse=limit((c.handbrake?2.8:5.4)*dt,0,1);
- s.yawRate+=(targetYaw-s.yawRate)*yawResponse;
- // Excess speed and sharp turning generate real lateral slip, not instant velocity snapping.
- if(c.nitro&&s.nitro>0&&c.throttle>.4){flong+=8;s.nitro=Math.max(0,s.nitro-dt*19);}
- else s.nitro=Math.min(100,s.nitro+dt*2.5);
- const dvx=(a.fx*flong+a.rx*latForce)*dt;
- const dvz=(a.fz*flong+a.rz*latForce)*dt;
- s.vx+=dvx;s.vz+=dvz;
- const v=speed(s),cap=t.topSpeed*(c.nitro?1.18:1)*(1-.42*k);
- if(v>cap){s.vx*=cap/v;s.vz*=cap/v;}
- s.heading+=s.yawRate*dt;
- s.x+=s.vx*dt;s.z+=s.vz*dt;
- s.odometer+=speed(s)*dt;
+ dt=limit(dt,0,1/30);if(dt===0)return;
+ const steps=Math.ceil(dt/(1/120)),h=dt/steps;
+ for(let i=0;i<steps;i++){
+  const a=axes(s.heading),long=s.vx*a.fx+s.vz*a.fz,lat=s.vx*a.rx+s.vz*a.rz;
+  const requestedThrottle=limit(c.throttle,0,1),requestedBrake=limit(c.brake,0,1);
+  // A pedal input changes torque over time, including when the driver lifts off.
+  s.throttlePedal=(s.throttlePedal??0)+(requestedThrottle-(s.throttlePedal??0))*(1-Math.exp(-h/(requestedThrottle>(s.throttlePedal??0)?.18:.09)));
+  s.brakePedal=(s.brakePedal??0)+(requestedBrake-(s.brakePedal??0))*(1-Math.exp(-h/.10));
+  if(c.reverse===false||requestedThrottle>.08||requestedBrake<.02)s.reverseEngaged=false;
+  else if(long<.25)s.reverseEngaged=true;
+  const reverse=!!s.reverseEngaged;
+  const damage=limit(1-s.hp/100,0,1),absLong=Math.abs(long);
+  const maxAngle=t.steerLock/(1+absLong*.028);
+  const requestedSteer=limit(c.steer,-1,1);
+  // A mild self-aligning rack helps unwind a slide when the driver releases steering.
+  // Explicit countersteering always takes priority; the rear tires still govern recovery.
+  const align=!c.handbrake&&long>3?limit(Math.atan2(lat,Math.max(3,long))*.7,-maxAngle,maxAngle)*(1-Math.min(1,Math.abs(requestedSteer)*5)):0;
+  const target=limit(requestedSteer*maxAngle+align,-maxAngle,maxAngle);
+  // Steering winds in, countersteers and self-centres progressively.
+  const steeringRate=(Math.abs(target)<Math.abs(s.steerAngle)?2.1:1.65)/(1+absLong*.02);
+  s.steerAngle+=limit((target-s.steerAngle)*(1-Math.exp(-h/.13)),-h*steeringRate,h*steeringRate);
+  const delta=s.steerAngle,cos=Math.cos(delta),sin=Math.sin(delta);
+  const frontArm=t.wheelbase*.48,rearArm=t.wheelbase*.52;
+  const inertia=t.mass*(4.5*4.5+2.2*2.2)/12;
+  const friction=t.grip*(wet?.76:1)*9.81;
+  // Acceleration moves normal load rearwards; braking moves it forwards.
+  const transfer=limit((s.longitudinalAccel??0)*.48/(9.81*t.wheelbase),-.16,.16);
+  const frontLoad=limit(rearArm/t.wheelbase-transfer,.30,.70),rearLoad=1-frontLoad;
+  const frontLimit=t.mass*friction*frontLoad;
+  const rearLimit=t.mass*friction*rearLoad*(c.handbrake?.23:1);
+  const denominator=Math.max(3,absLong),direction=long<0?-1:1;
+  // Regularized slip is continuous through zero speed and also works in reverse.
+  const frontSlip=Math.atan2(lat+s.yawRate*frontArm,denominator)-delta*direction*Math.min(1,absLong/3);
+  const rearSlip=Math.atan2(lat-s.yawRate*rearArm,denominator);
+  const frontLateral=-frontLimit*Math.tanh(frontSlip*8.8);
+  const rearLateral=-rearLimit*Math.tanh(rearSlip*9.8);
+  const boost=c.nitro&&s.nitro>0&&requestedThrottle>.4&&!reverse;
+  if(boost)s.nitro=Math.max(0,s.nitro-h*19);else s.nitro=Math.min(100,s.nitro+h*2.5);
+  const cap=(reverse?9:t.topSpeed*(boost?1.18:1))*(1-.42*damage);
+  // Fade engine force at redline, leaving collision and slide velocity unsnapped.
+  const torque=1.14-.23*limit(absLong/t.topSpeed,0,1);
+  const engine=reverse?-s.brakePedal*t.mass*4.2:s.throttlePedal*t.power*torque*(1-damage*.5)+(boost?t.mass*8:0);
+  const redline=limit((cap-(reverse?-long:long))/Math.max(2,cap*.12),0,1);
+  const traction=t.mass*friction;
+  const motor=limit(engine*redline,-traction*.55,traction*.82);
+  const requestedStop=(!reverse?s.brakePedal*t.brakeForce:0)+(c.handbrake?t.brakeForce*.34:0);
+  // Friction circle: braking and cornering share the same tire contact budget.
+  const brakeBudget=Math.sqrt(Math.max(0,frontLimit*frontLimit-frontLateral*frontLateral))+Math.sqrt(Math.max(0,rearLimit*rearLimit-rearLateral*rearLateral));
+  const braking=Math.min(requestedStop,brakeBudget,absLong*t.mass/h);
+  const resistance=t.mass*(.16*Math.tanh(long*3)+.0018*long*absLong)+t.drag*long;
+  const longitudinal=(motor-resistance-Math.sign(long)*braking-frontLateral*sin)/t.mass;
+  const lateral=(frontLateral*cos+rearLateral)/t.mass;
+  s.longitudinalAccel=longitudinal;
+  s.vx+=(a.fx*longitudinal+a.rx*lateral)*h;
+  s.vz+=(a.fz*longitudinal+a.rz*lateral)*h;
+  s.yawRate+=(frontArm*frontLateral*cos-rearArm*rearLateral)/inertia*h;
+  s.heading+=s.yawRate*h;
+  s.x+=s.vx*h;s.z+=s.vz*h;s.odometer+=speed(s)*h;
+  if(speed(s)<.025&&requestedThrottle<.02&&requestedBrake<.02){s.vx=0;s.vz=0;}
+ }
 }
 export function sideFor(s:CarState,nx:number,nz:number):Contact['side']{
  const a=axes(s.heading),forward=nx*a.fx+nz*a.fz,side=nx*a.rx+nz*a.rz;
@@ -66,7 +97,8 @@ export function sideFor(s:CarState,nx:number,nz:number):Contact['side']{
 export function impact(s:CarState,nx:number,nz:number,relativeSpeed:number,wall?:Wall,t:CarTune=BASE_TUNE):Contact{
  const side=sideFor(s,nx,nz);
  // Progressive structural damage at collision face: contact velocity sets seriousness.
- const amount=Math.max(0,relativeSpeed-2.1)*.9*(t.mass/1320)*(100/Math.max(35,t.durability));
+ const damagingSpeed=Math.max(0,relativeSpeed-1.8);
+ const amount=(.24*damagingSpeed*damagingSpeed+.55*damagingSpeed)*(t.mass/1320)*(100/Math.max(35,t.durability));
  const part='damage'+side.charAt(0).toUpperCase()+side.slice(1) as keyof CarState;
  (s as unknown as Record<string,number>)[part]=limit(Number(s[part])+amount/55,0,1);
  s.hp=limit(s.hp-amount,0,100);

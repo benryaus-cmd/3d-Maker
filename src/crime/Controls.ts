@@ -1,9 +1,9 @@
-export type ControlField='throttle'|'brake'|'left'|'right'|'handbrake'|'nitro';
-const keys:Record<ControlField,string[]>={throttle:['w','arrowup'],brake:['s','arrowdown'],left:['a','arrowleft'],right:['d','arrowright'],handbrake:[' '],nitro:['shift']};
+export type ControlField='throttle'|'brake'|'left'|'right'|'handbrake'|'nitro'|'punch';
+const keys:Record<ControlField,string[]>={throttle:['w','arrowup'],brake:['s','arrowdown'],left:['a','arrowleft'],right:['d','arrowright'],handbrake:[' '],nitro:['shift'],punch:['f']};
 
 /** Keep each keyboard key and captured finger independent until it releases. */
 export class Controls{
- throttle=false;brake=false;left=false;right=false;handbrake=false;nitro=false;steer=0;moveX=0;moveZ=0;
+ throttle=false;brake=false;left=false;right=false;handbrake=false;nitro=false;punch=false;steer=0;moveX=0;moveZ=0;
  private pressed=new Set<string>();
  private pointers=new Map<number,ControlField>();
  key(key:string,down:boolean){if(down)this.pressed.add(key);else this.pressed.delete(key);this.apply();}

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import './check-vehicle-handling.mjs';
 import * as vehicleGeometry from '../src/crime/vehiclePhysics.ts';
 assert.equal(typeof vehicleGeometry.pointTouchesCar,'function','pedestrian collisions must use the oriented vehicle hull');
 assert.ok(vehicleGeometry.pointTouchesCar(vehicleGeometry.newCar(),0,2.45,.35),'bonnet touches a pedestrian before the car centre does');
