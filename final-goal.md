@@ -1,362 +1,166 @@
-# Final goal: GraffCiti — a premium graffiti world
+# FINAL GOAL — BLACKTOP EMPIRE
+**Project:** Original 18+ portrait-first 3D top-down open-world crime, driving, police-pursuit, racing and contraband-trading game for Aippy.  
+**Date:** 12 October 2026  
+**Status:** Living product specification, implementation order and acceptance contract. This replaces the previous zombie/HubSide goal for THIS repository only.  
+**Reference flavours:** classic top-down GTA freedom and escalation; Need for Speed vehicle handling/customisation/pursuits; Dope Wars district economics. Build an original game, not a clone of their trademarks, levels, characters, dialogue, music or art.
 
-Updated: 9 October 2026 (Australia/Sydney).
+## 0. Non-negotiable direction
+Make an ACTUAL GAME, not a beautiful menu or static showcase. From first load the player can steer, throttle, brake, crash, flee police, make money, acquire vehicles, visit a safehouse and choose between story and open-world free roam. No tutorial wall preventing play. Cinematic, tactile, brutal adult crime fiction with meaningful decisions, consequences and progression. Target premium mobile presentation, original identity, cohesive stylized-but-detailed 3D.
 
-Repository: https://github.com/benryaus-cmd/graf-game  
-Live reference: https://aippy.ai/@PinkYyyy/street-art-canvas-aV7b
+**Portrait is the principal layout:** vertical view, player car in lower-middle, readable forward road, thumb-reachable twin-side controls, transparent controls over action, no cut-off HUD. Landscape/desktop gracefully supported. Never force a fake rotated view on Android Aippy. Big tap targets and proper multi-touch pointer-capture release.
 
-This is the working destination for future development. It describes intended behaviour, not completed features. Later instructions from the owner take precedence. Keep the GitHub-to-Aippy importer working as the game evolves.
+**Top-down means real 3D with a high orthographic camera pitched slightly off vertical**, not a 2D sprite masquerade. Lower/transparent obstructive roofs near player, car remains visible near tall buildings, strong camera follow with velocity lookahead, cinematic shake only at appropriate impacts, controlled dynamic zoom at speed/pursuit/cutscene. A true top-down camera means skyline/fog systems from HubSide/Dead City must not be carried over.
 
-**Owner's latest implementation instruction:** Make the premium town (canonical map ID `map2`, world identity `map2-v1`) the fresh default/main world and the only multiplayer choice. Keep the original city as a second, local-only option; preserve both worlds' existing artwork addresses and saved preferences. Apply the supplied 9 October night/settings defaults without overwriting saved custom settings. After grabbing a basketball, every normal release throws it, including a weak toss or stationary drop; cancellation does not. Soften power so a deliberate upward flick feels useful and low power is controllable. Use the existing multiplayer backend only. Publish a handover for its server AI, which may propose better backend schemas for a subsequent frontend update. Do not create another backend, VM service, Docker container or WebSocket server, and do not claim the new room/shared basketball is deployed before verification.
+**No distant scenery needlessly drawn or loaded.** Calculate camera frustum footprint and keep a near-edge safety margin. Preload or retain immediately relevant adjacent chunks and offscreen gameplay colliders/AI state, because deleting them just outside the view causes collisions, popping and police teleportation. Detach/recycle visuals for offscreen zones, not persistent world state. No need for fake haze/fog to mask draw distance. Camera culling alone is not sufficient: CPU actors, shadows, audio and prop update budget must cull as well. Use pooled and instanced geometry where valuable. Keep road connectivity stable between sectors.
 
-## Direction: keep the world and spraying foundation; rebuild the experience
+**Core fantasy:** Start broke in a grimy port-city district with a battered car and a rented room. Work street trades and deliveries, race for respect, modify vehicles, evade expanding police response, buy and upgrade properties, take territory, survive ambushes and complete a strongly directed campaign. Any time the player can ignore the story and roam.
 
-Keep the existing Three.js world, useful geometry/chunks and basic wall-painting foundation. Rebuild the controls, HUD, painting workflow and supporting systems as needed. The owner has authorised a substantial overhaul; retaining existing menus, bots, primitive avatars or poster features is not a goal. Preserve existing saved artwork during migration where practical, without letting old saves overwrite the shared world.
+## 1. Existing repository — protect useful assets, reject inherited gameplay
+Repo: https://github.com/benryaus-cmd/3d-Maker ; branch main.
+At planning inspection, this was a full Dead City/HubSide code archive, NOT an empty starter. `src/App.tsx` was a tiny re-export of `src/zombie/ZombieGame`. There are hundreds of historical `src/game`, `src/zombie`, `src/components` files, and preloaded `public/assets/characters/*.glb`, `public/assets/quarter/*.gltf`, `public/assets/preview/building.glb`, `public/assets/city/tree.gltf`, and extensive `public/audio/sfx`.
+**Do not delete that archive or blindly initialise a new framework.** A clean `src/crime/` entry point is preferable, leaving the dormant systems intact until proven replacements are better.
+Keep existing Aippy Vite integration/plugin chain, React 19, Three.js, package manager, aliases and build-time project viewer mechanics. No invented Aippy native networking/credits features. Game must work offline/local-first; no HubSide server connections.
 
-The game should feel like a serious graffiti sandbox: expressive handmade art, clean controls, convincing characters, a city worth exploring and an optional persistent social world. Premium quality means control feel and painting quality first, followed by coherent presentation and dependable persistence. It does not mean adding every possible feature at once.
+Asset work starts with an inventory: inspect and preview EXISTING geometry/models/sounds, reuse real assets when suitable, document exact licenses and file paths, then import missing car/road/property/sound assets. Avoid repeatedly loading same GLB/texture.
 
-**Solo by default. Join the shared server deliberately. My movement, looking and brush respond immediately, including on bad internet.** Remote players and their strokes may arrive late; my own input must never wait for a network round trip.
-
-Remove the AI image/poster generator. Players make their own art, tags, throw-ups and signatures. Replace the prompt-and-generate workflow with a handmade art library and drawing tools.
-
-## What the current review establishes
-
-The owner confirms spraying works, and supplied a portrait screenshot showing red/green paint on a concrete wall. The immediate problem is having to open the paint menu to enable spray, close it to paint, and reopen it to disable spray. The screenshot also shows visibly coarse/jagged paint edges and a crowded header. Those are the priorities, not a claim that paint deposition is broken.
-
-A separate live-browser session rendered the world, opened the Paint Station, selected green and toggled spray. Its unsuccessful targeting clicks were inconclusive and are superseded by the owner's positive painting evidence. The first browser had WebGL disabled; that was an environment limitation. The GitHub-matched project snapshot built successfully with npm run build. None of this proves good touch-control feel, measured frame rate or multiplayer readiness.
-
-Source inspection provides useful starting points:
-
-- GameHud combines several decorative/status rows, large actions, a movement joystick, jump and a paint dock.
-- worldControls uses canvas dragging for looking or painting depending on paint mode. These inputs compete.
-- worldPainting raycasts paintable walls with a 160-world-unit cutoff. Foreground non-paintable occlusion and a fixed selected surface need explicit handling.
-- Paint layers use fixed-resolution canvases per face with linear texture filtering. Strokes connect samples, but this alone does not establish sufficient detail or good stabilisation.
-- Paint and credits are saved in browser localStorage. App awards a coin for spraying at an 800 ms throttle; that cannot remain the shared economy.
-- PosterStudio contains the AI prompt/generation workflow that should be removed.
-- Existing world chunks and paint layers are useful foundations, but mutable wall indices must become stable surface IDs.
-
-The screenshot cannot establish whether texture density, sampling, projection or several factors caused the rough edges. Measure those separately during implementation.
-
-[Alternative live session report](https://agent.tinyfish.ai/runs/3afe04a0-d9d0-4c37-9ff6-e6429ec844c2).
-
-## Clean controls and a compact HUD
-
-Use an independent **left movement thumb control** and **right look thumb control**. Support both simultaneously, including while paint is enabled. Keep jump reachable. Preserve keyboard/mouse support.
-
-Put the colour selector and active tool/head in a compact top strip. Keep size and undo close at hand; open advanced palette, head tuning, layers and the art library only when needed. Reduce branding and decorative text. Put secondary settings in one small menu. Smaller readable text must not mean tiny touch targets.
-
-Provide a persistent, directly reachable **Paint / Explore toggle** outside the expanded paint menu. One tap enables painting/selection; one tap returns to exploration. Opening the palette only changes tools or colour. Closing it must not be the mechanism for starting or stopping spray.
-
-Enabling paint does not deposit paint automatically. Initially tap a surface to select an area; once selected, press/drag on it to paint. Show a small active-tool indicator and brush preview. Let artists stop painting or release the selected area without hunting through a modal. Avoid several overlapping switches whose combined state is unclear.
-
-Every pointer has one owner: movement, look, brush or UI. Right-look input never deposits paint; UI taps never fall through to the world. Pointer release, cancellation, lost focus and menu entry stop held actions. Typing in chat disables gameplay keyboard handling.
-
-Put **Portrait / Landscape** at the top right. Change the drawing/view orientation without reload, lost paint or multiplayer disconnect. Use native orientation control when available and an in-app rotated/reflowed view fallback otherwise. Transform pointer coordinates and control positions correctly. Preserve artwork aspect ratio, selected surface, draft and camera state; never stretch the painting to fill the screen.
-
-## Choose a real surface and preview a painting box
-
-Flow: **Paint → tap surface → see attached box → adjust/confirm → paint**. Selection taps do not paint.
-
-Attach the preview rectangle to a stable surface/face in world coordinates. It must stay on that surface as the camera moves. Show availability, dimensions and any price before confirmation. Start with a useful bounded area; allow resizing/repositioning up to a hard maximum. Extra area costs credits. Standard size, maximum size, reach and prices are tuning values, not fixed promises here.
-
-Respect actual geometry, nearby reach and the nearest foreground obstruction, including non-paintable solid objects. A doorway is a hole, not a continuous canvas. A selected wall must never turn into a target on a distant building through the doorway. Do not fall back to another wall when the chosen surface is missed. Break the stroke across invalid hits rather than connecting across empty space.
-
-Ordinary tools, erasers and reusable art are clipped to the chosen region and surface. Boxes cannot bridge holes or invalid geometry. Preview invalid placement clearly. The special drizzle exception is defined below.
-
-In the shared world, confirmation requests a server claim. Show a pending box immediately and preserve provisional local draft strokes while it is being checked. Pending paint cannot overwrite confirmed shared art. If refused, keep the draft and offer another valid area. In solo, the same selection flow works locally.
-
-## Smooth, sharp, expressive paint
-
-Treat input smoothing and visible pixel size as separate problems. Lowering texture resolution would make pixels larger; the goal is cleaner edges and appropriate detail at normal painting distance.
-
-Resample strokes at consistent spacing in surface coordinates, interpolate gaps, and offer adjustable stabilisation. Keep its default light enough for responsive handwriting and intentional corners. Support coalesced pointer samples and stylus pressure where available; mouse/touch must still feel good. Use frame-rate-independent paint accumulation so slow frames do not change coverage.
-
-Allocate texture detail according to physical artwork size and intended viewing distance. Avoid stretching one modest square texture across an enormous face. Evaluate bounded artwork patches or tiles, antialiased brush masks, correct UV scale and physical brush widths. Raise active-area detail within a measured GPU/memory budget; do not make every distant wall an enormous texture. Preserve sharper source art when resizing a reusable tag.
-
-Update dirty paint surfaces at most as needed per frame; avoid repeated full-texture upload, PNG encoding or saving in the brush input handler. Load/composite snapshots without blocking strokes. Compare the same mark at close, normal and distant viewing ranges on a representative phone.
-
-### Tools and heads
-
-| Tool/head | Intended behaviour |
-| --- | --- |
-| Fine/skinny cap | Controlled outlines, lettering and highlights; narrow adjustable soft edge. |
-| Standard cap | Balanced general drawing and fills. |
-| Fat cap | Broad fills and gradients with soft overspray. |
-| Flat/chisel head | Directional strokes, handstyles and broad edges. |
-| Marker | Clean opaque tags, including pressure/chisel behaviour where appropriate. |
-| Paint roller | Broad strips for backgrounds and block lettering, with a distinct texture/edge. |
-| Drip head | Paint builds up and runs down with gravity along the surface; dwell and flow matter. |
-| Drizzle head | Loose trails/splashes that can extend beyond the painting box. |
-| Eraser | Editable removal of authorised contributions; never free removal of protected art. |
-
-Expose useful size, opacity/flow and softness controls without making the artist configure a simulation. Head changes should be visibly different. Use deterministic brush versions/seeds and replayable actions so remote clients reproduce spray scatter and drips. Do not require a server message for each simulated droplet.
-
-**Drizzle ignores box limits**, but stays on the same reachable, unobstructed physical surface. It cannot cross doorways, jump to the background or paint protected neighbouring art for free. Spill remains attributed but does not automatically expand the protected claim. Show the spill margin in canvas mode. Protected overlap needs the same expensive paid override as any other tool.
-
-## Wall painting and live canvas mode
-
-After selecting an area, paint on the 3D wall or choose **Enter canvas mode**. Canvas mode hides the world and shows the same live artwork front-on in an otherwise clean workspace. Existing art stays visible; “blank screen” means removing world clutter, not clearing the wall.
-
-Provide pan/zoom, portrait rotation, the compact tools and an obvious return button. Both views edit the same surface coordinates and layer stack. There is no duplicate painting, export or delayed Apply step. Other players see updates on the wall while the artist draws in canvas mode. Switching view/orientation preserves marks, selection, layers, protection and pending updates.
-
-Give the piece a manageable layer stack: create/name, hide, reorder, opacity, lock and merge. Keep undo/redo for the artist's own editable work. A layer hidden in the editor must not ambiguously count as shared visible paint; shared composition changes are explicit operations. Undo cannot delete somebody else's later strokes or refund a reusable-art purchase through repeated placement. Layers cannot bypass claims, hard size limits or paid overrides.
-
-## Handmade tags, throw-ups and a personal art library
-
-Graffiti tools should support quick signatures, outline-and-fill throw-ups and developed pieces with backgrounds, shading and highlights. These are different creative uses of the same drawing tools, not generated images or locked templates.
-
-Add a **Make throw-up / tag** workspace with a transparent background, layers, undo/redo and the same brush tools. Save the player's handmade design to their library, name it, preview it and optionally designate their personal logo/signature. No AI prompt or image-generation button.
-
-Place saved designs into a piece with drag, resize and rotate handles. Preview the exact placement, clipping and price; confirm deliberately. Keep transparency and clean scaling. Limit source dimensions, data size, physical placement size and total covered area. Avoid saving a whole wall as an unlimited reusable “logo”.
-
-| Action in the shared world | Credit rule |
-| --- | --- |
-| Draw/edit/save a design to your own library | Free baseline creation; no generation charge. |
-| Reuse a throw-up/tag as a standalone mark or in another piece | Costs credits; show the quote before placement. |
-| Place your own designated logo/signature inside a piece you authored | Free within the signature size/coverage limits. |
-| Put that logo in someone else's piece | Normal reuse cost and required surface permission apply. |
-| Expand the region or cover another artist's protected paint | Relevant expansion/override charges still apply. A free signature never grants these permissions. |
-
-The server verifies asset ownership, piece authorship, designation and size/coverage limits. A client “this is my logo” flag is insufficient. Bound the total free signature coverage per piece so repeated free copies cannot fill a mural. Exact limits and reuse prices need tuning.
-
-Preview any combined reuse/expansion/override price together. Use unique operation IDs so retries cannot charge twice or place duplicates. Keep the original editable design when placing it. Solo uses local library/drafts; any later account sync is explicit and must not import a fabricated online balance.
-
-## Four-hour protection and deliberate paid tag-over
-
-An accepted online area is protected from ordinary painting/erasing by other players for **four hours**, measured by the server. Recommended start is claim confirmation. Editing/reconnecting does not silently renew it. Show author and remaining time when inspecting the piece.
-
-After expiry, art remains; it becomes eligible to be painted over. Expiry does not delete the original portfolio/history. Accept claims/expansions atomically so competing requests cannot both receive the same protected area.
-
-Allow an **expensive, deliberate tag-over** during protection. This is rivalry by choice. Show the affected artwork, bounded area and substantial price before purchase. Charge significantly more than ordinary reuse or expansion; tune actual rates later.
-
-The server validates funds and grants only the quoted region, with deduplicated charging. Recommended rule: that region becomes the new contribution with its own four-hour timer, while unaffected original regions retain their old timer. Preserve original versions and attribution. Explain the final rule before charging. Erasers, drizzles, imported art, layers or any retained bots cannot bypass it.
-
-## Solo first; one clearly joinable persistent server
-
-Boot into a local solo world immediately. Make **Join server** easy to find, with concise connection status, occupancy and available slots when known. Do not require multiplayer, sign-in or a working VM merely to paint alone.
-
-The join action is an authoritative server admission request, not a client-side slot estimate. Reserve capacity atomically; handle simultaneous joins, reconnect grace and stale connections. If full, show “Server full” and leave solo available. Do not show fabricated occupancy or silently create a second empty world to hide a full server.
-
-The shared world persists when everyone leaves. The service remains running; last-player departure must not reset art, claims, identities or credits. Leaving multiplayer returns to solo while preserving local work. Joining loads the shared world's state; it does not automatically publish every local wall texture.
-
-The main town keeps its existing `map2`/`map2-v1` identities despite its new main-world label. Request room `morning-quarter-v1` and require matching `worldId: "map2-v1"` on initial/resync snapshots. Never fall back to the original `public` room or project old art onto new geometry. The original city remains local-only in this client, and its old server records are preserved. See `docs/main-world-server-handoff-9oct2026.md` for the existing-server integration and schema review requested from the server AI.
-
-### Main-town fresh defaults: owner screenshots, 9 October
-
-Night is the town's fresh sky; sky/time follows the game. Apply these to fresh defaults and reset, while preserving saved custom values. Colour swatches retain the existing ground `#8b8982` and fog `#111b2c` values.
-
-| Settings | Defaults |
-| --- | --- |
-| Render scale; haze; exposure | 1.2; 0.06; 1.5 |
-| Detail range; 3D blocks; flat skyline | 69 m; 68 m; 400 m |
-| Landmark height; height split; height ranges | 5 m; 12 m; on |
-| Short detail / simple 3D / flat 2D | 48 / 68 / 160 m |
-| Tall detail / simple 3D / flat 2D | 60 / 84 / 400 m |
-| Silhouette width; live strokes | 1; 5 m |
-| Load budget; keep chunks; prefetch | 1.5 ms; 3 s; 12 m |
-| Fog style; fog start; solid fog | EXP; 20 m; 200 m |
-| Ground reach; shared images; concurrent image loads | 4 chunks; 35 m; 1 |
-| Ambient; sun/moon | 5; 3 |
-| Nearby real lights; lights on within | 12; 60 m |
-| Lamp power; reach; pool radius; fade | 150; 40 m; 12 m; 0 m |
-| Player light power | 10 |
-| Ground extension; sky/haze matching; street lights; glow pools; player light; city proxies; flat skyline; tree detail | on |
-| Fog culling; solid haze sky; custom fog colour | off |
-
-Keep solo saves and shared state separate. Offer an explicit future publish/import flow for chosen handmade designs or draft pieces, with normal claim/size/credit checks. Solo rewards and browser-edited counters cannot become server credits. A disconnected online session may retain a local draft; it cannot finalise purchases or assume an expired claim still permits shared writes.
-
-## Visible people, conversation and convincing characters
-
-Use Aippy's existing account profile through useUserInfo from @aippy/runtime/user. Default the display name to nickName, then @username, then PLAYER; show avatar with a normal visual fallback. Respect isLoading and do not ask players to invent a name. No custom accounts, login flow, user/profile database, token fetching for display or invented profile-write APIs. The server-issued connection playerId is the multiplayer authority; Aippy profile fields are display information, not proof of identity to this server. Do not display uid.
-
-Nearby online players appear as animated 3D humans with names, facing direction and idle/movement/painting state. Add compact presence and easy friend meetups. Bots are not a substitute for real multiplayer; remove confusing bot features from the default experience.
-
-Provide nearby text chat, a compact chat button and clear speaker identification. Selecting a player can open conversation/actions. Support mute/block/report, bounded message sizes and server rate limits. Handle the mobile keyboard without hiding the composer or causing accidental paint. Optional voice can follow later.
-
-Use coherent rigged GLB/glTF characters with several distinct appearances and a streetwear direction. Fix scale, feet/ground contact, materials, hand/can attachment and animation blending. Avoid twisted limbs, floating parts and sliding. Share textures/meshes where useful, but each animated instance needs its own skeleton.
-
-Implemented character selection: ten animated CC0 Quaternius Ultimate Animated Characters (Casual, Casual 2, Casual 3, Suit and Worker, each with female/male variants), plus the existing Original and Hoodie. The closet uses real previews and remembers the device choice. Each player has independent bones and animation blending; shared templates are cached with a bounded idle budget. Original retains the existing clothing/gear system; imported characters retain their authored outfits. Models and all 17 supplied clips are audited in `public/assets/characters/RESOURCE_AUDIT.md`.
-
-The town courtyard has three entry-triggered portals: Characters opens the closet, Basketball lands beside the court, and Multiplayer joins the existing town connection from solo. Portals require stepping off before retriggering and respect menus, paint activities and basketball locks. The Original local map remains separate.
-
-Multiplayer character selection adds the optional allowlisted `state.cosmetics.characterModel` to existing player state. Remote clients can render it, but the server must validate and preserve it in relay/snapshots before live peers see the selection. See `docs/characters-portals-server-handoff-9oct2026.md`; no new endpoint, message type or capability is needed. Hand/can attachments and dedicated painting clips for these imported rigs remain future polish.
-
-Further asset shortlist:
-
-| Source | Direction and caveat |
-| --- | --- |
-| [Quaternius humanoid bundle on GitHub](https://github.com/NafisRayan/Animate-Rigged-Humanoid-No-Blender), [creator's base-character pack](https://quaternius.itch.io/universal-base-characters) | Preferred human proportions. Creator documents six CC0 rigged base models; inspect actual files/variants in the mirror and adapt outfits. Do not assume every creator-pack option is included. |
-| [KayKit Adventurers](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0) | Creator's CC0 rigged/animated low-poly alternative; fantasy outfits need adaptation. |
-| [Quaternius animation library](https://quaternius.itch.io/universal-animation-library) | Candidate locomotion/emotes; verify chosen clips, licence and rig compatibility. |
-
-Mirror only chosen licensed files into the project for reliable Aippy imports. Keep asset-specific source/licence records and mobile budgets. Never assume one code licence covers all models inside a repository.
-
-## DigitalOcean backend and smooth multiplayer
-
-Use the existing secure endpoint: wss://24.144.88.205/multiplayer. Health: https://24.144.88.205/health. The owner reports the service is separate from Studio, already deployed and persistent, with publicly trusted TLS. No infrastructure or database changes are part of this work.
-
-The existing protocol is version 2. Wait for hello with its server-generated playerId, then send join with protocol 2, roomId `morning-quarter-v1`, worldId `map2-v1` and the default Aippy nickname/username in separate identity fields. The town server room/snapshot contract requires the existing-server handover; this client update does not establish live deployment. world_snapshot retains revisions, sequences, strokes, artwork, players, chat history and world items, and must confirm the town identity. Keep room selection modular without adding private-room UI yet. Preserve the existing controller/paint renderer, chat, cosmetics/emotes and binary /artwork-upload flow. References are shared through artwork_place; base64 images never go through WebSocket.
-
-Current scope includes connection/public join, player count, visible/interpolated players, shared paint/eraser metadata, persisted reconstruction, reconnect/resync, public chat, persistent posters and shared visual appearance/actions. Inventory/economy/trading authority remains disabled because the server runs AIPPY_AUTH_MODE=disabled. Do not bypass verified_account_required with username, uid, localStorage identity or a custom auth service. Do not invent capacity/free-slot numbers, account verification, claims or credit APIs. Solo remains the default and solo currency/saves are separate from shared data.
-
-Configure the URL once through VITE_MULTIPLAYER_URL with a production fallback in src/multiplayer/config.ts. Do not scatter endpoint literals in game modules. Stay below 64 KB/messages, 128 points/batch, 20,000 points/stroke, 10,000 persisted strokes/room and approximately 120 messages/second. The thin client uses 96-point batches around 100 ms, splits long gestures at 16,000 points and sends changed player state around 100 ms. Saved stroke objects use id; normalise it to client strokeId. Send the game's brush slider units, since the server clamps brushSize to at least 1; divide by 50 only when reproducing the existing local world-radius renderer.
-
-- Movement/look and paint render locally first, including with 500 ms round-trip latency. Do not smooth the local player's input through the server.
-- Send movement snapshots; interpolate remote avatars with bounded extrapolation.
-- Batch paint actions, not individual pixels. Roughly 50–150 ms paint batches and 50 ms position updates are starting points for measurement.
-- Each paint action identifies stable artwork/claim/surface/face/layer IDs, brush/version/settings, surface-coordinate samples and a unique operation ID.
-- The server checks permissions and limits, deduplicates, assigns accepted ordering and distributes it. Local provisional strokes sit over confirmed state; acknowledgements must not paint them twice.
-- Subscribe to nearby chunks for art and players. Stream initial snapshots and subsequent operations without freezing the active brush.
-- Persist ordered history plus periodic snapshots. Reconnects and late joins rebuild the same accepted composition.
-- Keep queues bounded. If a claim expired or a pending action is rejected, preserve the local draft and explain the conflict; never silently overwrite protected shared work.
-
-Reconnect explicitly and rejoin for a fresh snapshot without creating reconnect loops. Preserve offline paint locally and never silently upload it under a new connection identity. Keep solo PNG/poster saves separate from the shared stroke world. Local echo IDs and offscreen incremental replay must preserve current brush work without double deposition. The client cannot promise restart/backup behaviour beyond the existing backend's implementation; do not modify the VM to address this during game integration.
-
-## Credits and discovery
-
-Give each piece a stable ID, author, bounds, versions and engagement. Inspect without spraying: author, views, likes, comments, protection and optional history. Earn credits from meaningful views/likes, not holding spray, refreshing or self-liking.
-
-Count eligible distinct engagement server-side, deduplicate rewards and use one active like per viewer/piece. Do not reward repeated unlike/re-like loops. Keep awards/spending in an idempotent ledger. Comments persist but are not a requested credit source.
-
-A bounded basic painting area and ordinary handmade painting should be accessible to a newcomer. Tune starting allowance or introductory briefs so expansions/reuse are attainable. Recommend modest daily creative briefs later; repeated activity alone must not mint unlimited credits. Protect progression from trivial view-farming.
-
-## Server movement validation fix
-
-The protocol-2 wire check found that player_state drops state.position, whether sent as an array or an x/y/z object. The existing server must retain and broadcast the documented numeric [x,y,z] array (also in snapshot player state). Other player metadata is forwarded. On 6 October the owner confirmed the validation callback was corrected and is restarting the existing service. The client continues using the documented array. Do not fabricate movement coordinates or deploy a replacement backend.
-
-## Inventory, collecting and trading
-
-The owner explicitly wants collectible tags around the map, special paints, consumable items, unique collectibles to show off or trade, stackable quantities, dropping items and picking up other players’ drops. These are part of the destination. Ownership, purchases, currency, consumption, pickups/drops and atomic trades must be validated by the existing server against a genuinely verified Aippy account. Trade offers need ownership/quantity revalidation, locks, cancellation and timeout so items cannot be duplicated or spent twice. No fake local multiplayer economy.
-
-The protocol is present, but these interactions are unavailable until verified Aippy identity is connected. Current client structures retain world item snapshots/events and gate inventory/trade sends; current solo closet and coins remain solo data. Club/faction membership and restricted clubhouses may follow later; do not build them in this integration.
-
-## Research and what is worth reusing
-
-Reviewed primary developer/creator sources on 5 October 2026. These are references and candidates, not proof that their implementation is already integrated or compatible with Aippy.
-
-| Reference | Useful takeaway / reuse decision |
-| --- | --- |
-| [Graffitifun: tags, throw-ups and pieces](https://graffitifun.com/tagging-vs-throw-ups-vs-pieces-explained/) | Signature tags, quick outline/fill lettering and detailed pieces suggest marker/fine-cap, fill/outline and shading workflows. Give players expressive tools rather than generated imagery. |
-| [Kingspray, developer-provided description](https://store.steampowered.com/app/471660/Kingspray_Graffiti_VR/) | Distinct caps, spray character, drips and different paint surfaces are a useful quality reference. It is a VR game; adapt relevant feel to touch/mouse, not VR controls. Reference only; no assumed reusable code/art. |
-| [VandalVault developer's browser-game post](https://rameone.itch.io/vandalvault/devlog/1451640/vandalvault-is-live-spray-paint-the-internet) | Documents Three.js multiplayer wall painting, drips, galleries, profiles, challenges and live chat. A relevant browser-game reference, not independent proof of performance or a licence to copy source/assets. Do not import its police/can-limit loop by default. |
-| [perfect-freehand](https://github.com/steveruizok/perfect-freehand) | MIT TypeScript library generating pressure-sensitive stroke outlines. Prototype for marker/handstyle smoothing; it is not a complete aerosol/drip engine. Can render to the existing Canvas/Three.js path without changing build framework. |
-| [Klecks / Kleki source](https://github.com/bitbof/klecks) | MIT browser painting app with layers, pressure/stabilisation, touch gestures and editing transforms; standalone and embedded modes. Evaluate selected techniques/modules or a small prototype for canvas mode. Do not drop an entire second application into the game without checking live-wall integration, bundle cost and mobile memory. Keep required notices; branding is separate. |
-| [Konva](https://github.com/konvajs/konva) | MIT canvas scene graph with interaction/transforms. Candidate for transparent tag placement, resize/rotate handles and library editing. Keep core spray and the live wall texture independent; use only if it simplifies the editor within budget. |
-
-Prefer a small drawing core that owns surface-coordinate strokes/layers, shared by the 3D wall and 2D canvas view. Prototype the hard parts before adding dependencies. Vite is a build tool, not a paint engine; compatible TypeScript/Canvas tools are useful regardless of how their demos are built.
-
-## Additional premium direction
-
-After controls, paint quality and persistent multiplayer work, pursue:
-
-- Artist portfolios, favourites, neighbourhood mural routes and a restrained discovery feed.
-- Invite-only collaborative pieces with explicit co-painter permissions; free-signature ownership rules remain explicit.
-- Before/after history and rivalries with attribution, rather than deleting the original artist's record.
-- Saved palettes, colour picking, optional guides, non-generative stencils and useful brush previews.
-- Recognisable districts, readable concrete/brick/metal, restrained lighting and convincing paint colour.
-- Nozzle hiss, can shake, roller sound and optional haptics; subtle feedback that never masks the drawing.
-- Wave/point/admire emotes, friend meetups and optional curated community events.
-- Draft autosave, clear asset/WebGL errors, safe-area layouts and measured quality settings.
-
-Do not add forced police chases, consumable-can scarcity, compulsory multiplayer or heavy effects ahead of the artist experience.
-
-## Delivery order and evidence of completion
-
-1. Rebuild the HUD and input ownership: direct Paint/Explore, top tools, left move/right look, jump and portrait. Verify simultaneous touch use, stop/cancel behaviour and menu hit testing.
-2. Fix targeting and paint quality: box preview, reach/occlusion, normal clipping, drizzle exception, stroke sampling and detail. Compare repeatable lettering/fills at multiple distances on a phone.
-3. Add the shared drawing core, live canvas mode, heads/roller, layers and handmade library. Verify switching modes/orientation preserves the same art; resized signatures stay clean.
-4. Integrate the existing persistent service with deliberate solo-to-server joining, shared spray and the current character models. Check two real clients, late joins, disconnect/rejoin and no solo-save contamination. Upgrade models and chat later using supported protocol features; do not deploy a replacement service.
-5. Connect server claims, four-hour expiry, engagement credits, reuse/signature rules, paid expansions and protected tag-over. Check competing claims, insufficient funds, retry deduplication and protected drizzle overlap.
-6. Exercise late joins, reconnects, chunk changes, snapshots and 500 ms simulated latency. Local input must remain immediate; accepted shared paint must eventually converge without losing drafts.
-
-Aim for 60 FPS local drawing on chosen supported phones and measure it. Do not promise every device or VM capacity without evidence. Update HOW_I_DID_IT.md as actual systems are delivered. This brief is the destination; gameplay changes and server deployment are subsequent implementation work.
-
-
-## Canvas and server-admin follow-up
-
-The client now supports resizing a selected painting area from 0.5 to 8 metres before drawing, fine brush sizes, six wall heads, bounded edge overspray, and progressive stationary drips. Canvas mode hides movement and places its pan stick at the bottom; opening paint tools hides competing look and multiplayer overlays. Finishing a piece gives a 60-second local editing grace period before completion. Character facing is corrected and world look-stick speed is doubled.
-
-Server-returned permissions control graffiti deletion and contextual role management. Selecting a nearby player exposes their nickname, username and known role; admin/owner role changes wait for server acknowledgement. The existing server remains responsible for authorisation, protected areas, cleanup and role persistence. Credits, paid protection and comments still need their exact server contracts; no client-only balance or fabricated protection is introduced. These changes do not establish measured phone performance or complete AA production readiness.
-
-## 6 October production pass and revised owner direction
-
-Multiplayer display identity is intentionally client-trusted for now. Keep Aippy `username` and `nickName` separately, plus the resolved `displayName`, across join and player records. Keep the server-generated connection playerId. Do not fetch tokens or invent a login/profile service during this pass. Owner/admin authority is a separate existing-server patch; a matching unverified username must not grant privileges.
-
-Daily cleanup is now part of the destination: a piece gets a 24-hour evaluation window and survives into another window only with at least 20 eligible distinct likes earned in that window. It must earn another 20 in every following window. Previous-window likes do not carry over. This expires artwork, not the VM, player inventory or the whole server. Schedule/count/removal must persist on the existing server. The server now groups strokes under stable piece IDs; poster association is not yet specified. Independent client deletion is not an implementation of this rule. See docs/server-client-handoff.md.
-
-This client pass adds a directly accessible Paint/Explore switch, compact top colour control, independent right-look input, portrait viewport rotation with corresponding pointer mapping, coalesced painting samples, close-range/obstruction targeting, and a handmade transparent tag workspace with undo/redo and a bounded browser-local design library. The AI poster creation interface is replaced by manual drawing. Saved tags use the existing persistent binary upload/placement path when multiplayer is connected.
-
-Performance work bounds remote image downloads, indexes artwork by loaded surfaces and budgets paint reconstruction across frames. These are targeted protections; they do not prove a phone frame-rate or unrestricted world capacity. The client now selects a bounded wall rectangle before painting and offers a front-on isolated view of the same live wall. This rectangle is explicitly unprotected: it is not a server claim. Handmade tag drawing has fine, marker, spray, roller and drip heads. World spray still uses its existing brush. Piece creation/completion, nearby piece inspection, likes/window display and server removal are integrated with protocol v2. Four-hour claims, paid expansions/overpainting, wall drizzle exceptions/layers, engagement credits, trading, collectibles and rig-specific painting animations remain unfinished. No AA/AAA production claim is made solely from a successful build.
-
-## Latest artist controls and radio update
-
-Painting now has two stages: select/size a box with Start Painting or Cancel, then Enter Canvas/Back to Wall and Finish Piece. The action group sits at the top right below the toolbar. Paint/Explore names the destination mode. Five world layers, six world brush heads, saved palettes, eyedropper, canvas zoom/pan and fine world spray are delivered; the earlier world-brush limitations above are superseded by these controls. ART opens on entry; selecting a nearby shared piece opens its details and supported Like action. The entire game can rotate left with matching pointer mapping on either initial screen orientation. Radio uses one shared browser audio controller with settings volume and a channel button cycling green Chillhop, blue Alternative and red MetalFM.
-
-Canvas credits remain separate from cosmetic coins. Proposed tuning: minimum 1, otherwise ceil(canvas area in square metres); medium 2×2 costs 4, ultra 8×8 costs 64; start with 128 once and accrue 4 per five connected minutes. Solo remains free. Exact server credit/reservation/protection/comment contracts are still needed; this proposal is not a implemented authoritative economy. City texture and licensed prop options are recorded in docs/city-assets.md.
-
-## Admin, credits and protection follow-up
-
-Server `account_state.credits` now drives a distinct canvas-credit display and confirmed gain animations. World-space quotes, optional paid protection purchase, expiry metadata/countdowns and +1-hour protection updates are wired to the supplied messages. Red preview fills are guidance only; server validation is final. Empty areas say Cancel. Width and height always have separate pre-paint sliders, linked by default, with a move toggle to reposition on the selected wall.
-
-Admin/owner free paint requires server-granted authority. Selected art offers white/black/custom-colour roller paint-over through normal persistent strokes on the top layer; source art stays underneath. Player cards expose server-confirmed credit grants, kick, timed/permanent bans and unban, alongside roles. Banned targets can remain selected offline for unban. Account/role/ban persistence is the existing server's responsibility.
-
-Radio now has one channel-name button that cycles and plays, plus volume. It attempts playback from the menu and retries after a trusted tap if browser autoplay policy blocks it. Drip is a firmer soft spray with a short hold before its progressive tail develops. Cheap unprotected canvas charges, empty paid reservation refunds, comments and final vote-command mapping still require exact server contracts; see docs/credits-protection-comments-handoff.md.
-
-Nearby art discovery must remain available within its spatial range independently of the 60-second resume-edit grace period. VIEW briefly pulses the piece bounds in-world. Optional artwork titles accompany completion; the existing server must preserve/broadcast `piece_complete.title` for names to survive reconnects and reach other players.
-
-## Server canvas economy integration
-
-Both unprotected and protected multiplayer canvases require server purchase approval before spraying. Prices are ceil(area × 3.75) and ceil(area × 7.5), respectively, for 0.5–8 m sides. Protected purchase includes four hours. Server account balances start at 1,000 credits, accrue 24 per full connected minute, and award 24 per qualifying like; active protected art gains an additional hour per qualifying like. Solo painting remains free.
-
-Canvas sizing/Back to Wall controls can collapse to a compact button while zoom remains available. The area preview uses a thin raised border rendered above paint/poster layers; visual edging never changes purchased bounds.
-
-## Social minigames: basketball first
-
-Owner direction, 8 October: add small optional games to places in the city, starting at the Map 2 basketball hoop. They should give people something to do together between painting and chatting. Keep the graffiti world and phone performance central. The requirements below remain the target; the delivered scope is recorded at the end of this section.
-
-### Basketball interaction and shot feel
-
-- Show a compact **PLAY BASKETBALL** button only near the court while exploring. Entering places the player at an available shooting mark on the three-point arc, facing the hoop. Leave is always available and restores normal controls immediately.
-- Use five fixed shooting marks across the arc, each with a stable spot ID. Fit them to the existing playable court without placing players inside walls, props or the hoop support. Markings should look like ordinary court markings, not a large minigame menu.
-- Grab the visible held ball, move it with the finger to prepare, then flick upward and release to launch. Once grabbed, movement continues across the game view; starting elsewhere must not shoot. Every normal release throws exactly one ball: a small motion is a weak toss and no recent motion is a drop, not a silent reset. Power and aim come from recent release velocity/direction, not a static finger position or hold time. Use a softer capped power curve with a wider controllable low-power range; a deliberate substantial upward flick should make a useful shot. Keep score, Leave and spot selection compact at the edges, with the hoop and centre clear; show compact feedback only while holding the ball. Mouse drag/release uses the same gesture; pointer cancellation, lost focus and menu entry do not shoot.
-- Provide unlimited balls without inventory or credit charges. A fresh held ball appears after release. Each thrown ball lasts three seconds from launch, fading near the end and then returning to its reusable pool. Leaving the game, changing maps or disposing the world cleans up balls and effects.
-- Use a deterministic ballistic calculation with gravity and lightweight court/backboard/rim bounces. A basket scores only when the ball crosses the rim plane downward through the opening with room for its radius. Upward crossings, nearby passes and repeated crossings by the same ball must not score.
-- A made shot gets a brief rim/net response, a satisfying swish, a restrained burst and a small **BUCKET!** / streak indicator. Give a clean extra response for a swish without overwhelming chat or the view. Respect existing sound controls. Avoid bloom, shadows, new lights or an added physics dependency.
-- Keep movement/look/spray pointers separate from the shooting gesture. Stop spraying when entering, suppress normal movement while occupying a mark, and never let shooting-area taps paint a wall. Menu entry, lost focus and pointer cancellation release held actions. Do not discard any paint draft.
-
-Use one shared court definition for rendered geometry and gameplay. The enlarged Map 2 rim is at `[-53, 3.05, -39.9855]`, with a 30% larger opening; its small forward shift preserves the backboard gap. Preserve existing paint surface IDs and the paintable backboard. Rim and backboard contacts must bounce, including glancing rim hits and board edges/corners, before evaluating a clear downward scoring crossing.
-
-### Multiplayer seats, shots and HORSE
-
-Recommended first playable scope: solo practice plus shared free shooting from five spots. Add organised HORSE on the same shot/session foundation afterwards; do not make players wait for a turn during free shooting.
-
-- In multiplayer, joining requests one free mark from the existing server. All clients receive the same assignment. If all five marks are occupied, show **COURT FULL** and allow watching; never stack players or silently move another player. Release the mark on Leave, disconnect or map change. A pending request must not lock movement indefinitely.
-- Keep local input and ball launch immediate. Broadcast one bounded shot description containing court ID, player ID, shot ID, spot ID, origin, velocity, shot version and time. Remote clients animate the same trajectory locally; never send every ball position per frame. Dedupe echoes and repeated shots. Late arrivals see occupied spots and only balls still within their three-second lifetime.
-- Keep every activity scoped by map and court. Original-map users must not reserve Map 2 seats or see its balls. Ball state is temporary and never enters artwork persistence or the credit economy.
-- Separate launch calculation, simulation, score detection and presentation. Emit a shot-result event with the shot/spot IDs and make/miss outcome so free shooting, streak challenges and HORSE can use the same rules.
-- HORSE requires an explicit invite/accept, participants, turn order and authoritative session state. Start with two players. A player sets a made shot from a mark; the other player must make a basket from that same mark, without needing to copy the exact flick velocity. Failure earns the next letter of HORSE; five letters loses the match. A missed setting shot passes the setting turn. Invite only when the challenge mark can be reserved; its current shooter releases it before the next participant takes it. Free shooters keep their own marks. Leaving/disconnecting releases the mark and ends the match cleanly.
-- Shared seat assignment, verified shot outcomes and HORSE turns belong on the existing multiplayer service. Do not create another backend, socket, account system or VM service. Confirm the actual server contract before enabling shared play or claiming multiplayer works. Current `PlayerState` / `readPlayerState` only carry movement, appearance and related fields; arbitrary basketball fields would be discarded. A held basketball cosmetic is not a shot protocol.
-
-### Other fitting minigames to develop later
-
-| Game | Place and interaction | Reuse and scope |
-| --- | --- | --- |
-| Around the court | Make a basket from each of the five marks in order; solo or a friendly race. | Reuses basketball shots and spot IDs; no new physics or props. |
-| Wall target toss | Toss a soft ball at painted targets in a small alley, scoring centre hits. | Reuses throw simulation; targets remain separate from players' saved graffiti. |
-| Hopscotch / plaza steps | Jump through a short painted sequence; a clean run improves personal time. | Reuses walking/jumping; floor markings stay clear of main paths. |
-| Graffiti prompt jam | Friends accept one word/theme, paint nearby, then admire and vote. | Reuses existing paint and chat; player work remains normal persistent artwork. No AI judging or invented rewards. |
-| Neighbourhood photo hunt | Find a small set of landmarks or colours and check them off by proximity. | Reuses existing locations; no new downloads, NPCs or forced map expansion. |
-
-Do not build all five at once. Basketball establishes the small nearby-activity button, enter/leave flow and optional session hooks; add the next game only after playing and tuning the first.
-
-### Evidence required before release
-
-Verify flick strength and aim on a phone; cancellation and simultaneous pointer ownership; made/missed/duplicate rim crossings; three-second expiry under slow frames; repeated entry/exit and map changes without leaks; and restored painting controls. Exercise two real clients for simultaneous joins, five occupied spots, full-court handling, shot echoes, late joins, disconnect and reconnect. Compare the same court walk with gameplay idle and several balls active using the performance logger. An unavailable server must leave solo practice usable. Deliver through the existing exact-file incremental manifest without changing importer, aliases, host wrapper, dependencies or artwork saves.
-
-### 9 October basketball delivery and painting recovery
-
-Map 2 now offers local solo basketball near its existing hoop: five selectable shooting marks, upward flick power and lateral aim feedback, unlimited pooled balls, gravity and lightweight court/backboard/rim contacts, three-second flight lifetime, made-shot rim/net response, swish and streak feedback. Enter/Leave owns controls without deleting a paint draft; map changes dispose gameplay resources. Existing backboard paint addresses stay unchanged. No added real lights, shadows, physics dependency or downloaded game assets.
-
-Court seat allocation, bounded shot commands, deterministic server-side outcomes and two-player HORSE rules are implemented and unit tested. The server report's required mark-relative `releaseOffset` is adopted so moved-ball local/server origins match. The frontend includes shared free-shooting integration gated by the admitted town connection's `basketball_court_v1` capability; servers without it retain solo practice. Shared balls predict immediately, while shared counters and results remain authoritative. The existing backend must deploy the matching adapter and be verified with real clients before live shared play can be claimed. HORSE client challenge/accept, reserved-mark turns and authoritative letters/winner are implemented behind the optional server capability basketball_horse_v1, which must stay disabled pending deployment and real two-client verification. docs/horse-client-handoff-9oct2026.md defines exact existing invite/accept messages and explicitly unimplemented decline/cancel proposals. `docs/shared-basketball-client-handoff-9oct2026.md` describes the current wire contract and remaining server work; the preserved server report is `docs/server-report-town-basketball-9oct2026.md`. The other minigames above remain ideas.
-
-The urgent painting regression was traced to solo Undo reading the live 2048×2048 paint canvas, making subsequent texture updates slow in the browser benchmark. Solo world Undo/Redo is disabled, with no pixel readback or history allocation; multiplayer server Undo/Redo and the manual tag library are unchanged. Fully reload after applying the update to recreate previously affected canvases. Phone FPS must still be verified on the device.
+## 2. World and art direction
+Working title **BLACKTOP EMPIRE**; renameable independently of code. Fictional city **Vesper Bay**, with cohesive districts:
+- **Dockside:** containers, warehouses, cranes, freight, fences, tight chases; starting safehouse.
+- **Neon Mile:** convenience shops, clubs, nighttime wet roads, street-racing meets.
+- **Old Quarter:** apartments, alleys, roof access, dense traffic, backstreets.
+- **Financial Core:** high-end dealers, fast highways, reinforced cops, parking towers.
+- **Industrial Belt:** factories, scrapyards, garages, wreckable yards.
+- **The Hills:** wealthy residential properties, winding roads, high-stakes runs.
+- **Ring Road:** long connected straightaways for high-speed pursuit and rival racers.
+
+Deliver the first district fully playable before spreading low-quality city across all districts. Interconnected streets must be navigable: **lanes, junctions, one-ways where marked, sidewalks, alley shortcuts, ramps, garages, gates, traffic lights and parking**. Use deterministic chunk IDs and seeded layouts. Buildings receive stable colliders and roofs that hide or fade only when needed. Roads and sidewalks must have distinctive materials, crossings, tyre marks, litter, decals, bollards, signs, lamps, parked vehicles, breakable furniture and construction barriers. Strong day/night mood without fog as a rendering crutch; shadow impostors, baked AO, simple roof geometry and selective dynamic lights.
+
+Camera: orthographic following the player; speed-aware ahead target, damping, portrait safe zones, roof transparency; zoom adjustable. Enforce bounds and consistent mapping between world metres, vehicle units and image space. Tiny offscreen indicators for missions, pursuit units and safehouses; compact expanding minimap with district labels.
+
+## 3. Driving physics — priority #1, actually fun
+**Not** translation + instant rotation. Simulate rigid car chassis motion at fixed timestep (~60Hz), yaw inertia, longitudinal and lateral velocity, grip/slip curves, steer angle tied to speed, cornering, throttle/reverse, brake force, differential/drive style, handbrake oversteer, traction recovery, tire friction differences on asphalt/gravel/wet streets, engine torque curve, gearing, mass, collision impulse/restitution, rolling/drag resistance and steering assistance tuned for mobile. Never tie physics to frame rate. No car passing through walls, rotating on the spot at full speed, rubber-band corners or moving sideways with no inertia. Larger vehicles must feel heavy.
+
+Raycast suspension / four-wheel model is an upgrade if supported and warranted; Cannon-es RaycastVehicle reference: https://github.com/icurtis1/raycast-vehicle (check its license) and https://github.com/NullCipherr/Cannon-Car-Simulator (MIT). Top-down may use a performant measured 2D tire-force rigid-body simulation with 3D visual body roll, pitch and suspension if it convincingly meets handling tests. Do not add physics dependencies unnecessarily, but do not use a fake kinematic controller and call it 'real physics'.
+
+Tune car archetypes: battered starter sedan, muscle, tuner, exotic, utility van, SUV, police interceptor; top speed, brake grip, handling, weight, gear ratios, drivetrain, durability, pursuit health. Create test course: 0–100 acceleration, high-speed corner, handbrake U-turn, head-on collision, side-swipe, reverse, wet surface, chase at 60Hz and 30Hz. Record results not wishful claims.
+
+**Visible, progressive physical damage:** panel dents/crumpled corners with deformable mesh or damage-state swapping, bumper dislodgement, glass cracking/shattering, bent hood, missing lights, wheel misalignment, sparks, smoke, fluid leaks, damaged engine note, impaired steering and acceleration; debris gets impulse, fades/pooled. Damage caused by collision location, angle, mass and relative speed. Police and civilian cars receive damage too. Hit obstacles and leave skid tracks, scrape paint, panels and breakable props. Cars must not be pristine while their health is zero. Repair at garage or safehouse.
+
+**Controls:** left steer buttons/analog, right throttle/brake, separate handbrake and nitrous/horn. Genuine simultaneous thumb inputs on Android (pointerId-aware). Desktop arrows/WASD, space handbrake, shift nitrous, E action. Responsive throttle analogue where feasible. Gear sound/rev, brake/tyre skid, indicator and headlight controls later. Options: steering assist, camera follow, haptics and sound gains.
+
+## 4. Cops and systemic response
+Crime awareness/heat (0–5 stars), witness vision/hearing, dispatch delay, nearby reporting, escalating patrol vehicles, tactics, rolling roadblocks, tire strips, tactical vans and helicopters only when gameplay/camera supports them. Patrols drive lanes, obey a believable local pursuit model, search last-known position, split around blocks and recover from getting stuck. Police do NOT spawn inside obstacles, on top of the player, in line-of-sight out of nowhere, or forever ram the same wall. Wanted/heat drops only when genuinely unseen and not pursuing; hide at safehouse or change car/paint/plates, but never instantly erase active police at the front door. Arrest and hospital/impound consequences; car theft increases heat, pedestrians trigger reports, high-speed traffic collisions escalate.
+
+Police and other traffic follow the same chassis/collision rules as player where practical (lower-fidelity LOD offscreen). Controlled spawn budgets and pooling. Chase music adapts to threat; radio chatter and sirens spatially anchored. Fair pursuit, with escape routes, alleys, garages and cool-down.
+
+## 5. Population, streets, adult consequences
+Living civilians: street walking, crossing at intersections, reactions to honks, gunfire, violence, speeding and police. They spot threats, flee using sidewalks, avoid cars when possible, can be physically struck, knocked aside and injured with convincing animations, ragdoll fallback or short-lived physical impulses, appropriate blood effects for 18+ setting, ambulance/fire response if budget allows. **Never reward repeated harm to civilians as the best money or progression strategy.** Impacts have strong wanted/mission/financial consequences. Harden collision resolution so NPCs do not clip through the road/cars or trap police. Characters must not be absent just because camera is far overhead: silhouette/readability matters.
+
+Optional combat on foot later: player can enter/exit vehicles, sprint, take cover and use limited weapons; keep the DRIVING and the criminal economy as core, rather than copying the entire zombie shooter.
+
+Adults-only original crime fiction includes rough language, substance themes, gang rivalry, danger and serious violence. 18+ entry label, settings for blood intensity and flashing effects, and sensible content controls. Fictional market names and mechanics; no real-world trafficking instructions.
+
+## 6. Dope Wars meets GTA — functional market and risk
+A simulation of fictional illicit commodities (e.g. Ember, Glitch, Velvet, Crown) with regional supply/demand, price noise, supply shocks, police pressure, rumours, gangs, cargo capacity, storage, heat, laundering and territorial influence. Player earns by buying cheaply and selling at favorable district markets, but travel, time, confiscation, betrayal and patrol inspections alter the calculation. Different districts have repeatable but changing economies; balance must not be trivial infinite cash exploit.
+
+Map market nodes: dock stash, nightclub buyer, warehouse supplier, high-end broker, street fence. Dynamic events ('port shipment', 'neighbourhood crackdown', 'festival demand', 'rival raid') with finite duration. Offer contracts, courier runs, vehicle theft, races, protection and deliveries. Shops have hours and accessible interaction radius, prices and inventory; no buy/sell from opposite side of city. Show profit/loss including repair/fines/fuel if implemented. Fictional substance names only, abstract gameplay.
+
+## 7. Safehouses and property ladder
+Start with **Dockside Room**. Walk/drive to a marker; transition to a genuinely enterable **3D interior** or physically integrated room, not merely a static shop menu pretending to be a room. Upgrade and decorate it: lock, bed, desk, stash room, alarm, security cameras, workbench, garage, paint booth, sound system, weapon locker, extra parking/storage. Save game, repair cars, store inventory and hide from police with meaningful constraints. Later buy multiple properties in different districts, with distinct garages, passive revenue/risk, stash raids and decor style. Persist position of all purchased upgrades and garage vehicles.
+
+No microtransactions required; all upgrade costs are in-game currency.
+
+## 8. Cars, ownership, tuning, garages
+Vehicle dealerships, street theft, purchase/sale, limited garage slots, repairs, tow/impound/recovery. **Customisation visible in 3D:** body color, wrap/decals, wheels, suspension stance, aero/spoilers, exhaust, headlights, window tint, hood, bumper, neon underglow, engine sound and plate. **Mechanical upgrades:** engine, ECU, gearbox, tires, brakes, suspension, armour, cooling, nitrous, reliability; each changes measured physics parameters with trade-offs. Presets stored by unique vehicle IDs. Menus preview real cars rotating on turntable; the world displays the same changes and damage states.
+
+## 9. Campaign + free roam, no dead menus
+Two selectable modes using one shared city/save: **CAMPAIGN** (mission tracking, dialogue, authored story) and **FREE ROAM** (all systems available immediately, no compulsory mission). On the first load let player drive straight away. Campaign starts with 5 tightly playable missions before expanding:
+1. **LAST $200**: drive battered sedan to first safehouse, meet contact, learn the city.
+2. **HOT DELIVERY**: timed contraband run through traffic, evade patrol, first real cash.
+3. **BURN RUBBER**: race 3 opponents across the industrial route; unlock tuner shop.
+4. **BLUE LIGHT SPECIAL**: bait/escape a rising police chase, lose tail, stash vehicle.
+5. **THE TAKE**: multi-leg high-risk heist setup and getaway with branching payout.
+Mission structure: prerequisites, launch marker, dialogue/cutscene, checkpoints, objectives, timers, fail/retry, reward, persistent unlock and clear in-world navigation. No instant reward buttons sold as missions. Free roam side loops: illegal races, towing, taxi, courier, chase challenges, garage collection, territory pushback.
+
+**Cutscenes:** in-engine camera splines/close-ups, actors and cars physically present, skippable dialogue, subtitles with speaker labels, cinematic letterboxing only when aspect allows, normal play camera restores, AI-controlled vehicle remains stable during scene. Avoid cutscenes for every tiny action.
+
+## 10. Sound, feel and presentation
+Layered car audio with idle, load, acceleration, shifting, turbo, backfire; tire squeals by slip, skid, impacts by material and severity; police siren doppler and radio voice stingers; city traffic beds, pedestrian screams/reactions, nightclub bass, garage tools, rain/distant thunder as optional ambience. Separate sliders for master, engine, SFX, sirens, music and radio. Unlock audio on user gesture, respect pause/mute and Android audio policies. Existing `public/audio/sfx` contains gun impacts and other zombie sounds; reuse selectively, do not pretend they provide proper car audio.
+
+Juice: camera shake, chromatic hit flash only on strong hits, skid particles, sparks, fragments, stretch lights, responsive HUD, animated cash and mission completion, speedometer with KM/H and speed streaks, gear/tachometer, minimap with north/heading markers, heat stars, vehicle damage, current job, garage inventory and GPS path. Accessibility controls: scale/UI contrast, reduced shake, blood intensity and audio independent sliders.
+
+## 11. Asset acquisition queue — verified public sources
+First preserve all preloaded assets and inventory before imports. Strong **CC0** starting options:
+- **Kenney Car Kit** — current vehicle set, police, sedan, taxi, trucks, sporty sedans, detached wheels and useful debris: https://kenney.nl/assets/car-kit and https://kenney-assets.itch.io/car-kit
+- **Kenney City Kit Roads** — road/intersection/sidewalk/street furniture: https://kenney.nl/assets/city-kit-roads
+- **Kenney City Kit Commercial** — modern city buildings: https://opengameart.org/content/city-kit-commercial
+- **Kenney City Kit Suburban** — houses/fences/driveways: https://kenney-assets.itch.io/city-kit-suburban
+- **Kenney Racing Kit** — track/race props: https://kenney.nl/assets/racing-kit
+- **Quaternius Cars Pack** — alternative 8 CC0 vehicles: https://quaternius.com/packs/cars.html (FBX/OBJ/Blend, convert offline to GLB).
+- **Quaternius Downtown City MegaKit** — premium-looking modular city: https://quaternius.com/packs/downtowncitymegakit.html ; only free subset, check individual items and scale.
+- **Kenney self-contained GLBs GitHub mirror** — https://github.com/Hidencod/tge-assets ; `packs/car-kit/{sedan,sedan-sports,police,taxi,suv,...}.glb`, plus roads/commercial/suburban. Repository LICENSE explicitly declares Kenney CC0 and conversions CC0; use locally bundled files rather than runtime CDN. Maintain provenance `docs/blacktop-assets.md`.
+- **Car engine CC0 loops** https://opengameart.org/content/racing-car-engine-sound-loops ; **car engine start CC0** https://opengameart.org/content/car-engine-start-01 ; **car horn CC0** https://opengameart.org/content/car-signal. Check original specific sound license and optimise to .ogg (mono for 3D one-shots).
+- **Kenney Starter Kit Racing** https://github.com/KenneyNL/Starter-Kit-Racing with car models and CC0 sound reference (Godot project; import/convert individual assets, not whole runtime).
+For all external assets record original author, link, license, source SHA/version, conversion decisions, target path, scale/orientation, and measured byte/triangle costs. Reject unlicensed GTA/FiveM rips and copyrighted GTA/NFS audio. Do not depend on hotlinked remote gameplay models or audio at runtime.
+
+## 12. Engineering layout and integration
+Recommended new modules:
+```
+src/crime/
+  CrimeGame.tsx          // single React entry / UI / inputs
+  crime.css              // isolated modern portrait UI
+  vehiclePhysics.ts      // deterministic fixed-step planar vehicle physics
+  City.ts                // streamed urban chunks, roads, interiors, markers
+  Vehicles.ts            // garages, traffic, damage, deformation
+  Police.ts              // wanted, chase, dispatch, hiding
+  Pedestrians.ts         // culling, movement, flee, impacts
+  Economy.ts             // deterministic simulated district trade
+  Missions.ts            // objective engine and campaign data
+  Save.ts                // versioned persistence and migrations
+  Sound.ts               // Web Audio car engine + imported SFX
+  Tuning.ts              // developer debug / gameplay tuning
+public/assets/crime/     // newly imported reviewed CC0 GLBs and sounds
+docs/blacktop-assets.md  // provenance, paths, licenses
+tests/crime/              // physics, economy, mission, spawn, save invariants
+```
+Use React only for menu/HUD. Keep Three.js render loop direct, no per-frame React state. Use fixed-step simulation with delta clamp and interpolation; scene graph update and drawn frame separated. Pooled objects, geometries/materials/GLBs shared and disposed on teardown. Visibility calculations include effects and AI, not just meshes. All interactive prompts and overlays pointer-accessible. Limit device pixel ratio adaptively using real timings; default target 60 FPS Android portrait (30 FPS minimum under heavy scenes), no hidden quality reductions without exposed developer option.
+
+**No new server or multiplayer required**. Versioned autosave to localStorage/IndexedDB; defensive load validation and backup slots. Do not let currency/cars reset after reload. Distinguish real saved state from demo reset. Pause on tab hidden, stop audio, clear inputs; resume without physics explosion. Handle WebGL context loss where possible.
+
+## 13. Build in vertical slices, ALWAYS playable
+**S0 — Foundation:** fresh dedicated game entry; gorgeous topdown road grid and sidewalk street blocks; thumb multi-touch; physics-based sedan and collision; working camera; pause/save. Build verified.
+**S1 — Road spectacle:** real locally loaded car GLBs; driving surface feedback; skid/engine/sirens; destructible props; continuous positional dents, visual debris, repair; own vehicle damage; traffic. Stress test.
+**S2 — Police & population:** civilians, impact/flee responses, witnesses; accurate heat and live pursuit with road routing, roadblocks, escaping/cooldowns. Make chase exhilarating and FAIR.
+**S3 — Crime economy:** district markets, cargo capacity, price events, buys/sells, police risk, profitable loop, player finance ledger.
+**S4 — Properties:** actual enterable safehouse, 3D upgrade choices, garage, persistent vehicles, tuning with real handling impacts.
+**S5 — Story:** 5 real missions, driving delivery, races, pursuits, cutscenes/dialogue, branching reward, skip/retry and free roam.
+**S6 — polish:** complete Kenney/Quaternius world dressing, material harmonisation, audio mastering, day/night/weather, damage/multicar physics, smooth 30/60 FPS and UX review.
+
+Each slice: inspect only relevant files, implement, run tests/build, **play in browser** using mouse/touch where possible; record observed outcome, not unverified claims. Workers must read THIS `final-goal.md` before touching code and should use current files, not older README/MEMORY/spec/zombie plans. Don't delegate whole tasks in circles; parallelise independent assets, physics, city or UX work only when integration contract is precise.
+
+## 14. Definition of done / acceptance
+A first public playable is NOT done unless all:
+- Launches in Aippy portrait and desktop, renders a 3D street and player within a few seconds after assets ready; offline works after bundle loaded.
+- Drives at 30 and 60 FPS with nearly same acceleration, turning, braking; handbrake U-turn and high-speed drifting visibly behave differently; collisions solid.
+- At least 5 visibly different cars, with real damage visibly altering model and behavior.
+- Street props break, scatter, are culled/recycled, and do not break collision after unloading nearby visuals.
+- Civilian pedestrians walk, panic/flee, get struck/react and witness crimes; police respond, pursue, collide, can be escaped; spawn and recovery do not cheat visibly.
+- A complete delivery → payment → vehicle modification/repair → safehouse loop exists; fictional contraband prices differ by district, balance checked.
+- Enterable 3D safehouse and saved property upgrade/garage. Menu alone does not count.
+- 5 interactive campaign missions and unrestricted free roam share progression; cinematics skippable, mission resume/retry coherent.
+- Engine/skid/siren/crash/witness audio controls, working music/ambient settings, no autoplay violations.
+- Saved cash, heat consequences, cars, upgrades and progress survive reload.
+- Android controls do not stick with multiple fingers; camera does not occlude car; no offscreen heavy render/update; no runaway objects, textures, timers or audio.
+- Benchmark and manual test evidence, real screenshots/video where available; record features honestly as DONE / PARTIAL / TODO. NEVER claim physical device or Aippy test without running them.
+
+### Required Work-mode playtest when handed off
+1. Inspect Git HEAD, `src/App.tsx`, `src/crime`, `public/assets/crime`, `docs/blacktop-assets.md` and package scripts; note what is truly implemented.
+2. Install existing deps with Node 22, run `pnpm run build`, TypeScript check and relevant tests; fix only reproducible faults.
+3. Open served browser build and ACTUALLY drive: portrait ~390x844 and landscape/desktop; exercise acceleration, brake, skid, handbrake, collision, car damage, police chase, pedestrians, market, delivery, safehouse and reload.
+4. Verify linked GLBs load from local paths, camera shows streets with no dense haze/fog, spatial culling works and all user-facing controls respond.
+5. Record FPS/long frames/draw calls when available; inspect scene for unwanted spikes and memory leaks. Avoid falsely claiming Android native testing.
+6. Return an evidence table of DONE/PARTIAL/NOT IMPLEMENTED/BROKEN, screenshots, exact reproduction steps and targeted fixes; prioritise gameplay feel over adding dead feature UI.
+7. Keep pushing toward this final goal, not merely ticking off a shallow demo.
+
+## 15. Current delivery honesty
+This document is the intended FINAL GAME CONTRACT. It does **not** assert every feature above exists today. The first implementation should expressly identify what actually shipped. Preserve existing source/assets; never report plans as already completed.
