@@ -54,6 +54,21 @@ export function createCarVisual(style:CarStyle='sedan',color=0xdf6b35):THREE.Gro
  for(const x of [-.72,.72]){box(body,x,.72,2.16,.38,.18,.07,new THREE.MeshBasicMaterial({color:0xffe6b5}));box(body,x,.75,-2.18,.35,.18,.08,red);}
  const front=box(body,0,.44,2.21,2.25,.34,.22,mat(0x44464a));front.name='bumper-front';
  const rear=box(body,0,.44,-2.21,2.25,.34,.22,mat(0x44464a));rear.name='bumper-rear';
+ if(style==='police'){
+  const emergency=new THREE.Group();emergency.name='emergency-bar';root.add(emergency);
+  for(const side of [-1,1]){
+   const light=new THREE.Mesh(new THREE.BoxGeometry(.73,.16,.42),
+    new THREE.MeshBasicMaterial({color:side<0?0xfa283d:0x367fff,transparent:true,opacity:1,depthWrite:false}));
+   light.position.set(side*.49,1.7,-.25);light.userData.ownMaterial=true;emergency.add(light);
+  }
+  box(emergency,0,1.59,-.25,1.6,.06,.49,mat(0x22272c));
+ }
+ const smoke=new THREE.Group();smoke.name='engine-smoke';root.add(smoke);
+ for(let i=0;i<3;i++){
+  const puff=new THREE.Mesh(new THREE.IcosahedronGeometry(.21+i*.07,0),
+   new THREE.MeshBasicMaterial({color:i?0x696d69:0x373c3b,transparent:true,opacity:.25,depthWrite:false}));
+  puff.userData.ownMaterial=true;puff.visible=false;puff.userData.smokeIndex=i;smoke.add(puff);
+ }
  // Real Kenney model is loaded locally; retained 3D shell serves as deterministic fallback.
  void getModel('vehicles/'+style+'.glb').then(original=>{
   if(!root.parent || root.userData.disposed)return;
@@ -121,7 +136,7 @@ export function disposeCarVisual(root:THREE.Group){
   if(!(obj instanceof THREE.Mesh))return;
   if(!obj.userData.sharedGeometry)obj.geometry.dispose();
   const materials=Array.isArray(obj.material)?obj.material:[obj.material];
-  if(obj.userData.ownPaint)for(const material of materials)ownedMaterials.add(material);
+  if(obj.userData.ownPaint||obj.userData.ownMaterial)for(const material of materials)ownedMaterials.add(material);
   // Transparent neon is uniquely allocated for each player car.
   if(obj.parent?.name==='custom-neon')for(const material of materials)ownedMaterials.add(material);
  });
@@ -167,6 +182,26 @@ export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;
 /** Car view must be updated independently from physics cadence. */
 export function renderCar(root:THREE.Group,s:CarState,dt:number,braking=false){
  root.position.set(s.x,0,s.z);root.rotation.y=s.heading;
+ const bar=root.getObjectByName('emergency-bar');
+ if(bar)for(const child of bar.children){
+  if(!(child instanceof THREE.Mesh)||!(child.material instanceof THREE.MeshBasicMaterial))continue;
+  if(child.userData.ownMaterial)child.material.opacity=(Math.floor(performance.now()/145)%2)^(child.position.x>0?1:0)?.96:.10;
+ }
+ const smoke=root.getObjectByName('engine-smoke');
+ if(smoke){
+  const damaged=s.hp<44,period=performance.now()*.00065;
+  for(const child of smoke.children){
+   if(!(child instanceof THREE.Mesh))continue;
+   const i=Number(child.userData.smokeIndex)||0;
+   child.visible=damaged;
+   if(damaged){
+    const phase=(period+i/3)%1;
+    child.position.set(Math.sin(phase*4+i)*(.11+phase*.25),1.55+phase*1.65,1.14+phase*.75);
+    child.scale.setScalar(.42+phase*2.25);
+    if(child.material instanceof THREE.MeshBasicMaterial)child.material.opacity=(1-phase)*.27;
+   }
+  }
+ }
  const body=root.getObjectByName('body')??root.getObjectByName('loaded-body');
  if(body){body.rotation.z+=(Math.max(-.12,Math.min(.12,s.steerAngle*s.vx*.014))-body.rotation.z)*Math.min(1,dt*4);body.rotation.x+=(Math.max(-.09,Math.min(.09,braking?-.05:0))-body.rotation.x)*Math.min(1,dt*4);}
 }
