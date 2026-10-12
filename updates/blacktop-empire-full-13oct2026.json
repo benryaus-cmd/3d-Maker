@@ -1,0 +1,171 @@
+{
+  "version": "blacktop-empire-full-13oct2026",
+  "type": "full-snapshot",
+  "repository": "benryaus-cmd/3d-Maker",
+  "commit": "e2fccffa28638f7c5257ab37dae9ba9c2e037edb",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/e2fccffa28638f7c5257ab37dae9ba9c2e037edb/",
+  "fileCount": 40,
+  "description": "Complete self-contained BLACKTOP EMPIRE playable code plus Vite-bundled local models, animated civilians and sound. Import into existing Aippy host upstream using the established buildStart importer; root host and existing importer are never replaced. All required binary assets live under upstream/src/crime/bundled and are inlined by Vite; no nested public/asset URL dependency.",
+  "files": [
+    {
+      "source": "docs/blacktop-assets.md",
+      "target": "src/games/importedGame/upstream/docs/blacktop-assets.md"
+    },
+    {
+      "source": "docs/blacktop-progress.md",
+      "target": "src/games/importedGame/upstream/docs/blacktop-progress.md"
+    },
+    {
+      "source": "final-goal.md",
+      "target": "src/games/importedGame/upstream/final-goal.md"
+    },
+    {
+      "source": "src/App.tsx",
+      "target": "src/games/importedGame/upstream/src/App.tsx"
+    },
+    {
+      "source": "src/crime/CrimeGame.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/CrimeGame.tsx"
+    },
+    {
+      "source": "src/crime/Systems.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Systems.ts"
+    },
+    {
+      "source": "src/crime/World.ts",
+      "target": "src/games/importedGame/upstream/src/crime/World.ts"
+    },
+    {
+      "source": "src/crime/assets.ts",
+      "target": "src/games/importedGame/upstream/src/crime/assets.ts"
+    },
+    {
+      "source": "src/crime/bundled/audio/engine.ogg",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/audio/engine.ogg"
+    },
+    {
+      "source": "src/crime/bundled/audio/impact.ogg",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/audio/impact.ogg"
+    },
+    {
+      "source": "src/crime/bundled/audio/skid.ogg",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/audio/skid.ogg"
+    },
+    {
+      "source": "src/crime/bundled/buildings/building-a.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/buildings/building-a.glb"
+    },
+    {
+      "source": "src/crime/bundled/buildings/building-b.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/buildings/building-b.glb"
+    },
+    {
+      "source": "src/crime/bundled/buildings/building-c.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/buildings/building-c.glb"
+    },
+    {
+      "source": "src/crime/bundled/buildings/building-d.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/buildings/building-d.glb"
+    },
+    {
+      "source": "src/crime/bundled/buildings/building-skyscraper-a.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/buildings/building-skyscraper-a.glb"
+    },
+    {
+      "source": "src/crime/bundled/characters/casual-female.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/characters/casual-female.glb"
+    },
+    {
+      "source": "src/crime/bundled/characters/casual-male.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/characters/casual-male.glb"
+    },
+    {
+      "source": "src/crime/bundled/characters/suit-female.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/characters/suit-female.glb"
+    },
+    {
+      "source": "src/crime/bundled/characters/worker-male.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/characters/worker-male.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/construction-barrier.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/construction-barrier.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/construction-cone.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/construction-cone.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/construction-fence.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/construction-fence.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/dumpster.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/dumpster.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/electricity-pole.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/electricity-pole.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/light-curved.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/light-curved.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/road-sign-stop.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/road-sign-stop.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/road-sign-warning.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/road-sign-warning.glb"
+    },
+    {
+      "source": "src/crime/bundled/streets/traffic-light.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/streets/traffic-light.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/cone.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/cone.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/debris-bumper.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/debris-bumper.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/debris-door.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/debris-door.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/police.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/police.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/race.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/race.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/sedan-sports.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/sedan-sports.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/sedan.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/sedan.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/suv.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/suv.glb"
+    },
+    {
+      "source": "src/crime/bundled/vehicles/taxi.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/vehicles/taxi.glb"
+    },
+    {
+      "source": "src/crime/crime.css",
+      "target": "src/games/importedGame/upstream/src/crime/crime.css"
+    },
+    {
+      "source": "src/crime/vehiclePhysics.ts",
+      "target": "src/games/importedGame/upstream/src/crime/vehiclePhysics.ts"
+    }
+  ]
+}
