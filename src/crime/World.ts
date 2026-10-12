@@ -55,11 +55,15 @@ export function createCarVisual(style:CarStyle='sedan',color=0xdf6b35):THREE.Gro
   body.visible=false; for(const child of [...root.children])if(child!==body)child.visible=false;
   replacement.name='loaded-body';replacement.userData.originalGeometry=true;
   root.add(replacement);
+  // Apply impacts that happened while the GLB was still loading, not just future collisions.
+  const prior=root.userData.currentDamage as {front:number;rear:number;left:number;right:number}|undefined;
+  if(prior)showCarDamage(root,prior);
  }).catch(e=>console.warn('Car GLB fallback:',style,e));
  return root;
 }
 /** Visibly deform actual GLB mesh vertices in the direction of the collision. */
 export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;left:number;right:number}){
+ root.userData.currentDamage={...damage};
  const model=root.getObjectByName('loaded-body');
  if(model){
   model.traverse(o=>{
