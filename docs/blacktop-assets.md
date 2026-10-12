@@ -52,3 +52,20 @@ Source: Kenney Starter Kit Racing https://github.com/KenneyNL/Starter-Kit-Racing
 | `public/assets/crime/audio/engine.ogg` | `audio/engine.ogg` | `5073c9d34bd5b9c55a40ac0237604dc17acc520b` | Loop pitch/volume responds to throttle and speed |
 | `public/assets/crime/audio/skid.ogg` | `audio/skid.ogg` | `78b423b20df331af40bcf4088d2af305cb9bf54b` | Handbrake/corner slip |
 | `public/assets/crime/audio/impact.ogg` | `audio/impact.ogg` | `38e9feedf2469628e03e1b8fed6664b1e2ca529c` | Collision sample |
+
+## Kenney City Kit Roads GLBs, sourced and bundled as CC0
+All from `Hidencod/tge-assets/packs/city-kit-roads/`, same verified repository CC0 license as vehicle and commercial kits.
+
+| Local path under public/assets/crime/streets/ | Source file | Original blob SHA |
+| --- | --- | --- |
+| dumpster.glb | packs/city-kit-roads/dumpster.glb | 4346d91ead95d98d6ca3fbee9f4d37f4d841fb4f |
+| construction-barrier.glb | packs/city-kit-roads/construction-barrier.glb | f11e89081e7fa88dad4716b5e3b9042497f3019b |
+| construction-fence.glb | packs/city-kit-roads/construction-fence.glb | 5a2ce85eb9feeceb7d972557be6d91b47f8e2933 |
+| light-curved.glb | packs/city-kit-roads/light-curved.glb | fbe00e66616a20b0edc3b8b36039bec1dbc5953a |
+| traffic-light.glb | packs/city-kit-roads/traffic-light.glb | 39d39733a048bf5c83b9dda85203c926ae5bc258 |
+| road-sign-stop.glb | packs/city-kit-roads/road-sign-stop.glb | c6457263d88da000e7bbdc6abae10a90c27d7b97 |
+| road-sign-warning.glb | packs/city-kit-roads/road-sign-warning.glb | 596cbf05cd1cf7b5c556ea417dd14f0ac5d4dd29 |
+| construction-cone.glb | packs/city-kit-roads/construction-cone.glb | 463e1930ef71ee9b09e88562b7e4fc921f9ffb09 |
+| electricity-pole.glb | packs/city-kit-roads/electricity-pole.glb | 6f71ae0b5d06aaf3acfc6ed867c56edcae89cee8 |
+
+These are used as local 3D street dressing with physical proxy collisions; select items have destructible behaviour. The road surface geometry remains custom/instanced rather than imported road tiles.
