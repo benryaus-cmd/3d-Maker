@@ -1,10 +1,10 @@
 {
-  "version": "blacktop-empire-full-13oct2026",
+  "version": "blacktop-empire-full-playtested-13oct2026",
   "type": "full-snapshot",
   "repository": "benryaus-cmd/3d-Maker",
-  "commit": "e2fccffa28638f7c5257ab37dae9ba9c2e037edb",
-  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/e2fccffa28638f7c5257ab37dae9ba9c2e037edb/",
-  "fileCount": 40,
+  "commit": "dd45891232e966696fddb2976503690a512af0c6",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/dd45891232e966696fddb2976503690a512af0c6/",
+  "fileCount": 41,
   "description": "Complete self-contained BLACKTOP EMPIRE playable code plus Vite-bundled local models, animated civilians and sound. Import into existing Aippy host upstream using the established buildStart importer; root host and existing importer are never replaced. All required binary assets live under upstream/src/crime/bundled and are inlined by Vite; no nested public/asset URL dependency.",
   "files": [
     {
@@ -166,6 +166,10 @@
     {
       "source": "src/crime/vehiclePhysics.ts",
       "target": "src/games/importedGame/upstream/src/crime/vehiclePhysics.ts"
+    },
+    {
+      "source": "src/crime/Controls.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Controls.ts"
     }
   ]
 }
