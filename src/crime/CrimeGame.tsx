@@ -124,7 +124,7 @@ class EmpireEngine{
  actors:Actor[]=[];people:Ped[]=[];private sound=new Sound();private alive=true;private raf=0;private prev=performance.now();private acc=0;private gameTime=0;private displayAt=0;private saveAt=0;private noticeUntil=0;
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private npcDamage=new WeakMap<Actor,number>();private currentCarStyle:CarStyle;
- private raceRival:Actor|null=null;private raceTime=0;private rivalStep=1;private arrestProgress=0;
+ private raceRival:Actor|null=null;private raceTime=0;private rivalStep=1;private arrestProgress=0;private skidAtX=Infinity;private skidAtZ=Infinity;
  constructor(el:HTMLDivElement,private controls:Controls,private onUpdate:(v:UI)=>void){
   this.save=readSave();const active=activeBuild(this.save);this.player=newCar(this.save.x,this.save.z,this.save.heading,active.hp);
   Object.assign(this.player,{damageFront:active.damage.front,damageRear:active.damage.rear,damageLeft:active.damage.left,damageRight:active.damage.right});
@@ -297,6 +297,18 @@ class EmpireEngine{
   if(!this.foot){
    const steer=Number(c.right)-Number(c.left),tune=engineTune(this.save.car,this.save.mods);
    drive(this.player,{throttle:Number(c.throttle),brake:Number(c.brake),steer,handbrake:c.handbrake,nitro:c.nitro},dt,tune);
+   const a=axes(this.player.heading),v=this.player.vx*a.rx+this.player.vz*a.rz;
+   const sliding=speed(this.player)>6&&(c.handbrake||Math.abs(v)>3.8||c.brake&&speed(this.player)>20);
+   if(sliding&&Math.hypot(this.player.x-this.skidAtX,this.player.z-this.skidAtZ)>.50){
+    for(const side of [-1,1])this.world.addSkidMark(
+     this.player.x-a.fx*1.46+a.rx*.87*side,
+     this.player.z-a.fz*1.46+a.rz*.87*side,
+     this.player.heading
+    );
+    this.skidAtX=this.player.x;this.skidAtZ=this.player.z;
+   }
+   if(!sliding){this.skidAtX=Infinity;this.skidAtZ=Infinity;}
+
   }else{
    // Lightweight on-foot mode: shared input with driving, physically blocked by buildings.
    const dx=Number(c.right)-Number(c.left),dz=Number(c.throttle)-Number(c.brake);
