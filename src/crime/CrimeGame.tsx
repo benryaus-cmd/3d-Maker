@@ -174,7 +174,7 @@ class EmpireEngine{
    mesh.add(model);
    const mixer=new THREE.AnimationMixer(model);p.mixer=mixer;
    for(const name of ['Idle','Walk','Run','Death']){
-    const clip=source.animations.find(c=>c.name.toLowerCase().split('|').at(-1)===name.toLowerCase());
+    const clip=source.animations.find(c=>c.name.toLowerCase().split('|').pop()===name.toLowerCase());
     if(clip){const action=mixer.clipAction(clip);if(name==='Death'){action.clampWhenFinished=true;action.setLoop(THREE.LoopOnce,1);}p.clips.set(name,action);}
    }
    this.playPerson(p,p.alive?'Idle':'Death');
