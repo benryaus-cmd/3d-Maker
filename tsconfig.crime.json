@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["src/crime/**/*.ts", "src/crime/**/*.tsx", "src/App.tsx", "src/main.tsx", "src/vite-env.d.ts"]
+}
