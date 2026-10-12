@@ -50,3 +50,7 @@
 @media(min-width:700px){.be-hud{left:18px;right:18px}.be-controls{bottom:22px;left:23px;right:23px}.be-speed{bottom:220px;left:22px}.be-worldactions{bottom:220px;right:24px}}
 
 .be-race{position:absolute;top:32%;left:50%;transform:translateX(-50%);white-space:nowrap;padding:8px 12px;border:1px solid #f6ce85;background:#3c2921dc;border-radius:8px;color:#fff0b9;font-size:12px;font-weight:1000;letter-spacing:.08em;pointer-events:none;text-shadow:0 1px 3px #0008;box-shadow:0 2px 12px #0008}
+
+.be-colors{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin:3px 0 10px}
+.be-colors button{height:40px;min-width:0;min-height:40px;border-radius:7px;border:2px solid #ffffff6c;box-shadow:0 3px 7px #0006}
+.be-colors button.active{outline:2px solid #ffd69a;outline-offset:2px}
