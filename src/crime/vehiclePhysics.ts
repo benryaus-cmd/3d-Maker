@@ -18,7 +18,7 @@ export function tuneWithMods(base:CarTune,mods:{engine:number;tires:number;brake
 /** Slip-limited bicycle handling with yaw inertia. Must be called at 1/60s timestep. */
 export function drive(s:CarState,c:DriverInput,dt:number,t:CarTune=BASE_TUNE,wet=false):void{
  dt=limit(dt,0,1/30); const a=axes(s.heading),long=s.vx*a.fx+s.vz*a.fz,lat=s.vx*a.rx+s.vz*a.rz;
- const k=limit(1-s.hp/(t.durability||100),0,1);
+ const k=limit(1-s.hp/100,0,1);
  const maxAngle=t.steerLock/(1+Math.abs(long)*.025);
  const target=limit(c.steer,-1,1)*maxAngle;
  s.steerAngle+=limit(target-s.steerAngle,-dt*3.7,dt*3.7);
@@ -54,10 +54,10 @@ export function sideFor(s:CarState,nx:number,nz:number):Contact['side']{
 export function impact(s:CarState,nx:number,nz:number,relativeSpeed:number,wall?:Wall,t:CarTune=BASE_TUNE):Contact{
  const side=sideFor(s,nx,nz);
  // Progressive structural damage at collision face: contact velocity sets seriousness.
- const amount=Math.max(0,relativeSpeed-2.1)*.9*(t.mass/1320);
+ const amount=Math.max(0,relativeSpeed-2.1)*.9*(t.mass/1320)*(100/Math.max(35,t.durability));
  const part='damage'+side.charAt(0).toUpperCase()+side.slice(1) as keyof CarState;
  (s as unknown as Record<string,number>)[part]=limit(Number(s[part])+amount/55,0,1);
- s.hp=limit(s.hp-amount,0,t.durability);
+ s.hp=limit(s.hp-amount,0,100);
  s.lastImpact=relativeSpeed;
  return {speed:relativeSpeed,nx,nz,side,wall};
 }
