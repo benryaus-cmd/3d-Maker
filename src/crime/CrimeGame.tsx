@@ -431,7 +431,8 @@ class EmpireEngine{
   if(speed(this.player)<1.5){this.foot=true;this.notice('ON FOOT · PRESS ACTION TO ENTER CAR');return;}
   this.notice('SLOW DOWN BEFORE EXITING');
  }
- repair(){const cost=Math.max(40,Math.round((100-this.player.hp)*12));if(this.save.money<cost){this.notice('NEED $'+cost+' FOR REPAIR');return;}this.save.money-=cost;this.player.hp=100;this.player.damageFront=0;this.player.damageRear=0;this.player.damageLeft=0;this.player.damageRight=0;
+ repair(){if(this.player.hp>=99.9&&this.player.damageFront+this.player.damageRear+this.player.damageLeft+this.player.damageRight<.01){this.notice('YOUR VEHICLE IS ALREADY REPAIRED');return;}
+  const cost=Math.max(40,Math.round((100-this.player.hp)*12));if(this.save.money<cost){this.notice('NEED $'+cost+' FOR REPAIR');return;}this.save.money-=cost;this.player.hp=100;this.player.damageFront=0;this.player.damageRear=0;this.player.damageLeft=0;this.player.damageRight=0;
   this.mesh.userData.disposed=true;this.mesh.removeFromParent();this.mesh=createCarVisual(this.save.car,0xd45f3d);this.world.scene.add(this.mesh);this.playerDamage=[0,0,0,0];this.notice('FULL REPAIR · $'+cost);this.saveNow();
  }
  upgrade(key:keyof Mods|'garage'|'house'){const r=buyUpgrade(this.save,key);
@@ -484,9 +485,10 @@ export default function CrimeGame(){
  const s=engine.current?.getData()??initial();
  const close=()=>setMenu('none');
  const openNear=()=>{engine.current?.unlock();
-  if(hud.near==='garage')setMenu('garage');
-  else if(hud.near==='safehouse'){engine.current?.action();setMenu('house');}
-  else if(hud.near&&MARKETS.some(m=>m.id===hud.near))setMenu('trade');
+  if(hud.house){engine.current?.action();close();}
+  else if(hud.near==='garage'){if(hud.speed>6){engine.current?.notice('PARK BEFORE OPENING THE GARAGE');return;}setMenu('garage');}
+  else if(hud.near==='safehouse'){if(hud.speed>6){engine.current?.notice('PARK BEFORE ENTERING THE SAFEHOUSE');return;}engine.current?.action();if(engine.current?.house)setMenu('house');}
+  else if(hud.near&&MARKETS.some(m=>m.id===hud.near)){if(hud.speed>6){engine.current?.notice('PARK BEFORE TRADING');return;}setMenu('trade');}
   else engine.current?.action();
  };
  const adjust=(key:keyof Mods|'house'|'garage')=>engine.current?.upgrade(key);
@@ -503,7 +505,7 @@ export default function CrimeGame(){
   {hud.message&&<div className="be-banner">{hud.message}</div>}
   {hud.race&&<div className="be-race">{hud.race}</div>}
   {hud.notice&&<div className="be-danger">{hud.notice}</div>}
-  <div className="be-worldactions"><button onClick={()=>{engine.current?.unlock();setMenu('jobs');}}>JOBS</button><button onClick={()=>{engine.current?.unlock();openNear();}}>{hud.near===null?'ENTER / EXIT':hud.near==='safehouse'?'SAFEHOUSE':hud.near==='garage'?'GARAGE':'DEAL / ENTER'}</button></div>
+  <div className="be-worldactions"><button onClick={()=>{engine.current?.unlock();setMenu('jobs');}}>JOBS</button><button onClick={()=>{engine.current?.unlock();openNear();}}>{hud.house?'LEAVE SAFEHOUSE':hud.near===null?'ENTER / EXIT':hud.near==='safehouse'?'SAFEHOUSE':hud.near==='garage'?'GARAGE':'DEAL / ENTER'}</button></div>
   <div className="be-controls"><div className="be-steer">
     <ControlButton label="◀" field="left" controls={controls} engine={engine}/>
     <ControlButton label="▶" field="right" controls={controls} engine={engine}/>
