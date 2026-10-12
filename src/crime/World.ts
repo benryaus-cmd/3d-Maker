@@ -66,8 +66,52 @@ export function createCarVisual(style:CarStyle='sedan',color=0xdf6b35):THREE.Gro
   // Apply impacts that happened while the GLB was still loading, not just future collisions.
   const prior=root.userData.currentDamage as {front:number;rear:number;left:number;right:number}|undefined;
   if(prior)showCarDamage(root,prior);
+  const cosmetic=root.userData.cosmetics as {paint:number;spoiler:boolean;neon:boolean}|undefined;
+  if(cosmetic)applyCarCosmetics(root,cosmetic);
  }).catch(e=>console.warn('Car GLB fallback:',style,e));
  return root;
+}
+
+/** Real car customisation is attached to the vehicle scene, including after async GLB load.
+ * Only the original Kenney BODY material is cloned/tinted, never tyres or shared assets. */
+export function applyCarCosmetics(root:THREE.Group,options:{paint:number;spoiler:boolean;neon:boolean}):void{
+ root.userData.cosmetics={...options};
+ const paint=Math.max(0,Math.min(0xffffff,options.paint|0));
+ const original=root.getObjectByName('loaded-body');
+ if(original)original.traverse(obj=>{
+  if(!(obj instanceof THREE.Mesh)||!obj.name.toLowerCase().includes('body'))return;
+  if(!obj.userData.ownPaint){
+   const existing=Array.isArray(obj.material)?obj.material:[obj.material];
+   obj.material=existing.map(m=>m.clone());
+   obj.userData.ownPaint=true;
+  }
+  const mats=Array.isArray(obj.material)?obj.material:[obj.material];
+  for(const m of mats)if('color' in m && m.color instanceof THREE.Color){
+   m.color.set(0xffffff).lerp(new THREE.Color(paint),.46);
+  }
+ });
+ const fallback=root.getObjectByName('body');
+ if(fallback)fallback.traverse(o=>{
+  if(o instanceof THREE.Mesh&&o.material instanceof THREE.MeshStandardMaterial&&o.position.y>.65&&o.position.y<1.1){
+   // Avoid recolouring windows/tyres. Fallback body and hood only.
+   o.material=mat(paint,.26);
+  }
+ });
+ const oldSpoiler=root.getObjectByName('custom-spoiler');if(oldSpoiler)oldSpoiler.removeFromParent();
+ const oldGlow=root.getObjectByName('custom-neon');if(oldGlow)oldGlow.removeFromParent();
+ if(options.spoiler){
+  const spoiler=new THREE.Group();spoiler.name='custom-spoiler';
+  box(spoiler,0,1.22,-1.84,2.3,.13,.5,mat(0x22252b,.45));
+  for(const x of [-.84,.84])box(spoiler,x,1,-1.84,.14,.45,.18,mat(0x272c32,.45));
+  root.add(spoiler);
+ }
+ if(options.neon){
+  const glow=new THREE.Group();glow.name='custom-neon';
+  const p=new THREE.Mesh(new THREE.PlaneGeometry(2.8,5.5),new THREE.MeshBasicMaterial({
+   color:paint,transparent:true,opacity:.27,depthWrite:false,side:THREE.DoubleSide
+  }));
+  p.rotation.x=-Math.PI/2;p.position.y=.065;glow.add(p);root.add(glow);
+ }
 }
 /** Visibly deform actual GLB mesh vertices in the direction of the collision. */
 export function showCarDamage(root:THREE.Group,damage:{front:number;rear:number;left:number;right:number}){
