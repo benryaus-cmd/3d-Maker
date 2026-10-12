@@ -1,10 +1,26 @@
 import assert from 'node:assert/strict';
+import {Controls} from '../src/crime/Controls.ts';
+const controls=new Controls();
+controls.pointer(1,'throttle');controls.pointer(2,'left');controls.pointer(3,'handbrake');
+assert.ok(controls.throttle&&controls.left&&controls.handbrake,'independent simultaneous fingers');
+controls.key('x',true);controls.key('x',false);assert.ok(controls.throttle,'keyboard does not erase touch throttle');
+controls.key('w',true);controls.release(1);assert.ok(controls.throttle,'keyboard remains held after finger releases');
+controls.key('w',false);assert.ok(!controls.throttle,'last throttle source releases');
+controls.pointer(4,'left');controls.release(2);assert.ok(controls.left,'second finger keeps same control held');
+controls.clear();assert.ok(!controls.left&&!controls.handbrake,'focus/menu reset clears every source');
+controls.key('arrowup',true);controls.key('w',true);controls.key('w',false);assert.ok(controls.throttle,'alternate keyboard key remains held');
+controls.clear();controls.release(4);assert.ok(!controls.throttle&&!controls.left,'late capture release after reset is harmless');
 import fs from 'node:fs';
 import {newCar,drive,kmh,collideWall,impact,speed,tuneWithMods} from '../src/crime/vehiclePhysics.ts';
 import {initial,trade,quote,cargoCount,missionUpdate,buyUpgrade,buyCar,activeBuild,saveGame,readSave,MARKETS} from '../src/crime/Systems.ts';
 const input={throttle:1,brake:0,steer:0,handbrake:false,nitro:false};
 const simulate=(dt,total,steer=0)=>{const s=newCar();let acc=0;for(let i=0;i<Math.ceil(total/dt);i++){acc+=dt;while(acc>=1/60){drive(s,{...input,steer},1/60);acc-=1/60;}}return s;};
 const s30=simulate(1/30,4),s60=simulate(1/60,4);
+const reversing=newCar();
+for(let i=0;i<60;i++)drive(reversing,{throttle:0,brake:1,steer:0,handbrake:false,nitro:false},1/60);
+assert.ok(reversing.z< -1&&reversing.vz< -1,'held brake must accelerate backward from rest');
+for(let i=0;i<120;i++)drive(reversing,{throttle:1,brake:0,steer:0,handbrake:false,nitro:false},1/60);
+assert.ok(reversing.vz>1,'throttle must recover forward motion while reversing');
 assert.ok(kmh(s60)>30,'car must accelerate');
 assert.ok(Math.abs(kmh(s60)-kmh(s30))<2,'handling must not depend on frame rate');
 assert.ok(simulate(1/60,4,1).x>3,'steering must produce a turn');
@@ -49,3 +65,4 @@ assert.equal(activeBuild(reloaded,'sedan').hp,37);
 for(const f of ['vehicles/sedan.glb','vehicles/police.glb','vehicles/race.glb','buildings/building-a.glb'])
  assert.ok(fs.statSync('public/assets/crime/'+f).size>10000,'Missing GLB '+f);
 console.log('BLACKTOP EMPIRE physics/economy/mission/assets checks passed');
+

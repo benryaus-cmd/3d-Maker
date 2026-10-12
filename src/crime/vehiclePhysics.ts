@@ -23,12 +23,12 @@ export function drive(s:CarState,c:DriverInput,dt:number,t:CarTune=BASE_TUNE,wet
  const target=limit(c.steer,-1,1)*maxAngle;
  s.steerAngle+=limit(target-s.steerAngle,-dt*3.7,dt*3.7);
  const engine=limit(c.throttle,0,1)*(t.power/t.mass)*(1-k*.5);
- const reverse=long<-.3 || (c.brake>.8&&Math.abs(long)<.5&&c.throttle<.1);
+ const reverse=c.throttle<.1&&c.brake>0&&(long<-.3||(c.brake>.8&&Math.abs(long)<.5));
  const motor=reverse ? -c.brake*4.2:engine;
  const braking=reverse?0:c.brake*t.brakeForce/t.mass;
  const resistance=.018*long*Math.abs(long)+t.drag*long/t.mass+(.14*long);
  let flong=motor-resistance-(Math.abs(long)>.08?Math.sign(long)*braking:0);
- if(Math.abs(long)<.25&&c.brake>.6&&!c.throttle)flong=0;
+ if(!reverse&&Math.abs(long)<.25&&c.brake>.6&&!c.throttle)flong=0;
  const grip=t.grip*(wet?.78:1)*(c.handbrake?.36:1)*9.81;
  const latForce=limit(-lat*7.6,-grip,grip);
  const steerYaw=long*Math.tan(s.steerAngle)/t.wheelbase;
@@ -126,3 +126,4 @@ export function collideCars(a:CarState,b:CarState,ta:CarTune=BASE_TUNE,tb:CarTun
  }
  return [impact(a,-h.nx,-h.nz,approaching,undefined,ta),impact(b,h.nx,h.nz,approaching,undefined,tb)];
 }
+

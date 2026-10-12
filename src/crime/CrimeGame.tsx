@@ -7,6 +7,7 @@ import {CrimeWorld,createCarVisual,renderCar,showCarDamage,applyCarCosmetics,dis
 import {BASE_TUNE,axes,drive,newCar,collideWall,collideCars,kmh,speed,tuneWithMods,type CarState,type CarTune,type DriverInput} from './vehiclePhysics';
 import {readSave,saveGame,initial,MARKETS,GOODS,MISSIONS,quote,trade,missionUpdate,missionMarker,buyUpgrade,buyCar,cargoCount,cargoCap,activeBuild,type GameSave,type Commodity,type Mods} from './Systems';
 import './crime.css';
+import {Controls,type ControlField} from './Controls';
 
 const CAR_TUNES:Record<CarStyle,Partial<CarTune>>={
  sedan:{power:6900,topSpeed:40,grip:.99,mass:1380},
@@ -21,8 +22,7 @@ type Ped={mesh:THREE.Group;x:number;z:number;vx:number;vz:number;panic:number;do
 type Radar={player:[number,number];cops:[number,number][];traffic:[number,number][];people:[number,number][];target:[number,number]|null};
 type UI={speed:number;hp:number;heat:number;cash:number;nitro:number;mission:string;objective:string;message:string;area:string;near:string|null;mode:'campaign'|'freeroam';house:boolean;notice:string;radar:Radar;cargo:number;race:string|null};
 const initialUi:UI={speed:0,hp:100,heat:0,cash:1200,nitro:100,mission:'LAST $200',objective:'DRIVE TO SAFEHOUSE',message:'',area:'DOCKSIDE',near:null,mode:'campaign',house:false,notice:'',radar:{player:[0,0],cops:[],traffic:[],people:[],target:null},cargo:0,race:null};
-type Controls={throttle:boolean;brake:boolean;left:boolean;right:boolean;handbrake:boolean;nitro:boolean;moveX:number;moveZ:number};
-const clearInputs=(c:Controls)=>{c.throttle=false;c.brake=false;c.left=false;c.right=false;c.handbrake=false;c.nitro=false;c.moveX=0;c.moveZ=0;};
+const clearInputs=(c:Controls)=>c.clear();
 const wrap=(a:number)=>Math.atan2(Math.sin(a),Math.cos(a));
 const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
 const colours=[0xdf8759,0x75b0c5,0xead5b0,0x7a9384,0xbb6573,0xc2c7c3];
@@ -121,7 +121,7 @@ class Sound{
  }
 }
 class EmpireEngine{
- world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;private menuOpen=false;foot=false;footMesh:THREE.Group;
+ world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;private menuOpen=false;private backgrounded=document.hidden;foot=false;footMesh:THREE.Group;
  actors:Actor[]=[];people:Ped[]=[];private sound=new Sound();private alive=true;private raf=0;private prev=performance.now();private acc=0;private gameTime=0;private displayAt=0;private saveAt=0;private noticeUntil=0;
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private npcDamage=new WeakMap<Actor,number>();private currentCarStyle:CarStyle;
@@ -144,7 +144,11 @@ class EmpireEngine{
   this.resize();this.publish();this.raf=requestAnimationFrame(this.tick);
  }
  private resize=()=>this.world.resize();
- private visibility=()=>{if(document.hidden){this.saveNow();this.paused=true;clearInputs(this.controls);}else this.prev=performance.now();};
+ private visibility=()=>{
+  this.backgrounded=document.hidden;clearInputs(this.controls);this.acc=0;this.prev=performance.now();
+  if(this.backgrounded)this.saveNow();
+  this.sound.muted=this.backgrounded||this.paused||this.menuOpen||this.house;
+ };
  private saveNow=()=>{this.save.x=this.player.x;this.save.z=this.player.z;this.save.heading=this.player.heading;
   this.save.carHP=this.player.hp;
   this.save.carDamage={front:this.player.damageFront,rear:this.player.damageRear,left:this.player.damageLeft,right:this.player.damageRight};
@@ -301,7 +305,8 @@ class EmpireEngine{
   const nx=clamp(this.houseX+dx/distance*dt*4.6,-7,7);
   const nz=clamp(this.houseZ+dz/distance*dt*4.6,-7.3,7.3);
   // Real furniture colliders: bedroom, workbench, safes and kitchen table.
-  const blockers=[[-4,-4,2.4,1.9],[4,-5,2.4,1.1],[4,2,1.35,1.8],[-2,3,3,2]];
+  // The low rug at (-2,3) is floor dressing, not an obstacle around the entry.
+  const blockers=[[-4,-4,2.4,1.9],[4,-5,2.4,1.1],[4,2,1.35,1.8]];
   if(!blockers.some(([x,z,w,d])=>Math.abs(nx-x)<w+.4&&Math.abs(nz-z)<d+.4)){
    this.houseX=nx;this.houseZ=nz;
   }
@@ -440,9 +445,9 @@ class EmpireEngine{
  private tick=(now:number)=>{
   if(!this.alive)return;
   const elapsed=clamp((now-this.prev)/1000,0,.08);this.prev=now;
-  if(this.house&&!this.paused)this.save.heat=Math.max(0,this.save.heat-elapsed*.17);
-  if(this.house&&!this.paused&&!this.menuOpen)this.walkInterior(elapsed);
-  if(!this.paused&&!this.menuOpen&&!this.house){this.acc=Math.min(.10,this.acc+elapsed);for(let i=0;i<5&&this.acc>=1/60;i++){this.physics(1/60);this.acc-=1/60;}}
+  if(this.house&&!this.paused&&!this.backgrounded)this.save.heat=Math.max(0,this.save.heat-elapsed*.17);
+  if(this.house&&!this.paused&&!this.menuOpen&&!this.backgrounded)this.walkInterior(elapsed);
+  if(!this.paused&&!this.menuOpen&&!this.house&&!this.backgrounded){this.acc=Math.min(.10,this.acc+elapsed);for(let i=0;i<5&&this.acc>=1/60;i++){this.physics(1/60);this.acc-=1/60;}}
   if(!this.house){this.world.stream(this.player.x,this.player.z);}
   this.mesh.visible=!this.foot&&!this.house;this.footMesh.visible=this.foot||this.house;
   renderCar(this.mesh,this.player,elapsed,this.controls.brake);
@@ -469,7 +474,8 @@ class EmpireEngine{
     traffic:this.actors.filter(a=>a.type==='traffic').map(a=>[a.car.x,a.car.z] as [number,number]),
     people:this.people.filter(p=>p.alive).map(p=>[p.x,p.z] as [number,number]),target:objective?[objective.x,objective.z]:null}});
  }
- setMenuOpen(open:boolean){this.menuOpen=open;if(open)clearInputs(this.controls);this.sound.muted=this.paused||open||this.house;}
+ setMenuOpen(open:boolean){this.menuOpen=open;clearInputs(this.controls);this.sound.muted=this.paused||open||this.house||this.backgrounded;}
+ resume(){this.paused=false;this.acc=0;this.prev=performance.now();clearInputs(this.controls);this.sound.muted=this.menuOpen||this.house||this.backgrounded;}
  togglePause(){this.paused=!this.paused;clearInputs(this.controls);this.sound.muted=this.paused||this.menuOpen||this.house;this.publish();}
  setMode(mode:'campaign'|'freeroam'){this.save.mode=mode;if(mode==='freeroam')this.finishRace();this.saveNow();this.notice(mode==='campaign'?'CAMPAIGN RESUMED':'FREE ROAM · NO STORY REQUIREMENTS');}
  action(){
@@ -546,9 +552,9 @@ class EmpireEngine{
   this.sound.dispose();this.actors.forEach(a=>disposeCarVisual(a.mesh));this.people.forEach(p=>{p.mesh.removeFromParent();p.bleed?.removeFromParent();});
   disposeCarVisual(this.mesh);this.footMesh.removeFromParent();this.world.dispose();}
 }
-function ControlButton({label,field,controls,engine,className=''}:{label:string;field:keyof Controls;controls:React.MutableRefObject<Controls>;engine:React.MutableRefObject<EmpireEngine|null>;className?:string}){
- const down=(e:RP<HTMLButtonElement>)=>{e.preventDefault();e.stopPropagation();e.currentTarget.setPointerCapture(e.pointerId);(controls.current as unknown as Record<string,boolean>)[field]=true;engine.current?.unlock();};
- const up=(e:RP<HTMLButtonElement>)=>{e.preventDefault();(controls.current as unknown as Record<string,boolean>)[field]=false;};
+function ControlButton({label,field,controls,engine,className=''}:{label:string;field:ControlField;controls:React.MutableRefObject<Controls>;engine:React.MutableRefObject<EmpireEngine|null>;className?:string}){
+ const down=(e:RP<HTMLButtonElement>)=>{e.preventDefault();e.stopPropagation();e.currentTarget.setPointerCapture(e.pointerId);controls.current.pointer(e.pointerId,field);engine.current?.unlock();};
+ const up=(e:RP<HTMLButtonElement>)=>{e.preventDefault();controls.current.release(e.pointerId);};
  return <button type="button" className={'be-control '+className} onPointerDown={down} onPointerUp={up} onPointerCancel={up} onLostPointerCapture={up} aria-label={label}>{label}</button>;
 }
 function MiniMap({radar}:{radar:Radar}){const canvas=useRef<HTMLCanvasElement>(null);
@@ -565,24 +571,24 @@ function MiniMap({radar}:{radar:Radar}){const canvas=useRef<HTMLCanvasElement>(n
   if(radar.target)dot(radar.target,'#ffd06d',4);dot(radar.player,'#ff8b4c',4.5);
  },[radar]);return <canvas ref={canvas} width={120} height={120} className="be-minimap" aria-label="Local radar showing player, traffic, police and mission objective"/>;}
 export default function CrimeGame(){
- const el=useRef<HTMLDivElement>(null),controls=useRef<Controls>({throttle:false,brake:false,left:false,right:false,handbrake:false,nitro:false,moveX:0,moveZ:0}),engine=useRef<EmpireEngine|null>(null);
+ const el=useRef<HTMLDivElement>(null),controls=useRef(new Controls()),engine=useRef<EmpireEngine|null>(null);
  const [hud,setHud]=useState<UI>(initialUi),[menu,setMenu]=useState<'none'|'pause'|'garage'|'trade'|'house'|'jobs'>('none');
  const [selectedGood,setSelectedGood]=useState<Commodity>('Ember'),[qty,setQty]=useState(1);
  useEffect(()=>{engine.current?.setMenuOpen(menu!=='none');},[menu]);
  useEffect(()=>{
   if(!el.current)return;const game=new EmpireEngine(el.current,controls.current,setHud);engine.current=game;
-  const pressed=new Set<string>();const apply=()=>{const c=controls.current;c.throttle=pressed.has('w')||pressed.has('arrowup')||c.throttle&&false;
-   c.brake=pressed.has('s')||pressed.has('arrowdown');c.left=pressed.has('a')||pressed.has('arrowleft');c.right=pressed.has('d')||pressed.has('arrowright');c.handbrake=pressed.has(' ');c.nitro=pressed.has('shift');};
   const keydown=(e:KeyboardEvent)=>{if(e.repeat&&['e','escape','m'].includes(e.key.toLowerCase()))return;if(e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;
    const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();
    if(k==='e')game.action();else if(k==='escape')setMenu(prev=>prev==='none'?'pause':'none');else if(k==='m')setMenu(prev=>prev==='none'?'jobs':'none');
-   pressed.add(k);apply();game.unlock();};
-  const keyup=(e:KeyboardEvent)=>{pressed.delete(e.key.toLowerCase());apply();};
+   controls.current.key(k,true);game.unlock();};
+  const keyup=(e:KeyboardEvent)=>{controls.current.key(e.key.toLowerCase(),false);};
+  const blur=()=>clearInputs(controls.current);
   window.addEventListener('keydown',keydown);window.addEventListener('keyup',keyup);
-  return()=>{window.removeEventListener('keydown',keydown);window.removeEventListener('keyup',keyup);game.dispose();engine.current=null;};
+  window.addEventListener('blur',blur);
+  return()=>{window.removeEventListener('keydown',keydown);window.removeEventListener('keyup',keyup);window.removeEventListener('blur',blur);game.dispose();engine.current=null;};
  },[]);
  const s=engine.current?.getData()??initial();
- const close=()=>setMenu('none');
+ const close=()=>{if(menu==='pause')engine.current?.resume();setMenu('none');};
  const openNear=()=>{engine.current?.unlock();
   if(hud.house){engine.current?.action();close();}
   else if(hud.near==='garage'){if(hud.speed>6){engine.current?.notice('PARK BEFORE OPENING THE GARAGE');return;}setMenu('garage');}
@@ -617,7 +623,7 @@ export default function CrimeGame(){
   {menu!=='none'&&<div className="be-overlay" role="dialog" aria-modal="true">
    <div className="be-panel"><div className="be-panelhead"><strong>{menu==='pause'?'CITY MENU':menu==='trade'?'STREET MARKET':menu==='garage'?'VEHICLE SHOP':menu==='house'?'DOCKSIDE SAFEHOUSE':'JOBS & CAMPAIGN'}</strong><button onClick={close}>✕</button></div>
    {menu==='pause'&&<><p>STREETS NEVER SLEEP. DRIVE, BUILD YOUR EMPIRE AND LOSE THE HEAT.</p><div className="be-columns"><button onClick={()=>{engine.current?.setMode('campaign');close();}}>CAMPAIGN</button><button onClick={()=>{engine.current?.setMode('freeroam');close();}}>FREE ROAM</button></div>
-    <button onClick={()=>{engine.current?.togglePause();close();}}>PAUSE / RESUME DRIVING</button><button onClick={()=>{engine.current?.unlock();close();}}>BACK TO STREETS</button><button onClick={()=>{engine.current?.tow();close();}}>TOW MY VEHICLE TO GARAGE · $180</button><p className="be-note">WASD/arrows drive · SPACE drift · SHIFT nitro · E interact · M jobs. Progress autosaves.</p></>}
+    <button onClick={()=>{engine.current?.resume();close();}}>RESUME DRIVING</button><button onClick={()=>{engine.current?.unlock();close();}}>BACK TO STREETS</button><button onClick={()=>{engine.current?.tow();close();}}>TOW MY VEHICLE TO GARAGE · $180</button><p className="be-note">WASD/arrows drive · SPACE drift · SHIFT nitro · E interact · M jobs. Progress autosaves.</p></>}
    {menu==='trade'&&<><p>{item?.name??'NEARBY STREET MARKET'} · Prices move between districts. Reach a market before trading.</p>
     <div className="be-columns">{GOODS.map(g=><button key={g} className={selectedGood===g?'active':''} onClick={()=>setSelectedGood(g)}>{g.toUpperCase()}<small>{money(engine.current?.getPrice(item?.id??'port',g)??0)} · HAVE {s.cargo[g]}</small></button>)}</div>
     <div className="be-tradeqty"><label>Quantity <input type="number" min="1" max="20" value={qty} onChange={e=>setQty(clamp(Math.trunc(Number(e.target.value)||1),1,20))}/></label></div>
@@ -640,3 +646,4 @@ export default function CrimeGame(){
    </div></div>}
  </div>;
 }
+

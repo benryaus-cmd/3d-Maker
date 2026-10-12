@@ -98,7 +98,9 @@ export function applyCarCosmetics(root:THREE.Group,options:{paint:number;spoiler
   if(!(obj instanceof THREE.Mesh)||!obj.name.toLowerCase().includes('body'))return;
   if(!obj.userData.ownPaint){
    const existing=Array.isArray(obj.material)?obj.material:[obj.material];
-   obj.material=existing.map(m=>m.clone());
+   const copied=existing.map(m=>m.clone());
+   // Single-material GLB primitives have no geometry groups; an array hides them.
+   obj.material=Array.isArray(obj.material)?copied:copied[0];
    obj.userData.ownPaint=true;
   }
   const mats=Array.isArray(obj.material)?obj.material:[obj.material];
@@ -222,6 +224,7 @@ export class CrimeWorld{
  readonly maxChunks=16;
  private w=1;private h=1;private disposed=false;private lastcx=Infinity;private lastcz=Infinity;
  private cameraFocus=new THREE.Vector3();
+ private mountResize:ResizeObserver|null=null;
  private buildingAssets=new Map<string,THREE.Group>();
  constructor(private mount:HTMLElement){
   this.scene.background=new THREE.Color(0x4a555b);this.scene.add(this.root,this.sky,this.sun,this.interior);
@@ -236,8 +239,13 @@ export class CrimeWorld{
   this.renderer=new THREE.WebGLRenderer({antialias:false,alpha:false,powerPreference:'high-performance'});
   this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.65));this.renderer.outputColorSpace=THREE.SRGBColorSpace;
   this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.22;
-  this.renderer.setSize(this.w,this.h);this.mount.appendChild(this.renderer.domElement);
+  // CSS owns the display size; don't install a permanent inline 1px width/height.
+  this.renderer.setSize(this.w,this.h,false);this.mount.appendChild(this.renderer.domElement);
   this.resize();
+  if(typeof ResizeObserver!=='undefined'){
+   this.mountResize=new ResizeObserver(()=>{if(!this.disposed)this.resize();});
+   this.mountResize.observe(this.mount);
+  }
   this.makeInterior();
   for(const name of buildingPaths){void getModel('buildings/'+name+'.glb').then(m=>{this.buildingAssets.set(name,m);this.map.forEach(ch=>this.attachModels(ch.group));}).catch(()=>{});}
   for(const name of streetPaths){void getModel('streets/'+name+'.glb').then(m=>{this.buildingAssets.set(name,m);this.map.forEach(ch=>this.attachModels(ch.group));}).catch(()=>{});}
@@ -366,10 +374,12 @@ export class CrimeWorld{
  }
  follow(x:number,z:number,speed:number,heading:number,dt:number,interior=false){
   if(interior){
+   const entering=!this.interior.visible;
    this.root.visible=false;this.interior.visible=true;
    // Separate world-space safehouse, with the resident's avatar and furniture
    // walkable in a proper top-down camera, not a freeze-frame showroom.
    const desired=new THREE.Vector3(10000+x,0,10000+z);
+   if(entering)this.cameraFocus.copy(desired);
    this.cameraFocus.lerp(desired,Math.min(1,dt*4));
    this.camera.position.set(this.cameraFocus.x,26,this.cameraFocus.z+8);
    this.camera.lookAt(this.cameraFocus.x,0,this.cameraFocus.z);
@@ -447,6 +457,7 @@ export class CrimeWorld{
  render(){this.renderer.render(this.scene,this.camera);}
  dispose(){
   this.disposed=true;
+  this.mountResize?.disconnect();
   this.map.forEach(c=>{c.group.traverse(o=>{if(o instanceof THREE.Mesh&&!o.userData.sharedGeometry)o.geometry.dispose();});c.group.removeFromParent();});
   this.map.clear();
   this.tyreMarks.geometry.dispose();for(const mat of (Array.isArray(this.tyreMarks.material)?this.tyreMarks.material:[this.tyreMarks.material]))mat.dispose();
@@ -456,3 +467,4 @@ export class CrimeWorld{
   this.markers.forEach(o=>{o.geometry.dispose();(o.material as THREE.Material).dispose();o.removeFromParent();});
  }
 }
+
