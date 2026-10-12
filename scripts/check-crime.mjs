@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {newCar,drive,kmh,collideWall,impact,speed,tuneWithMods} from '../src/crime/vehiclePhysics.ts';
-import {initial,trade,quote,cargoCount,missionUpdate,buyUpgrade,buyCar,MARKETS} from '../src/crime/Systems.ts';
+import {initial,trade,quote,cargoCount,missionUpdate,buyUpgrade,buyCar,activeBuild,saveGame,readSave,MARKETS} from '../src/crime/Systems.ts';
 const input={throttle:1,brake:0,steer:0,handbrake:false,nitro:false};
 const simulate=(dt,total,steer=0)=>{const s=newCar();let acc=0;for(let i=0;i<Math.ceil(total/dt);i++){acc+=dt;while(acc>=1/60){drive(s,{...input,steer},1/60);acc-=1/60;}}return s;};
 const s30=simulate(1/30,4),s60=simulate(1/60,4);
@@ -23,6 +23,29 @@ assert.ok(!trade(state,'club','Crown',-1,0).ok,'no selling inventory not held');
 const story=initial();assert.equal(story.mission,0);assert.ok(missionUpdate(story,7,7,0)?.includes('COMPLETE'));assert.equal(story.mission,1);
 const upgradeSave=initial();assert.ok(buyUpgrade(upgradeSave,'engine').ok);assert.equal(upgradeSave.mods.engine,1);
 const owned=initial();owned.money=10000;assert.ok(buyCar(owned,'sedan-sports').ok);assert.ok(owned.owned.includes('sedan-sports'));
+// Per-vehicle modifications and visible structural damage are NOT globally shared.
+const stable=initial();stable.money=25000;
+assert.ok(buyUpgrade(stable,'tires').ok);
+const first=activeBuild(stable);assert.equal(first.mods.tires,1);
+first.paint=0x4477bb;first.spoiler=true;first.hp=37;first.damage.front=.6;
+assert.ok(buyCar(stable,'race').ok);
+assert.equal(activeBuild(stable).mods.tires,0);
+assert.equal(activeBuild(stable).hp,100);
+assert.ok(buyUpgrade(stable,'engine').ok);
+assert.equal(activeBuild(stable).mods.engine,1);
+assert.ok(buyCar(stable,'sedan').ok);
+assert.equal(activeBuild(stable).mods.tires,1);
+assert.equal(activeBuild(stable).paint,0x4477bb);
+assert.equal(activeBuild(stable).hp,37);
+assert.equal(activeBuild(stable).damage.front,.6);
+// Simulate browser storage to verify garage inventory survives a full reload.
+const fake=new Map();
+globalThis.localStorage={getItem:k=>fake.get(k)??null,setItem:(k,v)=>fake.set(k,v)};
+saveGame(stable);
+const reloaded=readSave();
+assert.equal(activeBuild(reloaded,'sedan').paint,0x4477bb);
+assert.equal(activeBuild(reloaded,'race').mods.engine,1);
+assert.equal(activeBuild(reloaded,'sedan').hp,37);
 for(const f of ['vehicles/sedan.glb','vehicles/police.glb','vehicles/race.glb','buildings/building-a.glb'])
  assert.ok(fs.statSync('public/assets/crime/'+f).size>10000,'Missing GLB '+f);
 console.log('BLACKTOP EMPIRE physics/economy/mission/assets checks passed');
