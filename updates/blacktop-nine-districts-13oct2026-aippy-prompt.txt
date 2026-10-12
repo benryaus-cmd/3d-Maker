@@ -1,0 +1,8 @@
+Use the EXISTING Node build-time GitHub importer during the normal Vite build to import:
+https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/main/updates/blacktop-nine-districts-13oct2026.json
+
+Download all 12 listed files using manifest.baseUrl + source, then replace their exact target paths in the current Blacktop Empire game.
+
+Preserve saves, credits, settings, host, importer, README and all unlisted files. Build and load BLACKTOP EMPIRE.
+
+This is an incremental import into the existing game. Do not rebuild the importer or full-import the repository.

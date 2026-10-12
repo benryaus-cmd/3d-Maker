@@ -1,10 +1,10 @@
 {
-  "version": "blacktop-empire-full-mobile-overhaul-13oct2026",
+  "version": "blacktop-empire-full-nine-districts-13oct2026",
   "type": "full-snapshot",
   "repository": "benryaus-cmd/3d-Maker",
-  "commit": "51d37149c7a724a094ab26c5eb34c81adee11d29",
-  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/51d37149c7a724a094ab26c5eb34c81adee11d29/",
-  "fileCount": 72,
+  "commit": "4ea3f4edc0d505738b2bd90dd7fa4d44d01af4ef",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/4ea3f4edc0d505738b2bd90dd7fa4d44d01af4ef/",
+  "fileCount": 76,
   "description": "Complete self-contained BLACKTOP EMPIRE playable code plus Vite-bundled local models, animated civilians and sound. Import into existing Aippy host upstream using the established buildStart importer; root host and existing importer are never replaced. All required binary assets live under upstream/src/crime/bundled and are inlined by Vite; no nested public/asset URL dependency.",
   "files": [
     {
@@ -294,6 +294,22 @@
     {
       "source": "src/crime/bundled/interior/loungesofa.glb",
       "target": "src/games/importedGame/upstream/src/crime/bundled/interior/loungesofa.glb"
+    },
+    {
+      "source": "src/crime/CityLayout.ts",
+      "target": "src/games/importedGame/upstream/src/crime/CityLayout.ts"
+    },
+    {
+      "source": "src/crime/TrafficController.ts",
+      "target": "src/games/importedGame/upstream/src/crime/TrafficController.ts"
+    },
+    {
+      "source": "src/crime/StreetCombat.ts",
+      "target": "src/games/importedGame/upstream/src/crime/StreetCombat.ts"
+    },
+    {
+      "source": "src/crime/VehicleLights.ts",
+      "target": "src/games/importedGame/upstream/src/crime/VehicleLights.ts"
     }
   ]
 }
