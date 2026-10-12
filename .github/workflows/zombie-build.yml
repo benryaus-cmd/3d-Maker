@@ -1,4 +1,4 @@
-name: Zombie Game Build
+name: Blacktop Empire Build
 on:
   push:
     branches: [main]
@@ -16,7 +16,6 @@ jobs:
           node-version: '22'
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec tsc -p tsconfig.zombie.json --noEmit
-      - run: node --experimental-strip-types scripts/check-zombie-gestures.mjs
-      - run: node scripts/test-zombie.mjs
+      - run: pnpm exec tsc -p tsconfig.crime.json --noEmit
+      - run: node --experimental-strip-types scripts/check-crime.mjs
       - run: pnpm build
