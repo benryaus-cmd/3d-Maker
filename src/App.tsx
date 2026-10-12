@@ -1,2 +1,2 @@
-/** Zombie survival entry. HubSide's painting UI remains in the original graf-game repository. */
-export { default } from '@/zombie/ZombieGame';
+/** BLACKTOP EMPIRE — original portrait-first 3D crime driving game. */
+export { default } from './crime/CrimeGame';
