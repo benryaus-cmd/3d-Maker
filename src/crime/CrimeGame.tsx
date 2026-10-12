@@ -147,7 +147,7 @@ class EmpireEngine{
    this.lastActorSpawn=this.gameTime;
    for(let i=0;i<10;i++){const delta=Math.random()*Math.PI*2,dist=30+Math.random()*30;let x=this.player.x+Math.sin(delta)*dist,z=this.player.z+Math.cos(delta)*dist;
     if(Math.random()<.5)x=cell(x)+(Math.random()<.5?1.7:-1.7);else z=cell(z)+(Math.random()<.5?1.7:-1.7);
-    if(this.canStand(x,z,2)&&Math.hypot(x-this.player.x,z-this.player.z)>18){this.makeActor('traffic',x,z);break;}
+    if(this.canStand(x,z,2)&&Math.hypot(x-this.player.x,z-this.player.z)>18&&this.actors.every(a=>Math.hypot(a.car.x-x,a.car.z-z)>8)){this.makeActor('traffic',x,z);break;}
    }
   }
   if(this.save.heat>=1&&this.actors.filter(a=>a.type==='police').length<Math.min(7,Math.ceil(this.save.heat*1.3))&&this.gameTime-this.lastPoliceAt>3){
@@ -241,6 +241,15 @@ class EmpireEngine{
     showCarDamage(actor.mesh,{front:actor.car.damageFront,rear:actor.car.damageRear,left:actor.car.damageLeft,right:actor.car.damageRight});
     this.npcDamage.set(actor,damage);
    }
+  }
+  // Civilian vehicles and patrols are actual solid physics objects to each other,
+  // not ghost traffic passing through wrecks at intersections.
+  for(let i=0;i<this.actors.length;i++)for(let j=i+1;j<this.actors.length;j++){
+   const a=this.actors[i],b=this.actors[j];
+   if(Math.abs(a.car.x-b.car.x)>5||Math.abs(a.car.z-b.car.z)>5)continue;
+   const hits=collideCars(a.car,b.car,engineTune(a.style,{engine:0,tires:0,brakes:0,armor:0}),
+       engineTune(b.style,{engine:0,tires:0,brakes:0,armor:0}));
+   if(hits&&hits[0].speed>4)this.hitEffect(hits[0].speed,(a.car.x+b.car.x)/2,(a.car.z+b.car.z)/2);
   }
   for(const p of this.people){
    if(!p.alive){p.down+=dt;if(p.down>18)p.mesh.visible=false;continue;}
