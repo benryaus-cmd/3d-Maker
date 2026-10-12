@@ -14,7 +14,15 @@ const assets=new Map<string,Promise<THREE.Group>>();
 function getModel(path:string):Promise<THREE.Group>{
  let promise=assets.get(path);if(!promise){promise=loader.loadAsync(base+path).then(r=>r.scene);assets.set(path,promise);}return promise;
 }
-const mat=(color:number,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness:.72,metalness});
+// Share per-colour materials between streamed blocks, instead of leaking a new GPU
+// material each time a 96m city chunk is built or recycled.
+const cachedMaterials=new Map<string,THREE.MeshStandardMaterial>();
+const mat=(color:number,metalness=0)=>{
+ const key=color.toString(16)+':'+metalness;
+ let existing=cachedMaterials.get(key);
+ if(!existing){existing=new THREE.MeshStandardMaterial({color,roughness:.72,metalness});cachedMaterials.set(key,existing);}
+ return existing;
+};
 const asphalt=mat(0x252a34),walk=mat(0x77736f),buildingMats=[mat(0x807d73),mat(0x6b777d),mat(0x947f70),mat(0x6b656a),mat(0x606f69)];
 const ground=mat(0x4c5750),lineWhite=new THREE.MeshBasicMaterial({color:0xb5b5a9}),lineYellow=new THREE.MeshBasicMaterial({color:0xe9b95b});
 const box=(parent:THREE.Object3D,x:number,y:number,z:number,w:number,h:number,d:number,m:THREE.Material)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.receiveShadow=true;parent.add(o);return o;};
@@ -283,9 +291,7 @@ export class CrimeWorld{
   const g=this.propertyUpgrades;
   // Dynamic room furniture is rebuilt only on purchase, never every frame.
   for(const child of [...g.children]){
-   g.remove(child);child.traverse(o=>{if(o instanceof THREE.Mesh){
-    o.geometry.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();
-   }});
+   g.remove(child);child.traverse(o=>{if(o instanceof THREE.Mesh)o.geometry.dispose();});
   }
   const create=(x:number,y:number,z:number,w:number,h:number,d:number,color:number)=>box(g,x,y,z,w,h,d,mat(color));
   // Functional garage workbench, laptop and money safe, then higher-end upgrades.
