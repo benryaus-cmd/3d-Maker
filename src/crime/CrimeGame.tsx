@@ -569,7 +569,12 @@ export default function CrimeGame(){
     <div className="be-columns"><button onClick={()=>item&&engine.current?.deal(item.id,selectedGood,qty)}>BUY</button><button onClick={()=>item&&engine.current?.deal(item.id,selectedGood,-qty)}>SELL</button></div>
     <p>BOOT CAPACITY {cargoCount(s)}/{cargoCap(s)} · CASH {money(hud.cash)}</p></>}
    {menu==='garage'&&<><p>OWNED CARS · PURCHASE · MOD · REPAIR</p><div className="be-columns">{(['sedan','sedan-sports','taxi','suv','race','police'] as CarStyle[]).map(c=><button key={c} onClick={()=>engine.current?.purchaseCar(c)}>{c.toUpperCase()}<small>{s.owned.includes(c)?'OWNED · SELECT':c==='race'?'$11,000':c==='sedan-sports'?'$5,500':c==='police'?'$9,000':c==='suv'?'$3,800':'$1,700'}</small></button>)}</div>
-    <button onClick={()=>engine.current?.repair()}>FULL BODY / ENGINE REPAIR</button>{(['engine','tires','brakes','armor'] as (keyof Mods)[]).map(k=><button key={k} onClick={()=>adjust(k)}>{k.toUpperCase()} · LEVEL {s.mods[k]}/3 · {money(350*(s.mods[k]+1))}</button>)}</>}
+    <button onClick={()=>engine.current?.repair()}>FULL BODY / ENGINE REPAIR</button>
+    <p>CUSTOM BODYWORK · ALL MODS SAVED TO THIS VEHICLE</p>
+    <div className="be-colors">{[0xd45f3d,0x40a3e2,0xe6d1a6,0x292e39,0x58aa6c,0xe5ca38,0xbd426f,0x6a55bf].map(color=><button type="button" key={color} title={'Paint '+color.toString(16)} className={activeBuild(s).paint===color?'active':''} style={{backgroundColor:'#'+color.toString(16).padStart(6,'0')}} onClick={()=>engine.current?.customize('paint',color)} aria-label={'Install paint '+color.toString(16)} />)}</div>
+    <div className="be-columns"><button onClick={()=>engine.current?.customize('spoiler')}>3D REAR SPOILER · $450<small>{activeBuild(s).spoiler?'INSTALLED':'AERO COSMETIC'}</small></button>
+    <button onClick={()=>engine.current?.customize('neon')}>UNDERBODY GLOW · $700<small>{activeBuild(s).neon?'INSTALLED':'CAR MATCHED'}</small></button></div>
+    {(['engine','tires','brakes','armor'] as (keyof Mods)[]).map(k=><button key={k} onClick={()=>adjust(k)}>{k.toUpperCase()} · LEVEL {activeBuild(s).mods[k]}/3 · {money(350*(activeBuild(s).mods[k]+1))}</button>)}</>}
    {menu==='house'&&<><p>YOUR ENTERABLE SAFEHOUSE · PERSONAL GARAGE · STORAGE · HIDEOUT</p><p>HOUSE LEVEL {s.houseLevel} · GARAGE LEVEL {s.garageLevel}</p>
     <div className="be-columns"><button onClick={()=>adjust('house')}>UPGRADE ROOMS · {money(550*(s.houseLevel+1))}</button><button onClick={()=>adjust('garage')}>EXPAND GARAGE/STASH · {money(650*(s.garageLevel+1))}</button></div>
     <button onClick={()=>{engine.current?.repair();}}>REPAIR YOUR CAR</button><button onClick={()=>{engine.current?.action();close();}}>EXIT SAFEHOUSE</button></>}
