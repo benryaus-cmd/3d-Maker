@@ -109,7 +109,7 @@ class EmpireEngine{
  world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;private menuOpen=false;foot=false;footMesh:THREE.Group;
  actors:Actor[]=[];people:Ped[]=[];private sound=new Sound();private alive=true;private raf=0;private prev=performance.now();private acc=0;private gameTime=0;private displayAt=0;private saveAt=0;private noticeUntil=0;
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
- private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private currentCarStyle:CarStyle;
+ private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private npcDamage=new WeakMap<Actor,number>();private currentCarStyle:CarStyle;
  constructor(el:HTMLDivElement,private controls:Controls,private onUpdate:(v:UI)=>void){
   this.save=readSave();this.player=newCar(this.save.x,this.save.z,this.save.heading,this.save.carHP);
   Object.assign(this.player,{damageFront:this.save.carDamage.front,damageRear:this.save.carDamage.rear,damageLeft:this.save.carDamage.left,damageRight:this.save.carDamage.right});
@@ -236,6 +236,11 @@ class EmpireEngine{
     }
    }
    renderCar(actor.mesh,actor.car,dt);actor.mesh.visible=!this.house;
+   const damage=actor.car.damageFront+actor.car.damageRear+actor.car.damageLeft+actor.car.damageRight;
+   if(damage>(this.npcDamage.get(actor)??0)+.025){
+    showCarDamage(actor.mesh,{front:actor.car.damageFront,rear:actor.car.damageRear,left:actor.car.damageLeft,right:actor.car.damageRight});
+    this.npcDamage.set(actor,damage);
+   }
   }
   for(const p of this.people){
    if(!p.alive){p.down+=dt;if(p.down>18)p.mesh.visible=false;continue;}
@@ -281,6 +286,7 @@ class EmpireEngine{
  private tick=(now:number)=>{
   if(!this.alive)return;
   const elapsed=clamp((now-this.prev)/1000,0,.08);this.prev=now;
+  if(this.house&&!this.paused)this.save.heat=Math.max(0,this.save.heat-elapsed*.17);
   if(!this.paused&&!this.menuOpen&&!this.house){this.acc=Math.min(.10,this.acc+elapsed);for(let i=0;i<5&&this.acc>=1/60;i++){this.physics(1/60);this.acc-=1/60;}}
   if(!this.house){this.world.stream(this.player.x,this.player.z);}
   this.mesh.visible=!this.foot&&!this.house;this.footMesh.visible=this.foot&&!this.house;
@@ -314,7 +320,13 @@ class EmpireEngine{
   this.unlock();
   if(this.house){this.house=false;this.paused=false;this.notice('BACK ON THE STREET');return;}
   const m=this.world.nearMarker(this.player.x,this.player.z,7.5);
-  if(m==='safehouse'){if(speed(this.player)>3){this.notice('PARK THE CAR FIRST');return;}this.house=true;this.save.heat=Math.max(0,this.save.heat-1);this.saveNow();this.notice('DOCKSIDE SAFEHOUSE');return;}
+  if(m==='safehouse'){
+   if(speed(this.player)>3){this.notice('PARK THE CAR FIRST');return;}
+   if(this.save.heat>=1&&this.actors.some(a=>a.type==='police'&&Math.hypot(a.car.x-this.player.x,a.car.z-this.player.z)<27)){
+    this.notice('POLICE WATCHING THE DOOR · LOSE YOUR TAIL');return;
+   }
+   this.house=true;this.saveNow();this.notice('DOCKSIDE SAFEHOUSE');return;
+  }
   if(this.foot){this.foot=false;this.notice('BACK IN THE DRIVER SEAT');return;}
   if(speed(this.player)<1.5){this.foot=true;this.notice('ON FOOT · PRESS ACTION TO ENTER CAR');return;}
   this.notice('SLOW DOWN BEFORE EXITING');
