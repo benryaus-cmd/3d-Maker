@@ -1,0 +1,63 @@
+{
+  "version": "blacktop-immersion-13oct2026",
+  "type": "incremental-update",
+  "repository": "benryaus-cmd/3d-Maker",
+  "commit": "7ad47a80207df8bf210f0df3996f36c8d9bfbf98",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/7ad47a80207df8bf210f0df3996f36c8d9bfbf98/",
+  "fileCount": 13,
+  "description": "50%wider roads, solid model colliders, timed skid fade, persistent breakable scenery, physical impacts, expanded city map, fitted brake/headlights and precise day/night lighting.",
+  "files": [
+    {
+      "source": "src/crime/CityLayout.ts",
+      "target": "src/games/importedGame/upstream/src/crime/CityLayout.ts"
+    },
+    {
+      "source": "src/crime/TrafficController.ts",
+      "target": "src/games/importedGame/upstream/src/crime/TrafficController.ts"
+    },
+    {
+      "source": "src/crime/World.ts",
+      "target": "src/games/importedGame/upstream/src/crime/World.ts"
+    },
+    {
+      "source": "src/crime/VehicleLights.ts",
+      "target": "src/games/importedGame/upstream/src/crime/VehicleLights.ts"
+    },
+    {
+      "source": "src/crime/CrimeGame.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/CrimeGame.tsx"
+    },
+    {
+      "source": "src/crime/vehiclePhysics.ts",
+      "target": "src/games/importedGame/upstream/src/crime/vehiclePhysics.ts"
+    },
+    {
+      "source": "src/crime/crime.css",
+      "target": "src/games/importedGame/upstream/src/crime/crime.css"
+    },
+    {
+      "source": "src/crime/SceneryPhysics.ts",
+      "target": "src/games/importedGame/upstream/src/crime/SceneryPhysics.ts"
+    },
+    {
+      "source": "src/crime/Daylight.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Daylight.ts"
+    },
+    {
+      "source": "src/crime/TimedSkids.ts",
+      "target": "src/games/importedGame/upstream/src/crime/TimedSkids.ts"
+    },
+    {
+      "source": "src/crime/ImpactMotion.ts",
+      "target": "src/games/importedGame/upstream/src/crime/ImpactMotion.ts"
+    },
+    {
+      "source": "src/crime/CityMap.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/CityMap.tsx"
+    },
+    {
+      "source": "docs/blacktop-assets.md",
+      "target": "src/games/importedGame/upstream/docs/blacktop-assets.md"
+    }
+  ]
+}

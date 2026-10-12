@@ -1,0 +1,9 @@
+Use the EXISTING Node build-time importer during the normal Vite build:
+
+https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/main/updates/blacktop-immersion-13oct2026.json
+
+Download all 13 listed files using manifest.baseUrl + source, then replace their exact target paths.
+
+Preserve saves, credits, settings, host, importer, README and all unlisted files.
+
+Build and load BLACKTOP EMPIRE.
