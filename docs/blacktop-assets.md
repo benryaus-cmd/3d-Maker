@@ -28,7 +28,7 @@ These bytes were transferred via the GitHub object API and verified as blobs by 
 `public/assets/quarter/`: 5 larger building glTFs with source material. Should be reviewed for overhead before importing into the new topdown chunk engine.
 `public/assets/preview/`: preview building/character GLBs, unused by the new entry.
 `public/assets/zombie-kit/`: Quaternius characters, zombie/weapon assets. Dormant in Blacktop Empire but not deleted.
-`public/audio/sfx/`: zombie/war/pistol/rifle audio. No licensed car engine loops, tire squeals or police radio samples shipped yet; prototype engine and siren use Web Audio synthesis.
+`public/audio/sfx/`: zombie/war/pistol/rifle audio. The new game ships genuine CC0 recorded car engine, skid and collision samples. Police radio remains TODO; siren currently uses Web Audio synthesis.
 
 ## Next authentic assets to import
 - Kenney Roads CC0 https://kenney.nl/assets/city-kit-roads ; GLB mirror under `packs/city-kit-roads/` (inspect filenames before selecting).
@@ -43,3 +43,12 @@ These bytes were transferred via the GitHub object API and verified as blobs by 
 - `src/crime/World.ts` uses local assets/crime/ GLBs and Three.js procedural fallback if fetch/load fails.
 - Actual deformation of Kenney geometry is implemented but not yet visually verified in Aippy or Android. On close inspections verify mesh axis/pivot normalization and front/rear dent direction.
 - Responsive scene/city built separately from zombie environment. Still needs external screen/playtesting to confirm frame rate, camera, collisions, AI and bundle correctness. No claim is made that Android was tested.
+
+## Recorded vehicle sounds — downloaded and bundled (CC0)
+Source: Kenney Starter Kit Racing https://github.com/KenneyNL/Starter-Kit-Racing . The README explicitly states that all game assets, including sounds, are CC0, and credits the skid sound to Landeplage (also CC0). Source code has a separate MIT licence.
+
+| Our bundled file | Original source path | Git blob SHA | Playback |
+| --- | --- | --- | --- |
+| `public/assets/crime/audio/engine.ogg` | `audio/engine.ogg` | `5073c9d34bd5b9c55a40ac0237604dc17acc520b` | Loop pitch/volume responds to throttle and speed |
+| `public/assets/crime/audio/skid.ogg` | `audio/skid.ogg` | `78b423b20df331af40bcf4088d2af305cb9bf54b` | Handbrake/corner slip |
+| `public/assets/crime/audio/impact.ogg` | `audio/impact.ogg` | `38e9feedf2469628e03e1b8fed6664b1e2ca529c` | Collision sample |
