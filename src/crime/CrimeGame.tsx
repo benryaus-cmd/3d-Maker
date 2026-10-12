@@ -106,7 +106,7 @@ class Sound{
  }
 }
 class EmpireEngine{
- world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;foot=false;footMesh:THREE.Group;
+ world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;private menuOpen=false;foot=false;footMesh:THREE.Group;
  actors:Actor[]=[];people:Ped[]=[];private sound=new Sound();private alive=true;private raf=0;private prev=performance.now();private acc=0;private gameTime=0;private displayAt=0;private saveAt=0;private noticeUntil=0;
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private currentCarStyle:CarStyle;
@@ -281,7 +281,7 @@ class EmpireEngine{
  private tick=(now:number)=>{
   if(!this.alive)return;
   const elapsed=clamp((now-this.prev)/1000,0,.08);this.prev=now;
-  if(!this.paused&&!this.house){this.acc=Math.min(.10,this.acc+elapsed);for(let i=0;i<5&&this.acc>=1/60;i++){this.physics(1/60);this.acc-=1/60;}}
+  if(!this.paused&&!this.menuOpen&&!this.house){this.acc=Math.min(.10,this.acc+elapsed);for(let i=0;i<5&&this.acc>=1/60;i++){this.physics(1/60);this.acc-=1/60;}}
   if(!this.house){this.world.stream(this.player.x,this.player.z);}
   this.mesh.visible=!this.foot&&!this.house;this.footMesh.visible=this.foot&&!this.house;
   renderCar(this.mesh,this.player,elapsed,this.controls.brake);
@@ -307,7 +307,8 @@ class EmpireEngine{
     traffic:this.actors.filter(a=>a.type==='traffic').map(a=>[a.car.x,a.car.z] as [number,number]),
     people:this.people.filter(p=>p.alive).map(p=>[p.x,p.z] as [number,number]),target:objective?[objective.x,objective.z]:null}});
  }
- togglePause(){this.paused=!this.paused;clearInputs(this.controls);this.sound.muted=this.paused;this.publish();}
+ setMenuOpen(open:boolean){this.menuOpen=open;if(open)clearInputs(this.controls);this.sound.muted=this.paused||open||this.house;}
+ togglePause(){this.paused=!this.paused;clearInputs(this.controls);this.sound.muted=this.paused||this.menuOpen||this.house;this.publish();}
  setMode(mode:'campaign'|'freeroam'){this.save.mode=mode;this.saveNow();this.notice(mode==='campaign'?'CAMPAIGN RESUMED':'FREE ROAM · NO STORY REQUIREMENTS');}
  action(){
   this.unlock();
@@ -353,6 +354,7 @@ export default function CrimeGame(){
  const el=useRef<HTMLDivElement>(null),controls=useRef<Controls>({throttle:false,brake:false,left:false,right:false,handbrake:false,nitro:false,moveX:0,moveZ:0}),engine=useRef<EmpireEngine|null>(null);
  const [hud,setHud]=useState<UI>(initialUi),[menu,setMenu]=useState<'none'|'pause'|'garage'|'trade'|'house'|'jobs'>('none');
  const [selectedGood,setSelectedGood]=useState<Commodity>('Ember'),[qty,setQty]=useState(1);
+ useEffect(()=>{engine.current?.setMenuOpen(menu!=='none');},[menu]);
  useEffect(()=>{
   if(!el.current)return;const game=new EmpireEngine(el.current,controls.current,setHud);engine.current=game;
   const pressed=new Set<string>();const apply=()=>{const c=controls.current;c.throttle=pressed.has('w')||pressed.has('arrowup')||c.throttle&&false;
