@@ -1,10 +1,10 @@
 {
-  "version": "blacktop-empire-full-playtested-13oct2026",
+  "version": "blacktop-empire-full-mobile-overhaul-13oct2026",
   "type": "full-snapshot",
   "repository": "benryaus-cmd/3d-Maker",
-  "commit": "dd45891232e966696fddb2976503690a512af0c6",
-  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/dd45891232e966696fddb2976503690a512af0c6/",
-  "fileCount": 41,
+  "commit": "51d37149c7a724a094ab26c5eb34c81adee11d29",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/51d37149c7a724a094ab26c5eb34c81adee11d29/",
+  "fileCount": 72,
   "description": "Complete self-contained BLACKTOP EMPIRE playable code plus Vite-bundled local models, animated civilians and sound. Import into existing Aippy host upstream using the established buildStart importer; root host and existing importer are never replaced. All required binary assets live under upstream/src/crime/bundled and are inlined by Vite; no nested public/asset URL dependency.",
   "files": [
     {
@@ -170,6 +170,130 @@
     {
       "source": "src/crime/Controls.ts",
       "target": "src/games/importedGame/upstream/src/crime/Controls.ts"
+    },
+    {
+      "source": "src/crime/CityModels.ts",
+      "target": "src/games/importedGame/upstream/src/crime/CityModels.ts"
+    },
+    {
+      "source": "src/crime/PersonVisuals.ts",
+      "target": "src/games/importedGame/upstream/src/crime/PersonVisuals.ts"
+    },
+    {
+      "source": "src/crime/bundled/city/kay-building-a.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/kay-building-a.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/kay-bench.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/kay-bench.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/KAYKIT-LICENSE.txt",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/KAYKIT-LICENSE.txt"
+    },
+    {
+      "source": "src/crime/bundled/city/kay-building-c.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/kay-building-c.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/kay-streetlight.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/kay-streetlight.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/kay-building-b.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/kay-building-b.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/palm.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/palm.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/house.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/house.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/kay-watertower.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/kay-watertower.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/tree.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/tree.glb"
+    },
+    {
+      "source": "src/crime/bundled/city/KENNEY-LICENSE.txt",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/KENNEY-LICENSE.txt"
+    },
+    {
+      "source": "src/crime/bundled/city/kay-bush.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/city/kay-bush.glb"
+    },
+    {
+      "source": "src/crime/bundled/roads/road-intersection.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/roads/road-intersection.glb"
+    },
+    {
+      "source": "src/crime/bundled/roads/road-straight.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/roads/road-straight.glb"
+    },
+    {
+      "source": "src/crime/bundled/roads/road-crossroad-path.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/roads/road-crossroad-path.glb"
+    },
+    {
+      "source": "src/crime/bundled/roads/road-crossing.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/roads/road-crossing.glb"
+    },
+    {
+      "source": "src/crime/bundled/roads/road-bend.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/roads/road-bend.glb"
+    },
+    {
+      "source": "src/crime/bundled/fonts/BarlowCondensed-SemiBold.ttf",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/fonts/BarlowCondensed-SemiBold.ttf"
+    },
+    {
+      "source": "src/crime/bundled/fonts/Rajdhani-OFL.txt",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/fonts/Rajdhani-OFL.txt"
+    },
+    {
+      "source": "src/crime/bundled/fonts/Rajdhani-Medium.ttf",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/fonts/Rajdhani-Medium.ttf"
+    },
+    {
+      "source": "src/crime/bundled/fonts/BarlowCondensed-OFL.txt",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/fonts/BarlowCondensed-OFL.txt"
+    },
+    {
+      "source": "src/crime/bundled/interior/chair.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/chair.glb"
+    },
+    {
+      "source": "src/crime/bundled/interior/kitchencabinet.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/kitchencabinet.glb"
+    },
+    {
+      "source": "src/crime/bundled/interior/beddouble.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/beddouble.glb"
+    },
+    {
+      "source": "src/crime/bundled/interior/lamproundfloor.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/lamproundfloor.glb"
+    },
+    {
+      "source": "src/crime/bundled/interior/table.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/table.glb"
+    },
+    {
+      "source": "src/crime/bundled/interior/pottedplant.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/pottedplant.glb"
+    },
+    {
+      "source": "src/crime/bundled/interior/bookcaseopen.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/bookcaseopen.glb"
+    },
+    {
+      "source": "src/crime/bundled/interior/loungesofa.glb",
+      "target": "src/games/importedGame/upstream/src/crime/bundled/interior/loungesofa.glb"
     }
   ]
 }

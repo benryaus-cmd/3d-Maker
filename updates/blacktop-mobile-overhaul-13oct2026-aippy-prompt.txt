@@ -1,0 +1,4 @@
+Apply this Blacktop Empire update to the existing Aippy game using its existing Node build-time importer:
+https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/main/updates/blacktop-mobile-overhaul-13oct2026.json
+
+Download all 38 listed files from manifest.baseUrl + source as exact bytes, replacing each listed target. Preserve the existing host, importer, saves and files not listed. These include binary GLB/font assets and license text: do not convert them to placeholders. Build and load the CrimeGame entry after import. The manifest pins commit 51d37149c7a724a094ab26c5eb34c81adee11d29.
