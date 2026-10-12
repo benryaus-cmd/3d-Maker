@@ -111,7 +111,8 @@ class EmpireEngine{
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private currentCarStyle:CarStyle;
  constructor(el:HTMLDivElement,private controls:Controls,private onUpdate:(v:UI)=>void){
-  this.save=readSave();this.player=newCar(this.save.x,this.save.z,this.save.heading);
+  this.save=readSave();this.player=newCar(this.save.x,this.save.z,this.save.heading,this.save.carHP);
+  Object.assign(this.player,{damageFront:this.save.carDamage.front,damageRear:this.save.carDamage.rear,damageLeft:this.save.carDamage.left,damageRight:this.save.carDamage.right});
   this.currentCarStyle=this.save.car;this.world=new CrimeWorld(el);
   this.world.stream(this.player.x,this.player.z);
   this.mesh=createCarVisual(this.save.car,0xd45f3d);this.world.scene.add(this.mesh);
@@ -126,7 +127,10 @@ class EmpireEngine{
  }
  private resize=()=>this.world.resize();
  private visibility=()=>{if(document.hidden){this.saveNow();this.paused=true;clearInputs(this.controls);}else this.prev=performance.now();};
- private saveNow=()=>{this.save.x=this.player.x;this.save.z=this.player.z;this.save.heading=this.player.heading;saveGame(this.save);};
+ private saveNow=()=>{this.save.x=this.player.x;this.save.z=this.player.z;this.save.heading=this.player.heading;
+  this.save.carHP=this.player.hp;
+  this.save.carDamage={front:this.player.damageFront,rear:this.player.damageRear,left:this.player.damageLeft,right:this.player.damageRight};
+  saveGame(this.save);};
  unlock(){this.sound.start();}
  notice(s:string){this.message=s;this.noticeUntil=this.gameTime+3.5;this.publish();}
  private crime(heat:number){this.save.heat=clamp(this.save.heat+heat,0,5);this.lastCrimeAt=this.gameTime;}
