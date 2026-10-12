@@ -2,9 +2,9 @@ import {useEffect,useRef,useState,type PointerEvent as RP} from 'react';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {clone as cloneSkinned} from 'three/examples/jsm/utils/SkeletonUtils.js';
-import {CrimeWorld,createCarVisual,renderCar,showCarDamage,type CarStyle} from './World';
+import {CrimeWorld,createCarVisual,renderCar,showCarDamage,applyCarCosmetics,type CarStyle} from './World';
 import {BASE_TUNE,axes,drive,newCar,collideWall,collideCars,kmh,speed,tuneWithMods,type CarState,type CarTune,type DriverInput} from './vehiclePhysics';
-import {readSave,saveGame,initial,MARKETS,GOODS,MISSIONS,quote,trade,missionUpdate,missionMarker,buyUpgrade,buyCar,cargoCount,cargoCap,type GameSave,type Commodity,type Mods} from './Systems';
+import {readSave,saveGame,initial,MARKETS,GOODS,MISSIONS,quote,trade,missionUpdate,missionMarker,buyUpgrade,buyCar,cargoCount,cargoCap,activeBuild,type GameSave,type Commodity,type Mods} from './Systems';
 import './crime.css';
 
 const CAR_TUNES:Record<CarStyle,Partial<CarTune>>={
@@ -126,12 +126,13 @@ class EmpireEngine{
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private npcDamage=new WeakMap<Actor,number>();private currentCarStyle:CarStyle;
  private raceRival:Actor|null=null;private raceTime=0;private rivalStep=1;
  constructor(el:HTMLDivElement,private controls:Controls,private onUpdate:(v:UI)=>void){
-  this.save=readSave();this.player=newCar(this.save.x,this.save.z,this.save.heading,this.save.carHP);
-  Object.assign(this.player,{damageFront:this.save.carDamage.front,damageRear:this.save.carDamage.rear,damageLeft:this.save.carDamage.left,damageRight:this.save.carDamage.right});
+  this.save=readSave();const active=activeBuild(this.save);this.player=newCar(this.save.x,this.save.z,this.save.heading,active.hp);
+  Object.assign(this.player,{damageFront:active.damage.front,damageRear:active.damage.rear,damageLeft:active.damage.left,damageRight:active.damage.right});
   this.currentCarStyle=this.save.car;this.world=new CrimeWorld(el);
   this.world.setInteriorLevels(this.save.houseLevel,this.save.garageLevel);
   this.world.stream(this.player.x,this.player.z);
-  this.mesh=createCarVisual(this.save.car,0xd45f3d);this.world.scene.add(this.mesh);
+  this.mesh=createCarVisual(this.save.car,active.paint);this.world.scene.add(this.mesh);
+  applyCarCosmetics(this.mesh,active);
   this.footMesh=npcVisual();this.footMesh.visible=false;this.world.scene.add(this.footMesh);
   this.world.marker('safehouse',7,7,0x40d3aa);
   this.world.marker('garage',-7,-7,0xf4b255);
@@ -146,7 +147,8 @@ class EmpireEngine{
  private saveNow=()=>{this.save.x=this.player.x;this.save.z=this.player.z;this.save.heading=this.player.heading;
   this.save.carHP=this.player.hp;
   this.save.carDamage={front:this.player.damageFront,rear:this.player.damageRear,left:this.player.damageLeft,right:this.player.damageRight};
-  saveGame(this.save);};
+  const build=activeBuild(this.save);build.hp=this.player.hp;build.damage={...this.save.carDamage};
+  build.mods={...this.save.mods};saveGame(this.save);};
  unlock(){this.sound.start();}
  notice(s:string){this.message=s;this.noticeUntil=this.gameTime+3.5;this.publish();}
  private crime(heat:number){this.save.heat=clamp(this.save.heat+heat,0,5);this.lastCrimeAt=this.gameTime;}
@@ -431,14 +433,56 @@ class EmpireEngine{
   if(speed(this.player)<1.5){this.foot=true;this.notice('ON FOOT · PRESS ACTION TO ENTER CAR');return;}
   this.notice('SLOW DOWN BEFORE EXITING');
  }
- repair(){if(this.player.hp>=99.9&&this.player.damageFront+this.player.damageRear+this.player.damageLeft+this.player.damageRight<.01){this.notice('YOUR VEHICLE IS ALREADY REPAIRED');return;}
-  const cost=Math.max(40,Math.round((100-this.player.hp)*12));if(this.save.money<cost){this.notice('NEED $'+cost+' FOR REPAIR');return;}this.save.money-=cost;this.player.hp=100;this.player.damageFront=0;this.player.damageRear=0;this.player.damageLeft=0;this.player.damageRight=0;
-  this.mesh.userData.disposed=true;this.mesh.removeFromParent();this.mesh=createCarVisual(this.save.car,0xd45f3d);this.world.scene.add(this.mesh);this.playerDamage=[0,0,0,0];this.notice('FULL REPAIR · $'+cost);this.saveNow();
+ private rebuildPlayerVisual(){
+  this.mesh.userData.disposed=true;this.mesh.removeFromParent();
+  const build=activeBuild(this.save);
+  this.mesh=createCarVisual(this.save.car,build.paint);
+  this.world.scene.add(this.mesh);
+  applyCarCosmetics(this.mesh,build);
+  const damage={front:this.player.damageFront,rear:this.player.damageRear,left:this.player.damageLeft,right:this.player.damageRight};
+  showCarDamage(this.mesh,damage);
+  this.playerDamage=[damage.front,damage.rear,damage.left,damage.right];
  }
- upgrade(key:keyof Mods|'garage'|'house'){const r=buyUpgrade(this.save,key);
-  if(r.ok&&(key==='garage'||key==='house'))this.world.setInteriorLevels(this.save.houseLevel,this.save.garageLevel);
-  this.notice(r.text);this.saveNow();}
- purchaseCar(style:CarStyle){const r=buyCar(this.save,style);if(r.ok){this.mesh.userData.disposed=true;this.mesh.removeFromParent();this.mesh=createCarVisual(style,0xd45f3d);this.world.scene.add(this.mesh);this.player.hp=100;this.playerDamage=[0,0,0,0];this.player.damageFront=0;this.player.damageRear=0;this.player.damageLeft=0;this.player.damageRight=0;}this.notice(r.text);this.saveNow();}
+ repair(){
+  const damage=this.player.damageFront+this.player.damageRear+this.player.damageLeft+this.player.damageRight;
+  if(this.player.hp>=99.9&&damage<.01){this.notice('YOUR VEHICLE IS ALREADY REPAIRED');return;}
+  const cost=Math.max(40,Math.round((100-this.player.hp)*12+damage*210));
+  if(this.save.money<cost){this.notice('NEED $'+cost+' FOR REPAIR');return;}
+  this.save.money-=cost;this.player.hp=100;
+  this.player.damageFront=this.player.damageRear=this.player.damageLeft=this.player.damageRight=0;
+  this.rebuildPlayerVisual();this.notice('FULL REPAIR · $'+cost);this.saveNow();
+ }
+ upgrade(key:keyof Mods|'garage'|'house'){
+  const result=buyUpgrade(this.save,key);
+  if(result.ok&&(key==='garage'||key==='house'))this.world.setInteriorLevels(this.save.houseLevel,this.save.garageLevel);
+  this.notice(result.text);this.saveNow();
+ }
+ purchaseCar(style:CarStyle){
+  // Save the outgoing car BEFORE selecting another: no free repairs by swapping vehicles.
+  this.saveNow();
+  const result=buyCar(this.save,style);
+  if(result.ok){
+   const build=activeBuild(this.save,style);
+   this.save.mods={...build.mods};this.player.hp=build.hp;
+   this.player.damageFront=build.damage.front;this.player.damageRear=build.damage.rear;
+   this.player.damageLeft=build.damage.left;this.player.damageRight=build.damage.right;
+   this.rebuildPlayerVisual();
+  }
+  this.notice(result.text);this.saveNow();
+ }
+ customize(kind:'paint'|'spoiler'|'neon',color=0){
+  const build=activeBuild(this.save);
+  const prices={paint:180,spoiler:450,neon:700};
+  if(kind==='paint'&&build.paint===color){this.notice('PAINT ALREADY FITTED');return;}
+  if(kind==='spoiler'&&build.spoiler||kind==='neon'&&build.neon){this.notice('MOD ALREADY FITTED');return;}
+  const price=prices[kind];
+  if(this.save.money<price){this.notice('NOT ENOUGH CASH · $'+price);return;}
+  this.save.money-=price;
+  if(kind==='paint')build.paint=color;
+  else if(kind==='spoiler')build.spoiler=true;
+  else build.neon=true;
+  applyCarCosmetics(this.mesh,build);this.notice(kind.toUpperCase()+' FITTED · $'+price);this.saveNow();
+ }
  deal(market:string,good:Commodity,qty:number){const r=trade(this.save,market,good,qty,this.gameTime);this.notice(r.text);if(r.ok){this.crime(.08);this.saveNow();}}
  getData(){return this.save;}
  getPrice(market:string,good:Commodity){return quote(market,good,this.gameTime);}
