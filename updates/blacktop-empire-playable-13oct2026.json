@@ -1,0 +1,167 @@
+{
+  "version": "blacktop-empire-first-playable-13oct2026",
+  "type": "incremental-exact-paths",
+  "repository": "benryaus-cmd/3d-Maker",
+  "commit": "f5892ded59ad004f6ed8ed79d68e4e2c955834e6",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/f5892ded59ad004f6ed8ed79d68e4e2c955834e6/",
+  "fileCount": 39,
+  "description": "BLACKTOP EMPIRE first playable. Update existing Aippy 3D Vite project in-place with actual root game and local bundled 3D/sound assets. Node 22 copies all 39 listed paths as bytes. Keep current Vite plugins, node downloader, @aippy/runtime, npm/pnpm lockfiles, shell and all unlisted files. Do not create nested upstream/iframe.",
+  "files": [
+    {
+      "source": "src/App.tsx",
+      "target": "src/App.tsx"
+    },
+    {
+      "source": "src/crime/CrimeGame.tsx",
+      "target": "src/crime/CrimeGame.tsx"
+    },
+    {
+      "source": "src/crime/World.ts",
+      "target": "src/crime/World.ts"
+    },
+    {
+      "source": "src/crime/vehiclePhysics.ts",
+      "target": "src/crime/vehiclePhysics.ts"
+    },
+    {
+      "source": "src/crime/Systems.ts",
+      "target": "src/crime/Systems.ts"
+    },
+    {
+      "source": "src/crime/crime.css",
+      "target": "src/crime/crime.css"
+    },
+    {
+      "source": "final-goal.md",
+      "target": "final-goal.md"
+    },
+    {
+      "source": "docs/blacktop-assets.md",
+      "target": "docs/blacktop-assets.md"
+    },
+    {
+      "source": "docs/blacktop-progress.md",
+      "target": "docs/blacktop-progress.md"
+    },
+    {
+      "source": "public/assets/crime/vehicles/sedan.glb",
+      "target": "public/assets/crime/vehicles/sedan.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/sedan-sports.glb",
+      "target": "public/assets/crime/vehicles/sedan-sports.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/police.glb",
+      "target": "public/assets/crime/vehicles/police.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/taxi.glb",
+      "target": "public/assets/crime/vehicles/taxi.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/suv.glb",
+      "target": "public/assets/crime/vehicles/suv.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/race.glb",
+      "target": "public/assets/crime/vehicles/race.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/debris-bumper.glb",
+      "target": "public/assets/crime/vehicles/debris-bumper.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/debris-door.glb",
+      "target": "public/assets/crime/vehicles/debris-door.glb"
+    },
+    {
+      "source": "public/assets/crime/vehicles/cone.glb",
+      "target": "public/assets/crime/vehicles/cone.glb"
+    },
+    {
+      "source": "public/assets/crime/buildings/building-a.glb",
+      "target": "public/assets/crime/buildings/building-a.glb"
+    },
+    {
+      "source": "public/assets/crime/buildings/building-b.glb",
+      "target": "public/assets/crime/buildings/building-b.glb"
+    },
+    {
+      "source": "public/assets/crime/buildings/building-c.glb",
+      "target": "public/assets/crime/buildings/building-c.glb"
+    },
+    {
+      "source": "public/assets/crime/buildings/building-d.glb",
+      "target": "public/assets/crime/buildings/building-d.glb"
+    },
+    {
+      "source": "public/assets/crime/buildings/building-skyscraper-a.glb",
+      "target": "public/assets/crime/buildings/building-skyscraper-a.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/dumpster.glb",
+      "target": "public/assets/crime/streets/dumpster.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/construction-barrier.glb",
+      "target": "public/assets/crime/streets/construction-barrier.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/construction-fence.glb",
+      "target": "public/assets/crime/streets/construction-fence.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/light-curved.glb",
+      "target": "public/assets/crime/streets/light-curved.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/traffic-light.glb",
+      "target": "public/assets/crime/streets/traffic-light.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/road-sign-stop.glb",
+      "target": "public/assets/crime/streets/road-sign-stop.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/road-sign-warning.glb",
+      "target": "public/assets/crime/streets/road-sign-warning.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/construction-cone.glb",
+      "target": "public/assets/crime/streets/construction-cone.glb"
+    },
+    {
+      "source": "public/assets/crime/streets/electricity-pole.glb",
+      "target": "public/assets/crime/streets/electricity-pole.glb"
+    },
+    {
+      "source": "public/assets/crime/audio/engine.ogg",
+      "target": "public/assets/crime/audio/engine.ogg"
+    },
+    {
+      "source": "public/assets/crime/audio/skid.ogg",
+      "target": "public/assets/crime/audio/skid.ogg"
+    },
+    {
+      "source": "public/assets/crime/audio/impact.ogg",
+      "target": "public/assets/crime/audio/impact.ogg"
+    },
+    {
+      "source": "public/assets/characters/casual-male.glb",
+      "target": "public/assets/characters/casual-male.glb"
+    },
+    {
+      "source": "public/assets/characters/casual-female.glb",
+      "target": "public/assets/characters/casual-female.glb"
+    },
+    {
+      "source": "public/assets/characters/worker-male.glb",
+      "target": "public/assets/characters/worker-male.glb"
+    },
+    {
+      "source": "public/assets/characters/suit-female.glb",
+      "target": "public/assets/characters/suit-female.glb"
+    }
+  ]
+}
