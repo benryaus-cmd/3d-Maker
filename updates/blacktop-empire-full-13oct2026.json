@@ -1,11 +1,11 @@
 {
-  "version": "blacktop-empire-full-immersion-13oct2026",
+  "version": "blacktop-street-empire-full-13oct2026",
   "type": "full-snapshot",
   "repository": "benryaus-cmd/3d-Maker",
-  "commit": "e1ae7eb5f0a954f12f2f7e55b4a2ef1354eb3ed9",
-  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/e1ae7eb5f0a954f12f2f7e55b4a2ef1354eb3ed9/",
-  "fileCount": 84,
-  "description": "Complete current BLACKTOP EMPIRE crime runtime, locally bundled models/audio/fonts, goal, roadmap and handoff for the existing Aippy build-time importer.",
+  "commit": "11a5b41cb9093b70184cb1e2b1ec3b0ed4f7a100",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/11a5b41cb9093b70184cb1e2b1ec3b0ed4f7a100/",
+  "fileCount": 95,
+  "description": "Complete current BLACKTOP EMPIRE gameplay runtime and bundled assets, including persistent economy, firearms, police search, faction contracts, garage/block ownership, mobile controls, goal and handoff. Apply in one normal build using the existing importer.",
   "files": [
     {
       "source": "docs/blacktop-assets.md",
@@ -342,6 +342,50 @@
     {
       "source": "how-to-achieve-final-goal.md",
       "target": "src/games/importedGame/upstream/how-to-achieve-final-goal.md"
+    },
+    {
+      "source": "src/crime/CombatAudio.ts",
+      "target": "src/games/importedGame/upstream/src/crime/CombatAudio.ts"
+    },
+    {
+      "source": "src/crime/CombatControls.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/CombatControls.tsx"
+    },
+    {
+      "source": "src/crime/CombatEffects.ts",
+      "target": "src/games/importedGame/upstream/src/crime/CombatEffects.ts"
+    },
+    {
+      "source": "src/crime/DistrictIdentity.ts",
+      "target": "src/games/importedGame/upstream/src/crime/DistrictIdentity.ts"
+    },
+    {
+      "source": "src/crime/Empire.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Empire.ts"
+    },
+    {
+      "source": "src/crime/EmpirePanel.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/EmpirePanel.tsx"
+    },
+    {
+      "source": "src/crime/Firearms.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Firearms.ts"
+    },
+    {
+      "source": "src/crime/PoliceDirector.ts",
+      "target": "src/games/importedGame/upstream/src/crime/PoliceDirector.ts"
+    },
+    {
+      "source": "src/crime/WeaponVisuals.ts",
+      "target": "src/games/importedGame/upstream/src/crime/WeaponVisuals.ts"
+    },
+    {
+      "source": "src/crime/combat-ui.css",
+      "target": "src/games/importedGame/upstream/src/crime/combat-ui.css"
+    },
+    {
+      "source": "src/crime/empire.css",
+      "target": "src/games/importedGame/upstream/src/crime/empire.css"
     }
   ]
 }

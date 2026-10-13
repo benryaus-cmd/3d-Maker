@@ -21,7 +21,7 @@ Updated 13 October 2026 (Australia/Sydney). This is a playable foundation progre
 
 ## Verification and limits
 
-Current sweep evidence: [street-empire report](testing/blacktop-street-empire-13oct2026.md),134passing browser assertions across phases. Historical economy evidence: [persistent economy playtest](testing/blacktop-economy-13oct2026.md). Earlier [goal review](testing/blacktop-goal-review-13oct2026.md) and [immersion pass](testing/blacktop-immersion-13oct2026.md) distinguish actual input from fixtures.
+Current sweep evidence: [street-empire report](testing/blacktop-street-empire-13oct2026.md),134 passing browser assertions across phases. Historical economy evidence: [persistent economy playtest](testing/blacktop-economy-13oct2026.md). Earlier [goal review](testing/blacktop-goal-review-13oct2026.md) and [immersion pass](testing/blacktop-immersion-13oct2026.md) distinguish actual input from fixtures.
 
 The economy update was checked through production browser driving, buying, travelling from Midtown to Financial Core, selling for measured profit, reload, persistent stock/ledger, stash/bank and blocked remote transfers. Active crime suites, TypeScript and production build are checked separately from the dormant archive suite. Exact counts/outputs are in the current report.
 
@@ -50,3 +50,5 @@ Physical Android/Aippy performance, audio, thermal stability, touch latency and 
 5. Stress traffic/pursuit congestion and long-session resources; deliver physical-device accessibility/performance evidence.
 
 Crew, branching campaign, rich cinematics, open-ended gang simulation and the final content floor remain unfinished. See [the sweep report](testing/blacktop-street-empire-13oct2026.md).
+
+Published runtime `11a5b41cb9093b70184cb1e2b1ec3b0ed4f7a100`; Node22 frozen CI run[38381947081](https://github.com/benryaus-cmd/3d-Maker/actions/runs/38381947081)passed 20 active check commands, TypeScript and build. Exact import: 22-file combined incremental or 95-file complete current snapshot.

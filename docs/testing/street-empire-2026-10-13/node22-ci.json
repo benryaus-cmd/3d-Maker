@@ -1,0 +1,136 @@
+{
+  "run": 38381947081,
+  "commit": "11a5b41cb9093b70184cb1e2b1ec3b0ed4f7a100",
+  "jobs": [
+    {
+      "name": "build",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm/action-setup@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm exec tsc -p tsconfig.crime.json --noEmit",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-economy.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node scripts/check-economy-ui.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-sweep-save.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-firearms.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-combat-controls.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-police-director.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-empire.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-combat-effects.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-district-identity.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-crime.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-mobile-controls.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-world.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-person-disposal.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-city-layout.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-road-assets.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-traffic.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-street-combat.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-daylight.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-skid-lifetime.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run node --experimental-strip-types scripts/check-impact-immersion.mjs",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run pnpm build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run pnpm/action-setup@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}
