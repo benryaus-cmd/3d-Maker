@@ -2,10 +2,10 @@
   "version": "blacktop-empire-full-immersion-13oct2026",
   "type": "full-snapshot",
   "repository": "benryaus-cmd/3d-Maker",
-  "commit": "7ad47a80207df8bf210f0df3996f36c8d9bfbf98",
-  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/7ad47a80207df8bf210f0df3996f36c8d9bfbf98/",
-  "fileCount": 81,
-  "description": "Complete self-contained BLACKTOP EMPIRE playable code plus Vite-bundled local models, animated civilians and sound. Import into existing Aippy host upstream using the established buildStart importer; root host and existing importer are never replaced. All required binary assets live under upstream/src/crime/bundled and are inlined by Vite; no nested public/asset URL dependency.",
+  "commit": "e1ae7eb5f0a954f12f2f7e55b4a2ef1354eb3ed9",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/e1ae7eb5f0a954f12f2f7e55b4a2ef1354eb3ed9/",
+  "fileCount": 84,
+  "description": "Complete current BLACKTOP EMPIRE crime runtime, locally bundled models/audio/fonts, goal, roadmap and handoff for the existing Aippy build-time importer.",
   "files": [
     {
       "source": "docs/blacktop-assets.md",
@@ -330,6 +330,18 @@
     {
       "source": "src/crime/CityMap.tsx",
       "target": "src/games/importedGame/upstream/src/crime/CityMap.tsx"
+    },
+    {
+      "source": "src/crime/Economy.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Economy.ts"
+    },
+    {
+      "source": "src/crime/EconomyPanels.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/EconomyPanels.tsx"
+    },
+    {
+      "source": "how-to-achieve-final-goal.md",
+      "target": "src/games/importedGame/upstream/how-to-achieve-final-goal.md"
     }
   ]
 }

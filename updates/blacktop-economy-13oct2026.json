@@ -1,0 +1,47 @@
+{
+  "version": "blacktop-economy-13oct2026",
+  "type": "incremental",
+  "repository": "benryaus-cmd/3d-Maker",
+  "commit": "e1ae7eb5f0a954f12f2f7e55b4a2ef1354eb3ed9",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/e1ae7eb5f0a954f12f2f7e55b4a2ef1354eb3ed9/",
+  "fileCount": 9,
+  "description": "Persistent finite markets, saved cargo costs, safehouse stash/bank and compact portrait trade UI. Apply with the existing build-time importer.",
+  "files": [
+    {
+      "source": "src/crime/Economy.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Economy.ts"
+    },
+    {
+      "source": "src/crime/EconomyPanels.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/EconomyPanels.tsx"
+    },
+    {
+      "source": "src/crime/Systems.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Systems.ts"
+    },
+    {
+      "source": "src/crime/CrimeGame.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/CrimeGame.tsx"
+    },
+    {
+      "source": "src/crime/World.ts",
+      "target": "src/games/importedGame/upstream/src/crime/World.ts"
+    },
+    {
+      "source": "src/crime/crime.css",
+      "target": "src/games/importedGame/upstream/src/crime/crime.css"
+    },
+    {
+      "source": "docs/blacktop-progress.md",
+      "target": "src/games/importedGame/upstream/docs/blacktop-progress.md"
+    },
+    {
+      "source": "final-goal.md",
+      "target": "src/games/importedGame/upstream/final-goal.md"
+    },
+    {
+      "source": "how-to-achieve-final-goal.md",
+      "target": "src/games/importedGame/upstream/how-to-achieve-final-goal.md"
+    }
+  ]
+}
