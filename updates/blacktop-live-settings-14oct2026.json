@@ -1,0 +1,75 @@
+{
+  "version": "blacktop-live-settings-14oct2026",
+  "type": "incremental",
+  "repository": "benryaus-cmd/3d-Maker",
+  "commit": "edbb77e1a833ca650688c913ba8f52dced93906e",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/edbb77e1a833ca650688c913ba8f52dced93906e/",
+  "fileCount": 16,
+  "description": "Visible live test settings, real runtime bindings, individual default resets and persistent JSON feedback.",
+  "files": [
+    {
+      "source": "docs/blacktop-live-testing.md",
+      "target": "src/games/importedGame/upstream/docs/blacktop-live-testing.md"
+    },
+    {
+      "source": "docs/blacktop-progress.md",
+      "target": "src/games/importedGame/upstream/docs/blacktop-progress.md"
+    },
+    {
+      "source": "src/crime/CombatControls.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/CombatControls.tsx"
+    },
+    {
+      "source": "src/crime/CrimeGame.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/CrimeGame.tsx"
+    },
+    {
+      "source": "src/crime/Economy.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Economy.ts"
+    },
+    {
+      "source": "src/crime/Empire.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Empire.ts"
+    },
+    {
+      "source": "src/crime/Firearms.ts",
+      "target": "src/games/importedGame/upstream/src/crime/Firearms.ts"
+    },
+    {
+      "source": "src/crime/LiveTuning.ts",
+      "target": "src/games/importedGame/upstream/src/crime/LiveTuning.ts"
+    },
+    {
+      "source": "src/crime/PoliceDirector.ts",
+      "target": "src/games/importedGame/upstream/src/crime/PoliceDirector.ts"
+    },
+    {
+      "source": "src/crime/SceneryPhysics.ts",
+      "target": "src/games/importedGame/upstream/src/crime/SceneryPhysics.ts"
+    },
+    {
+      "source": "src/crime/TestSettings.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/TestSettings.tsx"
+    },
+    {
+      "source": "src/crime/TimedSkids.ts",
+      "target": "src/games/importedGame/upstream/src/crime/TimedSkids.ts"
+    },
+    {
+      "source": "src/crime/VehicleLights.ts",
+      "target": "src/games/importedGame/upstream/src/crime/VehicleLights.ts"
+    },
+    {
+      "source": "src/crime/World.ts",
+      "target": "src/games/importedGame/upstream/src/crime/World.ts"
+    },
+    {
+      "source": "src/crime/test-settings.css",
+      "target": "src/games/importedGame/upstream/src/crime/test-settings.css"
+    },
+    {
+      "source": "src/crime/vehiclePhysics.ts",
+      "target": "src/games/importedGame/upstream/src/crime/vehiclePhysics.ts"
+    }
+  ]
+}

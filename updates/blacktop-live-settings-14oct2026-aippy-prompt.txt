@@ -1,0 +1,10 @@
+Use the EXISTING Node build-time importer during the normal Vite build:
+
+https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/main/updates/blacktop-live-settings-14oct2026.json
+
+Download all 16 listed files using manifest.baseUrl + source.
+Replace their exact target paths in the current BLACKTOP EMPIRE game.
+
+Preserve saves, credits, settings, host, importer, README and unlisted files.
+
+Build and load BLACKTOP EMPIRE.

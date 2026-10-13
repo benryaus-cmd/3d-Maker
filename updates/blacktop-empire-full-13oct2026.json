@@ -1,11 +1,11 @@
 {
-  "version": "blacktop-street-empire-full-13oct2026",
+  "version": "blacktop-full-live-settings-14oct2026",
   "type": "full-snapshot",
   "repository": "benryaus-cmd/3d-Maker",
-  "commit": "11a5b41cb9093b70184cb1e2b1ec3b0ed4f7a100",
-  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/11a5b41cb9093b70184cb1e2b1ec3b0ed4f7a100/",
-  "fileCount": 95,
-  "description": "Complete current BLACKTOP EMPIRE gameplay runtime and bundled assets, including persistent economy, firearms, police search, faction contracts, garage/block ownership, mobile controls, goal and handoff. Apply in one normal build using the existing importer.",
+  "commit": "edbb77e1a833ca650688c913ba8f52dced93906e",
+  "baseUrl": "https://raw.githubusercontent.com/benryaus-cmd/3d-Maker/edbb77e1a833ca650688c913ba8f52dced93906e/",
+  "fileCount": 99,
+  "description": "Complete current Blacktop Empire with live testing, persistent economy, street combat, pursuits and first empire ownership slice.",
   "files": [
     {
       "source": "docs/blacktop-assets.md",
@@ -386,6 +386,22 @@
     {
       "source": "src/crime/empire.css",
       "target": "src/games/importedGame/upstream/src/crime/empire.css"
+    },
+    {
+      "source": "docs/blacktop-live-testing.md",
+      "target": "src/games/importedGame/upstream/docs/blacktop-live-testing.md"
+    },
+    {
+      "source": "src/crime/LiveTuning.ts",
+      "target": "src/games/importedGame/upstream/src/crime/LiveTuning.ts"
+    },
+    {
+      "source": "src/crime/TestSettings.tsx",
+      "target": "src/games/importedGame/upstream/src/crime/TestSettings.tsx"
+    },
+    {
+      "source": "src/crime/test-settings.css",
+      "target": "src/games/importedGame/upstream/src/crime/test-settings.css"
     }
   ]
 }
