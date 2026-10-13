@@ -16,7 +16,7 @@ const timedSkidSource=(await fs.readFile(new URL('../src/crime/TimedSkids.ts',im
 const daySource=await fs.readFile(new URL('../src/crime/Daylight.ts',import.meta.url),'utf8');
 const scenerySource=(await fs.readFile(new URL('../src/crime/SceneryPhysics.ts',import.meta.url),'utf8')).replace("import * as THREE from 'three';",'');
 const modelSource=await fs.readFile(new URL('../src/crime/CityModels.ts',import.meta.url),'utf8');
-const source=timedSkidSource+'\n'+daySource+'\n'+(await fs.readFile(new URL('../src/crime/World.ts',import.meta.url),'utf8'))
+let source=timedSkidSource+'\n'+daySource+'\n'+(await fs.readFile(new URL('../src/crime/World.ts',import.meta.url),'utf8'))
  .replace(/import \{[^}]*\} from '\.\/TimedSkids';/g,'')
  .replace(/import \{[^}]*\} from '\.\/Daylight';/g,'')
  .replace("import {crimeAssetURL} from './assets';", "const crimeAssetURL=()=>'';")
@@ -25,12 +25,13 @@ const source=timedSkidSource+'\n'+daySource+'\n'+(await fs.readFile(new URL('../
  .replace("import {SCENERY_RESPONSE,sceneryKind,solidFootprint,stepFallingScenery,type FallingScenery} from './SceneryPhysics';",scenerySource)
  .replace("import {attachVehicleLights,updateVehicleLights,disposeVehicleLights} from './VehicleLights';",vehicleLightsSource.replace("import * as THREE from 'three';",''))
  .replace("import {type CarState,type Wall} from './vehiclePhysics';",'');
+source=source.replace(/import .* from '\.\/LiveTuning(?:\.ts)?';/g,'');source="import {LIVE,registerTuningObject} from '../src/crime/LiveTuning.ts';\n"+source;
 const path=new URL('./.world-check-runtime.mjs',import.meta.url);
 await fs.writeFile(path,ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText);
 try{
  const {CrimeWorld,TimedSkids,daylightAt,ROAD_TILES,CITY_BLOCKS,ROAD_LAMPS,CITY_ROAD_ORIENTATION,isRoad}=await import(path.href+'?'+Date.now());
  const world=Object.create(CrimeWorld.prototype);
- Object.assign(world,{cameraScale:1,scene:new THREE.Scene(),props:[],root:new THREE.Group(),interior:new THREE.Group(),navigation:new THREE.Group(),navigationKey:'',camera:new THREE.OrthographicCamera(-12,12,25,-25,.1,400),cameraFocus:new THREE.Vector3(),cameraHeading:0,cameraReady:false,sun:new THREE.DirectionalLight(),sky:new THREE.HemisphereLight(),streetLights:[],activeProps:new Set(),brokenLamps:new Set(),lampAnchors:[],lampRefresh:Infinity,lampX:Infinity,lampZ:Infinity,renderer:{toneMappingExposure:1},lampMaterial:new THREE.MeshBasicMaterial(),windowMaterial:new THREE.MeshBasicMaterial(),routeMaterial:new THREE.MeshBasicMaterial(),environmentTime:17.5*3600,night:0,skidCursor:0,skidSide:0,skidPrevious:[null,null],skidDummy:new THREE.Object3D(),tyreMarks:new THREE.InstancedMesh(new THREE.PlaneGeometry(.2,1),new THREE.MeshBasicMaterial(),420)});
+ Object.assign(world,{testWallSizes:new WeakMap(),cameraScale:1,scene:new THREE.Scene(),props:[],root:new THREE.Group(),interior:new THREE.Group(),navigation:new THREE.Group(),navigationKey:'',camera:new THREE.OrthographicCamera(-12,12,25,-25,.1,400),cameraFocus:new THREE.Vector3(),cameraHeading:0,cameraReady:false,sun:new THREE.DirectionalLight(),sky:new THREE.HemisphereLight(),streetLights:[],activeProps:new Set(),brokenLamps:new Set(),lampAnchors:[],lampRefresh:Infinity,lampX:Infinity,lampZ:Infinity,renderer:{toneMappingExposure:1,shadowMap:{enabled:true},getPixelRatio:()=>1,setPixelRatio:()=>{}},lampMaterial:new THREE.MeshBasicMaterial(),windowMaterial:new THREE.MeshBasicMaterial(),routeMaterial:new THREE.MeshBasicMaterial(),environmentTime:17.5*3600,night:0,skidCursor:0,skidSide:0,skidPrevious:[null,null],skidDummy:new THREE.Object3D(),tyreMarks:new THREE.InstancedMesh(new THREE.PlaneGeometry(.2,1),new THREE.MeshBasicMaterial(),420)});
  world.skids=new TimedSkids(world.scene,(x,z)=>world.surfaceHeight(x,z));world.tyreMarks=world.skids.mesh;
  world.scene.background=new THREE.Color();world.interior.visible=false;
  assert.equal(typeof world.restoreClock,'function','reload restores the day/night clock from persistent elapsed time');

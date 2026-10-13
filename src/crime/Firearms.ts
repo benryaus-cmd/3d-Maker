@@ -1,3 +1,4 @@
+import {registerTuningObject} from './LiveTuning.ts';
 /** Engine-free, fixed-step street firearms. Heading zero faces +Z. */
 export type WeaponId='pistol'|'shotgun'|'smg';
 export interface WeaponDefinition {name:string;magazine:number;startingReserve:number;damage:number;range:number;cadence:number;reload:number;pellets:number;spread:number;recoil:number;ammoCost:number;unlockCost:number;ammoPackSize:number;ammoPackCost:number}
@@ -6,11 +7,12 @@ export const WEAPON_DEFINITIONS:Record<WeaponId,WeaponDefinition>={
  shotgun:{name:'Shotgun',magazine:6,startingReserve:18,damage:13,range:19,cadence:.85,reload:1.9,pellets:7,spread:.16,recoil:.35,ammoCost:8,unlockCost:650,ammoPackSize:12,ammoPackCost:96},
  smg:{name:'SMG',magazine:24,startingReserve:72,damage:12,range:30,cadence:.105,reload:1.65,pellets:1,spread:.035,recoil:.08,ammoCost:2,unlockCost:1200,ammoPackSize:48,ammoPackCost:96},
 };
+for(const [id,definition]of Object.entries(WEAPON_DEFINITIONS))registerTuningObject('Weapon '+id,'weapon.'+id,definition,definition,['recoil','ammoCost']);
 const ids:WeaponId[]=['pistol','shotgun','smg'];
 export interface Arsenal {selected:WeaponId;unlocked:WeaponId[];ammo:Record<WeaponId,{magazine:number;reserve:number}>;cooldown:number;reloadRemaining:number;reloading:WeaponId|null;shotsFired:number}
 const finite=(n:unknown,fallback=0):number=>typeof n==='number'&&Number.isFinite(n)?n:fallback;
 const bounded=(n:unknown,max:number,fallback=0)=>Math.min(max,Math.max(0,finite(n,fallback)));
-export function createArsenal():Arsenal {return {selected:'pistol',unlocked:['pistol'],ammo:{pistol:{magazine:12,reserve:48},shotgun:{magazine:6,reserve:18},smg:{magazine:24,reserve:72}},cooldown:0,reloadRemaining:0,reloading:null,shotsFired:0};}
+export function createArsenal():Arsenal {return {selected:'pistol',unlocked:['pistol'],ammo:Object.fromEntries(ids.map(id=>[id,{magazine:WEAPON_DEFINITIONS[id].magazine,reserve:WEAPON_DEFINITIONS[id].startingReserve}])) as Arsenal['ammo'],cooldown:0,reloadRemaining:0,reloading:null,shotsFired:0};}
 /** Invalid/corrupt saves cannot manufacture infinite magazines or timers. */
 export function restoreArsenal(raw:unknown):Arsenal {
  const state=createArsenal();if(!raw||typeof raw!=='object')return state;

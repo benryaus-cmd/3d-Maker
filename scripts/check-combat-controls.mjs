@@ -33,6 +33,7 @@ c.release(1);c.releaseAim(2);assert.equal(c.fire,false,'late pointer capture rel
 const require=createRequire(import.meta.url),source=fs.readFileSync(new URL('../src/crime/CombatControls.tsx',import.meta.url),'utf8');
 let code=ts.transpileModule(source,{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2020}}).outputText;
 code=code.replace(/import ['"]\.\/combat-ui\.css['"];?/,'').replace(/from ['"]react['"]/g,`from ${JSON.stringify(pathToFileURL(require.resolve('react')).href)}`).replace(/from ['"]react\/jsx-runtime['"]/g,`from ${JSON.stringify(pathToFileURL(require.resolve('react/jsx-runtime')).href)}`).replace(/from ['"]\.\/Firearms['"]/g,`from ${JSON.stringify(new URL('../src/crime/Firearms.ts',import.meta.url).href)}`);
+code=code.replace("'./LiveTuning.ts'",JSON.stringify(new URL('../src/crime/LiveTuning.ts',import.meta.url).href));
 const {aimStickVector,CombatHUD,ArmouryPanel,CombatControls}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 assert.deepEqual(aimStickVector(2,0,32),{x:0,z:0,active:false},'touch center is a safe deadzone');
 assert.deepEqual(aimStickVector(0,-32,32),{x:0,z:1,active:true},'screen up aims north through parent projection');

@@ -1,0 +1,155 @@
+[
+  {
+    "command": "node --experimental-strip-types scripts/check-economy.mjs",
+    "exit": 0,
+    "tail": [
+      "PASS observed quote history and receipts remain bounded over 100 simulated days",
+      "COMPLETE 21 economy groups"
+    ]
+  },
+  {
+    "command": "node scripts/check-economy-ui.mjs",
+    "exit": 0,
+    "tail": [
+      "PASS fractional event countdowns carry seconds correctly"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-live-tuning.mjs",
+    "exit": 0,
+    "tail": [
+      "PASS live registry: object bindings, individual/default reset, export, persistence, zero values, automatic clock and invalid edit",
+      "PASS starting ammunition uses live definitions and collision hull changes actual query"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-sweep-save.mjs",
+    "exit": 0,
+    "tail": [
+      "PASS integrated combat/empire save and v3 migration preserve economy"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-firearms.mjs",
+    "exit": 0,
+    "tail": [
+      "PASS firearms: nearest hit, walls/broken cover, actor/car hulls, finite geometry, cadence/ammo/reload/switch/save, enemy perception/windup/retreat/reposition"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-combat-controls.mjs",
+    "exit": 0,
+    "tail": [
+      "Combat controls: mixed keyboard/touch, independent move/aim, deadzone, release and focus reset PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-police-director.mjs",
+    "exit": 0,
+    "tail": [
+      "Police report, obstruction, search, escape, arrest, persistence and roadblock checks: PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-empire.mjs",
+    "exit": 0,
+    "tail": [
+      "PASS empire: staged jobs, cargo cost basis, active clock, caps, atomic purchases, unique rewards, respect gates, witnessed reputation, takeover/defence/reclaim"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-combat-effects.mjs",
+    "exit": 0,
+    "tail": [
+      "PASS combat effects: four real GLB hand rigs, forward muzzle/support grip, pose restore, shared GPU assets, bounded pool/fade/disposal, headless audio lifecycle"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-district-identity.mjs",
+    "exit": 0,
+    "tail": [
+      "District identity: nine brands, wall attachment, safe roads, bounded streaming, garage ownership, gardens supports and disposal PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-crime.mjs",
+    "exit": 0,
+    "tail": [
+      "Vehicle handling checks passed",
+      "BLACKTOP EMPIRE physics/economy/mission/assets checks passed"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-mobile-controls.mjs",
+    "exit": 0,
+    "tail": [
+      "Mobile analog / mixed sources / cancellation: PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-world.mjs",
+    "exit": 0,
+    "tail": [
+      "391 road tiles, 72 merged/standalone blocks, 185 buildings, 344 sidewalk lamps",
+      "World camera, safehouse, day/night, route, connected skid and instance disposal checks passed"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-person-disposal.mjs",
+    "exit": 0,
+    "tail": [
+      "Character geometry/material/bone texture disposal and rig sharing: PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-city-layout.mjs",
+    "exit": 0,
+    "tail": [
+      "City layout verified: 9 districts, 72 blocks, 391 nodes, 391 tiles."
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-road-assets.mjs",
+    "exit": 0,
+    "tail": [
+      "Actual GLB deformation refresh and bounded lamp disposal passed.",
+      "Original GLB openings, geometry-derived vehicle lamps and async replacement checks passed."
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-traffic.mjs",
+    "exit": 0,
+    "tail": [
+      "Rotated route max chassis corner offset -1.57 4.10",
+      "Traffic lane graph, forward avoidance, turn-speed and physical recovery: PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-street-combat.mjs",
+    "exit": 0,
+    "tail": [
+      "Street combat range, reaction, cooldown, and real GLB punch pose: PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-daylight.mjs",
+    "exit": 0,
+    "tail": [
+      "Daylight boundaries, night wrap, hue windows and smooth C1 fades passed."
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-skid-lifetime.mjs",
+    "exit": 0,
+    "tail": [
+      "Skid10s hold/10s fade,20s expiry,boundedpool anddisposal: PASS"
+    ]
+  },
+  {
+    "command": "node --experimental-strip-types scripts/check-impact-immersion.mjs",
+    "exit": 0,
+    "tail": [
+      "Propmass/thresholds,rotatedphysicaledges,pedestrianknockback/ground/walls: PASS"
+    ]
+  }
+]

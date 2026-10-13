@@ -1,3 +1,4 @@
+import {LIVE} from './LiveTuning.ts';
 /** BLACKTOP EMPIRE — fixed-step planar chassis/tire model (world units = metres).
  * Vehicle direction uses heading=0 towards +Z; local X is right. No frame-dependent movement.
  * Core simulation intentionally independent of Three.js so physics can be unit-tested. */
@@ -15,8 +16,8 @@ export const axes=(heading:number)=>({fx:Math.sin(heading),fz:Math.cos(heading),
 /** Circle against the same oriented chassis used by solid car collisions. */
 export function pointTouchesCar(s:CarState,x:number,z:number,radius=.35):boolean{
  const a=axes(s.heading),dx=x-s.x,dz=z-s.z;
- const side=Math.max(0,Math.abs(dx*a.rx+dz*a.rz)-1.1);
- const front=Math.max(0,Math.abs(dx*a.fx+dz*a.fz)-2.25);
+ const side=Math.max(0,Math.abs(dx*a.rx+dz*a.rz)-LIVE.carHalfWidth);
+ const front=Math.max(0,Math.abs(dx*a.fx+dz*a.fz)-LIVE.carHalfLength);
  return side*side+front*front<radius*radius;
 }
 export function tuneWithMods(base:CarTune,mods:{engine:number;tires:number;brakes:number;armor:number}):CarTune{
@@ -35,21 +36,21 @@ export function drive(s:CarState,c:DriverInput,dt:number,t:CarTune=BASE_TUNE,wet
   const a=axes(s.heading),long=s.vx*a.fx+s.vz*a.fz,lat=s.vx*a.rx+s.vz*a.rz;
   const requestedThrottle=limit(c.throttle,0,1),requestedBrake=limit(c.brake,0,1);
   // A pedal input changes torque over time, including when the driver lifts off.
-  s.throttlePedal=(s.throttlePedal??0)+(requestedThrottle-(s.throttlePedal??0))*(1-Math.exp(-h/(requestedThrottle>(s.throttlePedal??0)?.18:.09)));
-  s.brakePedal=(s.brakePedal??0)+(requestedBrake-(s.brakePedal??0))*(1-Math.exp(-h/.10));
+  s.throttlePedal=(s.throttlePedal??0)+(requestedThrottle-(s.throttlePedal??0))*(1-Math.exp(-h/(requestedThrottle>(s.throttlePedal??0)?LIVE.throttleRise:LIVE.throttleFall)));
+  s.brakePedal=(s.brakePedal??0)+(requestedBrake-(s.brakePedal??0))*(1-Math.exp(-h/LIVE.brakeResponse));
   if(c.reverse===false||requestedThrottle>.08||requestedBrake<.02)s.reverseEngaged=false;
   else if(long<.25)s.reverseEngaged=true;
   const reverse=!!s.reverseEngaged;
   const damage=limit(1-s.hp/100,0,1),absLong=Math.abs(long);
-  const maxAngle=t.steerLock/(1+absLong*.028);
+  const maxAngle=t.steerLock/(1+absLong*LIVE.steerSpeedFalloff);
   const requestedSteer=limit(c.steer,-1,1);
   // A mild self-aligning rack helps unwind a slide when the driver releases steering.
   // Explicit countersteering always takes priority; the rear tires still govern recovery.
-  const align=!c.handbrake&&long>3?limit(Math.atan2(lat,Math.max(3,long))*.7,-maxAngle,maxAngle)*(1-Math.min(1,Math.abs(requestedSteer)*5)):0;
+  const align=!c.handbrake&&long>3?limit(Math.atan2(lat,Math.max(3,long))*LIVE.selfAlign,-maxAngle,maxAngle)*(1-Math.min(1,Math.abs(requestedSteer)*5)):0;
   const target=limit(requestedSteer*maxAngle+align,-maxAngle,maxAngle);
   // Steering winds in, countersteers and self-centres progressively.
   const steeringRate=(Math.abs(target)<Math.abs(s.steerAngle)?2.1:1.65)/(1+absLong*.02);
-  s.steerAngle+=limit((target-s.steerAngle)*(1-Math.exp(-h/.13)),-h*steeringRate,h*steeringRate);
+  s.steerAngle+=limit((target-s.steerAngle)*(1-Math.exp(-h/LIVE.steerResponse)),-h*steeringRate,h*steeringRate);
   const delta=s.steerAngle,cos=Math.cos(delta),sin=Math.sin(delta);
   const frontArm=t.wheelbase*.48,rearArm=t.wheelbase*.52;
   const inertia=t.mass*(4.5*4.5+2.2*2.2)/12;
@@ -109,7 +110,7 @@ export function impact(s:CarState,nx:number,nz:number,relativeSpeed:number,wall?
  * SAT along car/wall axes prevents bonnets and rear bumpers penetrating scenery. */
 type Vec={x:number;z:number};
 type Hull={x:number;z:number;rx:number;rz:number;fx:number;fz:number;halfW:number;halfL:number};
-const carHull=(s:CarState):Hull=>{const a=axes(s.heading);return {x:s.x,z:s.z,...a,halfW:1.10,halfL:2.25};};
+const carHull=(s:CarState):Hull=>{const a=axes(s.heading);return {x:s.x,z:s.z,...a,halfW:LIVE.carHalfWidth,halfL:LIVE.carHalfLength};};
 function projectHalf(h:Hull,axis:Vec):number {
  return h.halfW*Math.abs(h.rx*axis.x+h.rz*axis.z)+h.halfL*Math.abs(h.fx*axis.x+h.fz*axis.z);
 }
@@ -181,7 +182,7 @@ export function collideCars(a:CarState,b:CarState,ta:CarTune=BASE_TUNE,tb:CarTun
 /** Clamp the actual oriented hull to the physical map perimeter, not its centre to an inset. */
 export function constrainCarToBounds(s:CarState,edge:number):void{
  const c=Math.abs(Math.cos(s.heading)),a=Math.abs(Math.sin(s.heading));
- const halfX=c*1.1+a*2.25,halfZ=a*1.1+c*2.25;
+ const halfX=c*LIVE.carHalfWidth+a*LIVE.carHalfLength,halfZ=a*LIVE.carHalfWidth+c*LIVE.carHalfLength;
  const x=limit(s.x,-edge+halfX,edge-halfX),z=limit(s.z,-edge+halfZ,edge-halfZ);
  if(x!==s.x){s.x=x;s.vx*=-.12;}if(z!==s.z){s.z=z;s.vz*=-.12;}
 }

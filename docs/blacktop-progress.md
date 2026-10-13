@@ -52,3 +52,7 @@ Physical Android/Aippy performance, audio, thermal stability, touch latency and 
 Crew, branching campaign, rich cinematics, open-ended gang simulation and the final content floor remain unfinished. See [the sweep report](testing/blacktop-street-empire-13oct2026.md).
 
 Published runtime `11a5b41cb9093b70184cb1e2b1ec3b0ed4f7a100`; Node22 frozen CI run[38381947081](https://github.com/benryaus-cmd/3d-Maker/actions/runs/38381947081)passed 20 active check commands, TypeScript and build. Exact import: 22-file combined incremental or 95-file complete current snapshot.
+
+## Live test settings — 14 October 2026
+
+Visible TEST SETTINGS exposes 226 real runtime tunables, individual committed-default resets, search/changed-only, persistent overrides, copy/download/import JSON and a minimized FPS pill. See [the live-testing guide](blacktop-live-testing.md). Opening resumes play; editor interactions clear held controls. Existing save/host/assets remain intact.

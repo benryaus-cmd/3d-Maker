@@ -1,3 +1,4 @@
+import {LIVE} from './LiveTuning.ts';
 import {STREET_NODES,nearestStreet,roadRoute} from './CityLayout.ts';
 import type {Wall} from './vehiclePhysics';
 export type PolicePoint={x:number;z:number};
@@ -86,24 +87,24 @@ export class PoliceDirector{
    s.clock+=advance;
    if(s.stage==='incident'&&s.clock>=s.reportAt-2.5)s.stage='dispatch';
    const ready=s.heat>0&&s.clock>=s.reportAt;
-   const visible=ready&&!input.safehouse?input.units.filter(u=>distance(u,input.target)<=65&&policeLineOfSight(u,input.target,input.walls)):[];
+   const visible=ready&&!input.safehouse?input.units.filter(u=>distance(u,input.target)<=LIVE.policeSight&&policeLineOfSight(u,input.target,input.walls)):[];
    if(visible.length){
     s.stage='pursuit';s.lastKnown=copyPoint(input.target);s.lastSeenAt=s.clock;
     s.reportedBy=visible[0].id;s.searchAt=0;s.cooldownAt=0;
     if(s.heat>=3)this.planRoadblock(input.target);
    }else if(ready){
     if(s.stage==='dispatch'||s.stage==='pursuit'&&s.clock-s.lastSeenAt>=1.2){s.stage='search';s.searchAt=s.clock;}
-    if(s.stage==='search'&&s.clock-s.searchAt>=18+s.heat*2){s.stage='cooldown';s.cooldownAt=s.clock;}
-    if(s.stage==='cooldown'&&s.clock-s.cooldownAt>=8){s.stage='escaped';s.heat=0;s.roadblock=null;}
+    if(s.stage==='search'&&s.clock-s.searchAt>=LIVE.searchSeconds+s.heat*2){s.stage='cooldown';s.cooldownAt=s.clock;}
+    if(s.stage==='cooldown'&&s.clock-s.cooldownAt>=LIVE.cooldownSeconds){s.stage='escaped';s.heat=0;s.roadblock=null;}
    }
    // Speed is supplied from the actual controlled body, including on-foot movement.
-   const arrest=visible.some(u=>distance(u,input.target)<5.5)&&s.heat>=1.25&&input.target.speed<3.5;
+   const arrest=visible.some(u=>distance(u,input.target)<LIVE.arrestRange)&&s.heat>=1.25&&input.target.speed<LIVE.arrestSpeed;
    s.arrestProgress=arrest?s.arrestProgress+Math.min(advance,Math.max(0,s.clock-s.reportAt)):Math.max(0,s.arrestProgress-advance*2);
    if(s.roadblock&&s.clock>s.roadblock.expiresAt)s.roadblock=null;
   }
   const ready=s.heat>0&&s.clock>=s.reportAt;
   const guidance:PoliceGuidance[]=ready&&s.lastKnown?input.units.map((unit,index)=>{
-   const visible=!input.safehouse&&distance(unit,input.target)<=65&&policeLineOfSight(unit,input.target,input.walls);
+   const visible=!input.safehouse&&distance(unit,input.target)<=LIVE.policeSight&&policeLineOfSight(unit,input.target,input.walls);
    let destination=copyPoint(s.lastKnown!),role:PoliceGuidance['role']=s.stage==='pursuit'?'pursuer':'search';
    if(s.stage==='pursuit'&&visible&&index>0&&s.heat>=2){
     const vx=input.target.vx??0,vz=input.target.vz??0;
@@ -116,6 +117,6 @@ export class PoliceDirector{
    return {unitId:unit.id,destination,role,visible};
   }):[];
   const active=ready&&s.stage!=='escaped'&&s.stage!=='idle';
-  return {stage:s.stage,heat:s.heat,notoriety:s.notoriety,desiredUnitCount:active?Math.min(7,Math.ceil(s.heat*1.3)):0,intensity:s.stage==='pursuit'?1:s.stage==='search'?.55:s.stage==='cooldown'?.2:0,guidance,arrested:s.arrestProgress>=3.3,canEnterSafehouse:!ready||!input.units.some(u=>distance(u,input.target)<=65&&policeLineOfSight(u,input.target,input.walls)),roadblock:s.roadblock?{...s.roadblock}:null,lastKnown:s.lastKnown?copyPoint(s.lastKnown):null,searchRadius:s.stage==='search'?Math.min(65,20+Math.max(0,s.clock-s.searchAt)*2):0};
+  return {stage:s.stage,heat:s.heat,notoriety:s.notoriety,desiredUnitCount:active?Math.min(7,Math.ceil(s.heat*1.3)):0,intensity:s.stage==='pursuit'?1:s.stage==='search'?.55:s.stage==='cooldown'?.2:0,guidance,arrested:s.arrestProgress>=LIVE.arrestSeconds,canEnterSafehouse:!ready||!input.units.some(u=>distance(u,input.target)<=LIVE.policeSight&&policeLineOfSight(u,input.target,input.walls)),roadblock:s.roadblock?{...s.roadblock}:null,lastKnown:s.lastKnown?copyPoint(s.lastKnown):null,searchRadius:s.stage==='search'?Math.min(65,20+Math.max(0,s.clock-s.searchAt)*2):0};
  }
 }

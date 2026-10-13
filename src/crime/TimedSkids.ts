@@ -1,6 +1,7 @@
+import {LIVE} from './LiveTuning.ts';
 import * as THREE from 'three';
 export const SKID_CAPACITY=2560;
-export const skidOpacity=(age:number)=>Math.max(0,Math.min(1,1-(age-10)/10));
+export const skidOpacity=(age:number)=>Math.max(0,Math.min(1,1-(age-LIVE.skidHold)/Math.max(.001,LIVE.skidFade)));
 /** Fixed-step maximum is120segments/s;2560 retains the entire20s lifetime. */
 export class TimedSkids{
  readonly mesh:THREE.InstancedMesh;time=0;liveCount=0;
@@ -8,16 +9,16 @@ export class TimedSkids{
  private previous:Array<{x:number;z:number;time:number}|null>=[null,null];
  private births=new Float32Array(SKID_CAPACITY).fill(-100);
  private active=new Uint8Array(SKID_CAPACITY);
- private clock={value:0};private dummy=new THREE.Object3D();private disposed=false;
+ private clock={value:0};private hold={value:LIVE.skidHold};private fade={value:LIVE.skidFade};private dummy=new THREE.Object3D();private disposed=false;
  constructor(scene:THREE.Scene,private height:(x:number,z:number)=>number){
   const geometry=new THREE.PlaneGeometry(.20,1);geometry.setAttribute('skidBorn',new THREE.InstancedBufferAttribute(this.births,1));
   const material=new THREE.MeshBasicMaterial({color:0x11171d,transparent:true,opacity:.62,depthWrite:false,side:THREE.DoubleSide});
   material.onBeforeCompile=shader=>{
-   shader.uniforms.uSkidTime=this.clock;
+   shader.uniforms.uSkidTime=this.clock;shader.uniforms.uSkidHold=this.hold;shader.uniforms.uSkidFade=this.fade;
    shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nattribute float skidBorn; varying float vSkidBorn; varying vec2 vSkidUV;');
    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSkidBorn=skidBorn; vSkidUV=uv;');
-   shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform float uSkidTime; varying float vSkidBorn; varying vec2 vSkidUV;');
-   shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\nfloat skidFade=clamp(1.0-(uSkidTime-vSkidBorn-10.0)/10.0,0.0,1.0);\nfloat skidEdge=smoothstep(0.0,.12,vSkidUV.x)*(1.0-smoothstep(.88,1.0,vSkidUV.x));\ndiffuseColor.a*=skidFade*skidEdge; if(diffuseColor.a<.002) discard;');
+   shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform float uSkidTime;uniform float uSkidHold;uniform float uSkidFade; varying float vSkidBorn; varying vec2 vSkidUV;');
+   shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\nfloat skidFade=clamp(1.0-(uSkidTime-vSkidBorn-uSkidHold)/max(.001,uSkidFade),0.0,1.0);\nfloat skidEdge=smoothstep(0.0,.12,vSkidUV.x)*(1.0-smoothstep(.88,1.0,vSkidUV.x));\ndiffuseColor.a*=skidFade*skidEdge; if(diffuseColor.a<.002) discard;');
   };
   material.customProgramCacheKey=()=> 'blacktop-timed-skids-v1';
   this.mesh=new THREE.InstancedMesh(geometry,material,SKID_CAPACITY);this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.mesh.count=0;this.mesh.frustumCulled=false;this.mesh.renderOrder=2;this.mesh.name='timed-skid-pool';scene.add(this.mesh);
@@ -32,9 +33,9 @@ export class TimedSkids{
   this.written=Math.max(this.written,i+1);this.mesh.count=this.written;this.mesh.instanceMatrix.needsUpdate=true;(this.mesh.geometry.getAttribute('skidBorn') as THREE.InstancedBufferAttribute).needsUpdate=true;
  }
  tick(dt:number){
-  if(this.disposed)return;this.time+=Math.max(0,dt);this.clock.value=this.time;
+  if(this.disposed)return;this.time+=Math.max(0,dt);this.clock.value=this.time;this.hold.value=LIVE.skidHold;this.fade.value=LIVE.skidFade;
   let changed=false;
-  for(let i=0;i<this.written;i++)if(this.active[i]&&this.time-this.births[i]>=20-1e-4){
+  for(let i=0;i<this.written;i++)if(this.active[i]&&this.time-this.births[i]>=LIVE.skidHold+LIVE.skidFade-1e-4){
    this.active[i]=0;this.liveCount--;this.dummy.position.set(0,-100,0);this.dummy.scale.set(0,0,0);this.dummy.updateMatrix();this.mesh.setMatrixAt(i,this.dummy.matrix);changed=true;
   }
   if(changed)this.mesh.instanceMatrix.needsUpdate=true;if(this.liveCount===0)this.mesh.count=0;

@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import ts from 'typescript';
 const source='src/crime/Empire.ts';
 assert.ok(fs.existsSync(source),'Empire domain is implemented');
-const text=fs.readFileSync(source,'utf8');
+const text=fs.readFileSync(source,'utf8').replace("'./LiveTuning.ts'",JSON.stringify(new URL('../src/crime/LiveTuning.ts',import.meta.url).href));
 const js=ts.transpileModule(text,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ES2022}}).outputText;
 const E=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
 const account=()=>({money:1200,cargo:{Ember:2,Glitch:2,Velvet:0,Crown:0},empire:E.createEmpire()});

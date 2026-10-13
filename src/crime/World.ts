@@ -1,3 +1,4 @@
+import {LIVE} from './LiveTuning';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {crimeAssetURL} from './assets';
@@ -281,6 +282,7 @@ export class CrimeWorld{
  private w=1;private h=1;private disposed=false;private lastcx=Infinity;private lastcz=Infinity;
  private cameraFocus=new THREE.Vector3();
  private mountResize:ResizeObserver|null=null;
+ private testWallSizes=new WeakMap<Wall,{w:number;d:number}>();
  private buildingAssets=new Map<string,THREE.Group>();
  constructor(private mount:HTMLElement){
   this.scene.background=new THREE.Color(0x4a555b);this.scene.add(this.root,this.sky,this.sun,this.sun.target,this.interior,this.navigation);
@@ -327,7 +329,7 @@ export class CrimeWorld{
    if(wall){
     const solid=solidFootprint(clone,obj.userData.buildingSlot?'building':sceneryKind(spec.name));
     obj.updateWorldMatrix(true,false);const worldSolid=solid.clone().applyMatrix4(obj.matrixWorld),centre=worldSolid.getCenter(new THREE.Vector3());
-    wall.x=centre.x;wall.z=centre.z;wall.w=Math.max(.12,worldSolid.max.x-worldSolid.min.x);wall.d=Math.max(.12,worldSolid.max.z-worldSolid.min.z);
+    wall.x=centre.x;wall.z=centre.z;wall.w=Math.max(.12,worldSolid.max.x-worldSolid.min.x);wall.d=Math.max(.12,worldSolid.max.z-worldSolid.min.z);this.testWallSizes.set(wall,{w:wall.w,d:wall.d});const scale=wall.breakable?LIVE.propCollisionScale:LIVE.wallCollisionScale;wall.w*=scale;wall.d*=scale;
    }
    if(obj.userData.lampKey&&!wall?.broken){
     // Anchor the visible bulb and projected pool to the fitted GLB's lamp head.
@@ -498,7 +500,7 @@ export class CrimeWorld{
    disposeWorldVisuals(c.group);
    this.map.delete(k);
   }
-  this.walls.length=0;this.map.forEach(c=>this.walls.push(...c.walls));
+  this.walls.length=0;this.map.forEach(c=>this.walls.push(...c.walls));this.applyLiveTuning();
  }
  destroyProp(w:Wall,vx:number,vz:number){
   const p=this.props.find(p=>p.wall===w);if(!p||p.fall)return;
@@ -517,6 +519,7 @@ export class CrimeWorld{
   p.fall={root:p.root,bounds,velX:direction.x*momentum,velY:Math.min(1.4,momentum*.15),velZ:direction.z*momentum,angle:.06,angularSpeed:.9,axis:new THREE.Vector3(direction.z,0,-direction.x),baseRotation:p.root.quaternion.clone(),age:0,settled:false,ground:.09};
   p.root.userData.fallingBody=p.fall;this.activeProps.add(p);
  }
+ applyLiveTuning(){for(const w of this.walls){let base=this.testWallSizes.get(w);if(!base){base={w:w.w,d:w.d};this.testWallSizes.set(w,base);}const scale=w.breakable?LIVE.propCollisionScale:LIVE.wallCollisionScale;w.w=base.w*scale;w.d=base.d*scale;}for(const p of this.props)if(p.wall.kind&&p.wall.breakable)Object.assign(p.wall,SCENERY_RESPONSE[sceneryKind(p.wall.kind)]);}
  tickProps(dt:number){
   let budget=96;
   for(const p of this.activeProps){if(!p.fall){this.activeProps.delete(p);continue;}const px=p.root.position.x+(p.root.parent?.position.x??0),pz=p.root.position.z+(p.root.parent?.position.z??0);if(Math.hypot(px-this.cameraFocus.x,pz-this.cameraFocus.z)>90)continue;if(budget--<=0)break;stepFallingScenery(p.fall,dt);if(p.fall.settled)this.activeProps.delete(p);}
@@ -529,23 +532,23 @@ export class CrimeWorld{
   return null;
  }
  follow(x:number,z:number,speed:number,heading:number,dt:number,interior=false,onFoot=false){
-  const smooth=1-Math.exp(-Math.max(0,dt)*5);
+  const smooth=1-Math.exp(-Math.max(0,dt)*LIVE.cameraFollow);
   if(interior){
    const entering=!this.interior.visible;this.root.visible=false;this.navigation.visible=false;this.interior.visible=true;
    const desired=new THREE.Vector3(10000+THREE.MathUtils.clamp(x*.45,-2.2,2.2),0,10000+THREE.MathUtils.clamp(z*.35,-1.8,1.8));if(entering)this.cameraFocus.copy(desired);
-   this.cameraFocus.lerp(desired,smooth);this.camera.position.set(this.cameraFocus.x,20,this.cameraFocus.z-16);this.camera.lookAt(this.cameraFocus);this.camera.zoom=1.52*this.cameraScale;this.camera.updateProjectionMatrix();
+   this.cameraFocus.lerp(desired,smooth);this.camera.position.set(this.cameraFocus.x,LIVE.interiorHeight,this.cameraFocus.z-LIVE.interiorDistance);this.camera.lookAt(this.cameraFocus);this.camera.zoom=LIVE.interiorZoom*this.cameraScale;this.camera.updateProjectionMatrix();
    (this.scene.background as THREE.Color).set(0x27313a);this.sun.position.set(9990,20,9985);this.sun.target.position.set(10000,0,10000);this.sun.target.updateMatrixWorld();this.streetLights.forEach(l=>l.intensity=0);return;
   }
   if(this.interior.visible||!this.cameraReady){this.cameraFocus.set(x,0,z);this.cameraHeading=onFoot?0:heading;this.cameraReady=true;}
   this.root.visible=true;this.navigation.visible=true;this.interior.visible=false;
-  const wantedHeading=onFoot?0:heading;
+  const wantedHeading=LIVE.cameraHeading>=0?THREE.MathUtils.degToRad(LIVE.cameraHeading):onFoot?0:heading;
   const angle=Math.atan2(Math.sin(wantedHeading-this.cameraHeading),Math.cos(wantedHeading-this.cameraHeading));
-  this.cameraHeading+=Math.max(-dt*.95,Math.min(dt*.95,angle*(1-Math.exp(-dt*2.2))));
-  const fx=Math.sin(this.cameraHeading),fz=Math.cos(this.cameraHeading),ahead=onFoot?1.4:3.5+Math.min(Math.abs(speed)*.12,6);
+  this.cameraHeading+=Math.max(-dt*LIVE.cameraTurnRate,Math.min(dt*LIVE.cameraTurnRate,angle*(1-Math.exp(-dt*LIVE.cameraTurnSmoothing))));
+  const fx=Math.sin(this.cameraHeading),fz=Math.cos(this.cameraHeading),ahead=onFoot?LIVE.walkingLookAhead:LIVE.drivingLookAhead+Math.min(Math.abs(speed)*LIVE.speedLookAhead,LIVE.maxLookAhead);
   this.cameraFocus.lerp(new THREE.Vector3(x+fx*ahead,0,z+fz*ahead),smooth);
-  this.camera.position.set(this.cameraFocus.x-fx*(onFoot?20:28),onFoot?25:40,this.cameraFocus.z-fz*(onFoot?20:28));this.camera.lookAt(this.cameraFocus);
-  const targetZoom=(onFoot?2.3:1.22-Math.min(Math.abs(speed)/55,.22))*this.cameraScale;
-  this.camera.zoom+=(targetZoom-this.camera.zoom)*(1-Math.exp(-dt*2.8));this.camera.updateProjectionMatrix();
+  this.camera.position.set(this.cameraFocus.x-fx*(onFoot?LIVE.walkingDistance:LIVE.drivingDistance),(LIVE.cameraPitch>=0?Math.tan(THREE.MathUtils.degToRad(LIVE.cameraPitch))*(onFoot?LIVE.walkingDistance:LIVE.drivingDistance):onFoot?LIVE.walkingHeight:LIVE.drivingHeight),this.cameraFocus.z-fz*(onFoot?LIVE.walkingDistance:LIVE.drivingDistance));this.camera.lookAt(this.cameraFocus);
+  this.camera.far=Math.max(.2,LIVE.cameraFar);const targetZoom=Math.max(.05,(onFoot?LIVE.walkingZoom:LIVE.drivingZoom-Math.min(Math.abs(speed)/LIVE.speedZoomScale,LIVE.speedZoomRange))*this.cameraScale);
+  this.camera.zoom+=(targetZoom-this.camera.zoom)*(1-Math.exp(-dt*LIVE.cameraZoomSmoothing));this.camera.updateProjectionMatrix();
   this.sun.position.set(x-32,60,z-22);this.sun.target.position.set(x,0,z);this.sun.target.updateMatrixWorld();
   this.lampRefresh+=dt;
   if(this.lampRefresh>=.5||Math.hypot(x-this.lampX,z-this.lampZ)>4){
@@ -554,24 +557,26 @@ export class CrimeWorld{
    const candidates=this.props.filter(p=>p.root.userData.lampKey&&!p.wall.broken&&Math.hypot(p.wall.x-x,p.wall.z-z)<28).map(p=>(p.root.userData.lampHead as THREE.Vector3|undefined)?.clone()??new THREE.Vector3(p.wall.x,4.5,p.wall.z));
    candidates.sort((a,b)=>a.distanceToSquared(this.cameraFocus)-b.distanceToSquared(this.cameraFocus));this.lampAnchors=candidates.slice(0,3);
   }
-  this.streetLights.forEach((l,i)=>{const anchor=this.lampAnchors[i];l.intensity=anchor?this.night*18:0;if(anchor)l.position.copy(anchor);});
+  this.streetLights.forEach((l,i)=>{const anchor=this.lampAnchors[i];l.intensity=anchor?this.night*LIVE.streetLight:0;if(anchor)l.position.copy(anchor);});
  }
  restoreClock(elapsedSeconds:number){
   this.environmentTime=(17.5*3600+Math.max(0,Number.isFinite(elapsedSeconds)?elapsedSeconds:0)*72)%86400;this.updateEnvironment(0);
  }
  updateEnvironment(dt:number){
-  this.environmentTime=(this.environmentTime+Math.max(0,dt)*72)%86400;
+  this.environmentTime=(this.environmentTime+Math.max(0,dt)*LIVE.clockSpeed)%86400;
+  if(LIVE.clockOverride>=0)this.environmentTime=LIVE.clockOverride*3600;
   const hours=this.environmentTime/3600;this.clockLabel=String(Math.floor(hours)).padStart(2,'0')+':'+String(Math.floor(hours%1*60)).padStart(2,'0');
   this.skids.tick(dt);
   const light=daylightAt(hours),daylight=light.day;this.night=light.night;
-  this.sky.intensity=.9+daylight*1.05;this.sky.color.set(0x9bb6e2).lerp(new THREE.Color(0xcbddea),daylight);
+  this.sky.intensity=(.9+daylight*1.05)*LIVE.ambientLight;this.sky.color.set(0x9bb6e2).lerp(new THREE.Color(0xcbddea),daylight);
   this.sky.color.lerp(new THREE.Color(0xffda8b),(light.dawn+light.golden)*.22).lerp(new THREE.Color(0xe696af),light.dusk*.22);
   this.sky.groundColor.set(0x3a4965).lerp(new THREE.Color(0x636858),daylight).lerp(new THREE.Color(0xaa8750),(light.dawn+light.golden)*.20).lerp(new THREE.Color(0x9b6571),light.dusk*.18);
-  this.sun.intensity=.32+daylight*2.35;this.sun.color.set(0xffebce).lerp(new THREE.Color(0xffd473),light.dawn+light.golden).lerp(new THREE.Color(0xfa919e),light.dusk);
+  this.sun.intensity=(.32+daylight*2.35)*LIVE.sunLight;this.sun.color.set(0xffebce).lerp(new THREE.Color(0xffd473),light.dawn+light.golden).lerp(new THREE.Color(0xfa919e),light.dusk);
   (this.scene.background as THREE.Color).set(0x17243d).lerp(new THREE.Color(0x849da8),daylight).lerp(new THREE.Color(0xdcc59b),(light.dawn+light.golden)*.18).lerp(new THREE.Color(0xba91a3),light.dusk*.20);
-  this.lampMaterial.opacity=this.night*.23;this.windowMaterial.opacity=this.night*.85;
+  this.lampMaterial.opacity=this.night*LIVE.streetGlow;this.windowMaterial.opacity=this.night*LIVE.windowGlow;
   this.routeMaterial.opacity=.58+Math.sin(this.environmentTime*.07)*.14;
-  this.renderer.toneMappingExposure=1.16+daylight*.12;
+  this.renderer.toneMappingExposure=(1.16+daylight*.12)*LIVE.exposure;
+  this.renderer.shadowMap.enabled=LIVE.shadows>=.5;const pixel=Math.min(globalThis.devicePixelRatio||1,LIVE.pixelRatio);if(this.renderer.getPixelRatio()!==pixel){this.renderer.setPixelRatio(pixel);this.resize();};
  }
  setNavigation(target:{x:number;z:number;label?:string}|null,player:{x:number;z:number;heading:number}):void{
   const key=target?`${Math.round(player.x/4)},${Math.round(player.z/4)}:${target.x},${target.z}`:'';if(key===this.navigationKey)return;this.navigationKey=key;disposeWorldVisuals(this.navigation);this.navigation.clear();if(!target)return;

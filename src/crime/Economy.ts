@@ -1,3 +1,4 @@
+import {registerTuningObject} from './LiveTuning.ts';
 /** Persistent, deterministic street markets. All money moves through validated transactions. */
 export type Commodity='Ember'|'Glitch'|'Velvet'|'Crown';
 export const GOODS:Commodity[]=['Ember','Glitch','Velvet','Crown'];
@@ -28,6 +29,7 @@ const CAR_IDS=['sedan','sedan-sports','police','taxi','suv','race'];
 const BASE:Quantities={Ember:60,Glitch:105,Velvet:170,Crown:280};
 const STOCK:Quantities={Ember:24,Glitch:18,Velvet:12,Crown:8};
 const DEMAND:Quantities={Ember:30,Glitch:24,Velvet:18,Crown:12};
+registerTuningObject('Commodity base prices','economy.price',BASE);registerTuningObject('Dealer target stock','economy.stock',STOCK);registerTuningObject('Buyer target demand','economy.demand',DEMAND);
 const PROFILE:Record<string,number[]>={port:[.72,.82,1.12,1.08],club:[1.20,1.12,1.48,1.25],yard:[.95,.68,.92,1.14],tower:[1.16,1.22,1.20,1.48],hills:[1.04,1.15,1.35,1.38],gardens:[.97,1.03,1.18,1.12],quarter:[1.10,.94,.90,1.06],midtown:[1.05,1.00,1.06,1.10],market:[.90,1.08,.86,.98]};
 const finite=(v:unknown,fallback:number,min=0,max=1e9)=>typeof v==='number'&&Number.isFinite(v)?Math.max(min,Math.min(max,v)):fallback;
 const integer=(v:unknown,fallback=0,max=1e9)=>Math.floor(finite(v,fallback,0,max));

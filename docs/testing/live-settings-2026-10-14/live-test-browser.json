@@ -1,0 +1,31 @@
+{
+  "checks": [
+    "visible test button opens live panel",
+    "catalog exposes real camera/physics/weapons/economy parameters",
+    "camera height changes actual camera live",
+    "exposure changes actual renderer live",
+    "individual reset preserves another edit",
+    "camera angle override changes actual pitch",
+    "night override updates actual lights and time",
+    "decimal preference value is applied without integer rounding",
+    "copy handler exports exact labelled current values",
+    "minimized panel leaves actual driving input active",
+    "test values survive reload",
+    "export-format JSON imports live values",
+    "reset all restores committed defaults",
+    "gunfire volume can mute completely",
+    "camera shake can disable completely",
+    "traffic reduction removes existing traffic live",
+    "pedestrian reduction removes existing civilians live",
+    "simulation speed zero freezes economy and empire inside safehouse",
+    "panel fits 390x844",
+    "panel fits 360x800",
+    "panel fits 844x390",
+    "opening test settings resumes paused play",
+    "no JavaScript errors"
+  ],
+  "count": 226,
+  "errors": [],
+  "fixtures": "Clipboard writer stub only; all edits, resets, import, reload, renderer/camera and driving are real production UI.",
+  "softwareWebGL": true
+}

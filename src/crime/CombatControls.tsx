@@ -1,3 +1,4 @@
+import {LIVE} from './LiveTuning.ts';
 import {useEffect,useRef,useState,type MutableRefObject,type PointerEvent as RP} from 'react';
 import {type Controls,type ControlField} from './Controls';
 import {WEAPON_DEFINITIONS,type Arsenal,type WeaponId} from './Firearms';
@@ -10,7 +11,7 @@ const cash=(value:number)=>'$'+value.toLocaleString('en-AU');
 /** Match the movement stick's screen coordinates: right +X, up +Z. */
 export function aimStickVector(x:number,y:number,radius:number){
  if(!Number.isFinite(x)||!Number.isFinite(y)||!Number.isFinite(radius)||radius<=0)return {x:0,z:0,active:false};
- const length=Math.hypot(x,y),scale=Math.max(radius,length),active=length>radius*.18;
+ const length=Math.hypot(x,y),scale=Math.max(radius,length),active=length>radius*LIVE.aimDeadzone;
  return {x:active?x/scale:0,z:active?-y/scale:0,active};
 }
 
@@ -35,7 +36,7 @@ export function CombatControls({controls,onReload,onHolster,onPunch}:CombatContr
  },[controls]);
  const move=(e:RP<HTMLDivElement>)=>{
   if(pointer.current!==e.pointerId)return;
-  const box=e.currentTarget.getBoundingClientRect(),radius=box.width*.32,x=e.clientX-box.left-box.width/2,y=e.clientY-box.top-box.height/2,aim=aimStickVector(x,y,radius);
+  const box=e.currentTarget.getBoundingClientRect(),radius=box.width*LIVE.stickRadius,x=e.clientX-box.left-box.width/2,y=e.clientY-box.top-box.height/2,aim=aimStickVector(x,y,radius);
   controls.current.pointerAim(e.pointerId,aim.x,aim.z,aim.active);setOffset([aim.x*radius,-aim.z*radius]);setActive(aim.active);
  };
  const down=(e:RP<HTMLDivElement>)=>{if(pointer.current!==null)return;e.preventDefault();e.stopPropagation();pointer.current=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);move(e);};

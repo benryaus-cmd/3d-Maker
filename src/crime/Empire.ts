@@ -1,3 +1,4 @@
+import {registerTuningObject} from './LiveTuning.ts';
 /** Active-time empire domain. Wallet changes commit only after all world checks pass. */
 import type {Commodity, Quantities, EconomyState} from './Economy.ts';
 export type FactionId='breakwater'|'velvet'|'ashline'|'crown';
@@ -92,3 +93,6 @@ export function collectBusiness(s:EmpireAccount,id:string,c:EmpireContext):Empir
 export function defendTerritory(s:EmpireAccount,c:EmpireContext,delegate=false):EmpireResult{const t=s.empire.territories['midtown-block'];if(t.status!=='contested'||s.empire.seconds>=t.responseUntil)return result(false,'NO ACTIVE COUNTERATTACK');if(delegate){if(!Number.isFinite(s.money)||s.money<180)return result(false,'GUARDS COST $180');s.money-=180;}else{if(!near({x:30,z:-30},c))return result(false,'REACH THE BLOCK');if(c.remainingEnemies&&c.remainingEnemies>=2){t.defenceSeen=true;return result(true,'DEFEND THE BLOCK · CLEAR THE TWO RIVALS');}if(!t.defenceSeen||c.remainingEnemies!==0)return result(false,'CLEAR THE COUNTERATTACK RIVALS');}t.status='owned';t.nextAttack=s.empire.seconds+600;t.responseUntil=0;t.defenceSeen=false;log(s.empire,delegate?'DEFENCE DELEGATED':'BLOCK DEFENDED',delegate?-180:0);return result(true,'MIDTOWN BLOCK SECURED');}
 export function garageRepairMultiplier(e:EmpireState){return e.businesses['midtown-garage']?.owned ? .8 : 1;}
 export type EmpireAction={type:'begin';id:string}|{type:'complete'}|{type:'fail'}|{type:'buy'|'upgrade'|'collect';id:string}|{type:'defend';delegate:boolean}|{type:'route';x:number;z:number;label:string};
+
+for(const job of CONTRACTS)registerTuningObject('Contract '+job.title,'contract.'+job.id,job);
+for(const business of BUSINESSES)registerTuningObject('Business '+business.id,'business.'+business.id,business,business,['x','z']);

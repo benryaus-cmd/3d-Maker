@@ -1,3 +1,4 @@
+import {LIVE} from './LiveTuning.ts';
 import * as THREE from 'three';
 
 const GROUP_NAME='custom-vehicle-lights';
@@ -82,7 +83,7 @@ export function attachVehicleLights(root:THREE.Group):void {
 export function updateVehicleLights(root:THREE.Group,night:number,braking:boolean):void {
  const visual=visuals.get(root);if(!visual)return;refreshBody(root,visual);
  const level=nightAmount(night),on=level>.02;
- visual.beams.opacity=on?level*.34:0;visual.heads.emissiveIntensity=on?level*2.4:0;visual.tails.emissiveIntensity=braking?3.8:(on?level*1.3:0);
+ visual.beams.opacity=on?level*LIVE.headlightBeam:0;visual.heads.emissiveIntensity=on?level*LIVE.headlightGlow:0;visual.tails.emissiveIntensity=braking?LIVE.brakeGlow:(on?level*LIVE.tailGlow:0);
  if(!visual.body)return;
  root.updateWorldMatrix(true,true);const relative=new THREE.Matrix4().multiplyMatrices(root.matrixWorld.clone().invert(),visual.body.matrixWorld);visual.lamps.matrix.copy(relative);
  let i=0;for(const child of visual.group.children){
@@ -106,7 +107,7 @@ export class VehicleLightRig {
   if(this.disposed)return;const visual=root?visuals.get(root):undefined;if(root&&visual)refreshBody(root,visual);
   const level=root?nightAmount(night):0;root?.updateWorldMatrix(true,true);
   this.lights.forEach((light,i)=>{
-   const anchor=visual?.anchors[i];light.visible=level>.02&&!!anchor;light.intensity=light.visible?level*48:0;
+   const anchor=visual?.anchors[i];light.visible=level>.02&&!!anchor;light.intensity=light.visible?level*LIVE.headlightPower:0;
    if(!root||!visual?.body||!anchor)return;
    light.position.copy(visual.body.localToWorld(anchor.clone()));
    const ahead=new THREE.Vector3(0,0,1).transformDirection(root.matrixWorld);

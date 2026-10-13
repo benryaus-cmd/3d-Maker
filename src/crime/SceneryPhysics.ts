@@ -1,3 +1,4 @@
+import {registerTuningObject} from './LiveTuning.ts';
 import * as THREE from 'three';
 
 export type SceneryKind='cone'|'sign'|'bench'|'fence'|'dumpster'|'lamp'|'tree'|'pole'|'hedge';
@@ -6,6 +7,7 @@ export const SCENERY_RESPONSE:Record<SceneryKind,{mass:number;hitThreshold:numbe
  fence:{mass:90,hitThreshold:8},dumpster:{mass:190,hitThreshold:10},lamp:{mass:110,hitThreshold:12},
  tree:{mass:380,hitThreshold:14},pole:{mass:280,hitThreshold:16},hedge:{mass:45,hitThreshold:5},
 };
+for(const [kind,response]of Object.entries(SCENERY_RESPONSE))registerTuningObject('Destructible '+kind,'scenery.'+kind,response);
 export function sceneryKind(path:string):SceneryKind{
  path=path.split('/').pop()??path;
  if(/^(tree|palm)/.test(path))return 'tree';if(/light/.test(path))return 'lamp';if(/pole/.test(path))return 'pole';
