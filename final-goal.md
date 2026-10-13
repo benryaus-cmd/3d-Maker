@@ -1,166 +1,154 @@
-# FINAL GOAL — BLACKTOP EMPIRE
-**Project:** Original 18+ portrait-first 3D top-down open-world crime, driving, police-pursuit, racing and contraband-trading game for Aippy.  
-**Date:** 12 October 2026  
-**Status:** Living product specification, implementation order and acceptance contract. This replaces the previous zombie/HubSide goal for THIS repository only.  
-**Reference flavours:** classic top-down GTA freedom and escalation; Need for Speed vehicle handling/customisation/pursuits; Dope Wars district economics. Build an original game, not a clone of their trademarks, levels, characters, dialogue, music or art.
+# BLACKTOP EMPIRE — Final game goal
 
-## 0. Non-negotiable direction
-Make an ACTUAL GAME, not a beautiful menu or static showcase. From first load the player can steer, throttle, brake, crash, flee police, make money, acquire vehicles, visit a safehouse and choose between story and open-world free roam. No tutorial wall preventing play. Cinematic, tactile, brutal adult crime fiction with meaningful decisions, consequences and progression. Target premium mobile presentation, original identity, cohesive stylized-but-detailed 3D.
+Updated 13 October 2026 (Australia/Sydney). **This is the target product contract, not a claim that these features already exist.** The execution order and current gaps are in [how-to-achieve-final-goal.md](how-to-achieve-final-goal.md). The earlier specification is preserved in [the archive](docs/archive/final-goal-before-2026-10-13-expansion.md).
 
-**Portrait is the principal layout:** vertical view, player car in lower-middle, readable forward road, thumb-reachable twin-side controls, transparent controls over action, no cut-off HUD. Landscape/desktop gracefully supported. Never force a fake rotated view on Android Aippy. Big tap targets and proper multi-touch pointer-capture release.
+## 1. The promise
 
-**Top-down means real 3D with a high orthographic camera pitched slightly off vertical**, not a 2D sprite masquerade. Lower/transparent obstructive roofs near player, car remains visible near tall buildings, strong camera follow with velocity lookahead, cinematic shake only at appropriate impacts, controlled dynamic zoom at speed/pursuit/cutscene. A true top-down camera means skyline/fog systems from HubSide/Dead City must not be carried over.
+Build an original, premium, portrait-first 3D crime sandbox for mobile: **start as a street trader with a battered car, survive a city that remembers your choices, and become the owner of a criminal empire.** Trade on the street, build relationships, race, fight, escape spectacular police pursuits, acquire businesses and defend territory. Campaign and free roam share one persistent city and progression.
 
-**No distant scenery needlessly drawn or loaded.** Calculate camera frustum footprint and keep a near-edge safety margin. Preload or retain immediately relevant adjacent chunks and offscreen gameplay colliders/AI state, because deleting them just outside the view causes collisions, popping and police teleportation. Detach/recycle visuals for offscreen zones, not persistent world state. No need for fake haze/fog to mask draw distance. Camera culling alone is not sufficient: CPU actors, shadows, audio and prop update budget must cull as well. Use pooled and instanced geometry where valuable. Keep road connectivity stable between sectors.
+The benchmark is the quality of a game someone actively chooses to return to and considers worth a premium subscription, not a subscription system to implement. No pay-to-win progression, mandatory ads or energy timers. Monetisation decisions remain separate from gameplay. The core game works locally/offline after its assets are available.
 
-**Core fantasy:** Start broke in a grimy port-city district with a battered car and a rented room. Work street trades and deliveries, race for respect, modify vehicles, evade expanding police response, buy and upgrade properties, take territory, survive ambushes and complete a strongly directed campaign. Any time the player can ignore the story and roam.
+“AAA within mobile” means exceptional responsiveness, coherent art, readable action, convincing sound, rich interconnected systems, memorable authored moments and reliable performance. It does not mean photorealism, a huge empty map, or a list of buttons for unfinished features.
 
-## 1. Existing repository — protect useful assets, reject inherited gameplay
-Repo: https://github.com/benryaus-cmd/3d-Maker ; branch main.
-At planning inspection, this was a full Dead City/HubSide code archive, NOT an empty starter. `src/App.tsx` was a tiny re-export of `src/zombie/ZombieGame`. There are hundreds of historical `src/game`, `src/zombie`, `src/components` files, and preloaded `public/assets/characters/*.glb`, `public/assets/quarter/*.gltf`, `public/assets/preview/building.glb`, `public/assets/city/tree.gltf`, and extensive `public/audio/sfx`.
-**Do not delete that archive or blindly initialise a new framework.** A clean `src/crime/` entry point is preferable, leaving the dormant systems intact until proven replacements are better.
-Keep existing Aippy Vite integration/plugin chain, React 19, Three.js, package manager, aliases and build-time project viewer mechanics. No invented Aippy native networking/credits features. Game must work offline/local-first; no HubSide server connections.
+### Design references and interpretation
 
-Asset work starts with an inventory: inspect and preview EXISTING geometry/models/sounds, reuse real assets when suitable, document exact licenses and file paths, then import missing car/road/property/sound assets. Avoid repeatedly loading same GLB/texture.
+These are creative references, not assets or mechanics to copy verbatim. Reference pages were reviewed on 13 October 2026; their promotional claims are not independent playtest findings.
 
-## 2. World and art direction
-Working title **BLACKTOP EMPIRE**; renameable independently of code. Fictional city **Vesper Bay**, with cohesive districts:
-- **Dockside:** containers, warehouses, cranes, freight, fences, tight chases; starting safehouse.
-- **Neon Mile:** convenience shops, clubs, nighttime wet roads, street-racing meets.
-- **Old Quarter:** apartments, alleys, roof access, dense traffic, backstreets.
-- **Financial Core:** high-end dealers, fast highways, reinforced cops, parking towers.
-- **Industrial Belt:** factories, scrapyards, garages, wreckable yards.
-- **The Hills:** wealthy residential properties, winding roads, high-stakes runs.
-- **Ring Road:** long connected straightaways for high-speed pursuit and rival racers.
+| Reference | What Blacktop takes from the reference |
+|---|---|
+| [GTA 2](https://www.rockstargames.com/games/gta2) | The requested top-down street sandbox, readable danger and gang allegiance fantasy. Our reputation model is specified below. |
+| [Dope Wars — The Dopest](https://store.steampowered.com/app/4503300/Dope_Wars__The_Dopest/) | Regional price differences, finite resources, market shocks and risk across trading runs. Here, the journey takes place in a driven, explorable city. |
+| [Saints Row](https://www.deepsilver.com/games/saints-row) | Personal identity, expressive vehicles, a recognisable crew and the fantasy of becoming a city boss. Our ownership system must visibly change streets. |
+| [FLAIR](https://theflairgame.itch.io/theflairgame) | Its advertised ambition of reactive NPCs, gangs and ownable businesses. Blacktop prioritises authored assets and persistent systemic reactions; runtime AI generation and multiplayer are separate future proposals. |
+| [Need for Speed: Most Wanted](https://www.ea.com/games/need-for-speed/need-for-speed-most-wanted) | Route choice, vehicle character, shortcuts, pursuit spectacle and escape. The linked EA page describes the 2012 game; the requested 2005-style escalating pursuit/rival fantasy also informs our original design. |
+| [Justinmind game UI guide](https://www.justinmind.com/ui-design/game) | Clear hierarchy, contextual information, consistent visual language and immediate feedback. Applied as measurable portrait UI requirements, not copied screens. |
 
-Deliver the first district fully playable before spreading low-quality city across all districts. Interconnected streets must be navigable: **lanes, junctions, one-ways where marked, sidewalks, alley shortcuts, ramps, garages, gates, traffic lights and parking**. Use deterministic chunk IDs and seeded layouts. Buildings receive stable colliders and roofs that hide or fade only when needed. Roads and sidewalks must have distinctive materials, crossings, tyre marks, litter, decals, bollards, signs, lamps, parked vehicles, breakable furniture and construction barriers. Strong day/night mood without fog as a rendering crutch; shadow impostors, baked AO, simple roof geometry and selective dynamic lights.
+## 2. Interconnected play, not isolated activities
 
-Camera: orthographic following the player; speed-aware ahead target, damping, portrait safe zones, roof transparency; zoom adjustable. Enforce bounds and consistent mapping between world metres, vehicle units and image space. Tiny offscreen indicators for missions, pursuit units and safehouses; compact expanding minimap with district labels.
+**Moment to moment:** steer through traffic, read danger, choose an alley, land a shot, take cover, make a deal, hear an approaching siren.
 
-## 3. Driving physics — priority #1, actually fun
-**Not** translation + instant rotation. Simulate rigid car chassis motion at fixed timestep (~60Hz), yaw inertia, longitudinal and lateral velocity, grip/slip curves, steer angle tied to speed, cornering, throttle/reverse, brake force, differential/drive style, handbrake oversteer, traction recovery, tire friction differences on asphalt/gravel/wet streets, engine torque curve, gearing, mass, collision impulse/restitution, rolling/drag resistance and steering assistance tuned for mobile. Never tie physics to frame rate. No car passing through walls, rotating on the spot at full speed, rubber-band corners or moving sideways with no inertia. Larger vehicles must feel heavy.
+**Three to ten minutes:** spot an opportunity → choose cargo and a route → meet a contact → survive a complication → sell or deliver → bank the profit → repair or reinvest.
 
-Raycast suspension / four-wheel model is an upgrade if supported and warranted; Cannon-es RaycastVehicle reference: https://github.com/icurtis1/raycast-vehicle (check its license) and https://github.com/NullCipherr/Cannon-Car-Simulator (MIT). Top-down may use a performant measured 2D tire-force rigid-body simulation with 3D visual body roll, pitch and suspension if it convincingly meets handling tests. Do not add physics dependencies unnecessarily, but do not use a fake kinematic controller and call it 'real physics'.
+**Thirty to sixty minutes:** cultivate one faction, undermine another, upgrade a vehicle, unlock a business, complete a story chapter and change the district's balance of power.
 
-Tune car archetypes: battered starter sedan, muscle, tuner, exotic, utility van, SUV, police interceptor; top speed, brake grip, handling, weight, gear ratios, drivetrain, durability, pursuit health. Create test course: 0–100 acceleration, high-speed corner, handbrake U-turn, head-on collision, side-swipe, reverse, wet surface, chase at 60Hz and 30Hz. Record results not wishful claims.
+**Long term:** assemble a distinctive fleet and crew, establish a supply network, own and defend businesses, shape nine districts and finish a branching campaign. Free roam continues with meaningful changing opportunities.
 
-**Visible, progressive physical damage:** panel dents/crumpled corners with deformable mesh or damage-state swapping, bumper dislodgement, glass cracking/shattering, bent hood, missing lights, wheel misalignment, sparks, smoke, fluid leaks, damaged engine note, impaired steering and acceleration; debris gets impulse, fades/pooled. Damage caused by collision location, angle, mass and relative speed. Police and civilian cars receive damage too. Hit obstacles and leave skid tracks, scrape paint, panels and breakable props. Cars must not be pristine while their health is zero. Repair at garage or safehouse.
+Example target sequence: a port oversupply creates a cheap purchase; an ally offers a better buyer; crossing a rival block triggers a telegraphed ambush; a short street gunfight attracts patrols; the player abandons a damaged vehicle, uses a parked getaway car, escapes through a construction shortcut, sells the surviving cargo, repairs the original car and returns to an owned garage. All cash, damage, faction changes and cargo losses survive reload. This is the benchmark vertical slice.
 
-**Controls:** left steer buttons/analog, right throttle/brake, separate handbrake and nitrous/horn. Genuine simultaneous thumb inputs on Android (pointerId-aware). Desktop arrows/WASD, space handbrake, shift nitrous, E action. Responsive throttle analogue where feasible. Gear sound/rev, brake/tyre skid, indicator and headlight controls later. Options: steering assist, camera follow, haptics and sound gains.
+## 3. Vesper Bay: nine authored districts
 
-## 4. Cops and systemic response
-Crime awareness/heat (0–5 stars), witness vision/hearing, dispatch delay, nearby reporting, escalating patrol vehicles, tactics, rolling roadblocks, tire strips, tactical vans and helicopters only when gameplay/camera supports them. Patrols drive lanes, obey a believable local pursuit model, search last-known position, split around blocks and recover from getting stuck. Police do NOT spawn inside obstacles, on top of the player, in line-of-sight out of nowhere, or forever ram the same wall. Wanted/heat drops only when genuinely unseen and not pursuing; hide at safehouse or change car/paint/plates, but never instantly erase active police at the front door. Arrest and hospital/impound consequences; car theft increases heat, pedestrians trigger reports, high-speed traffic collisions escalate.
+Retain the seamless 3×3 city foundation, roughly 120×120 world units per district. The current centreline span is 360, with physical perimeter at ±187.5 after road widening. These are game-world units: perceived journey length and route choices matter more than a claim of real city scale. Expand only after measured travel times and density justify it.
 
-Police and other traffic follow the same chassis/collision rules as player where practical (lower-fidelity LOD offscreen). Controlled spawn budgets and pooling. Chase music adapts to threat; radio chatter and sirens spatially anchored. Fair pursuit, with escape routes, alleys, garages and cool-down.
+| District | Identity and landmarks | Gameplay character |
+|---|---|---|
+| Dockside | Working waterfront, cranes, container lanes, customs yard | Bulk supply, freight interception, tight warehouse escapes |
+| Industrial Belt | Foundries, scrapyards, service tunnels, rail sidings | Heavy vehicles, chop shops, destructible chase routes |
+| Market Ward | Shopfronts, stalls, loading bays, commercial plazas | Busy street trading, crowds, fences and delivery work |
+| Old Quarter | Dense brick housing, courtyards, narrow alleys | Foot pursuits, gang boundaries, intimate ambushes |
+| Midtown | Mixed apartments, workshops, diners, transit stops | Starting home, accessible contacts, social crossroads |
+| Neon Mile | Clubs, arcades, signs, rain-slick nightlife strips | Luxury demand, racing meets, nightclub disputes |
+| The Hills | Homes, gardens, switchbacks, gated estates | Expensive cars, long sightlines, high-value contracts |
+| Financial Core | Towers, bank plaza, parking structures | Corporate buyers, heavier surveillance, late campaign work |
+| Civic Gardens | Parks, lake edge, civic buildings, sports spaces | Foot shortcuts, open sightlines, quieter meeting points |
 
-## 5. Population, streets, adult consequences
-Living civilians: street walking, crossing at intersections, reactions to honks, gunfire, violence, speeding and police. They spot threats, flee using sidewalks, avoid cars when possible, can be physically struck, knocked aside and injured with convincing animations, ragdoll fallback or short-lived physical impulses, appropriate blood effects for 18+ setting, ambulance/fire response if budget allows. **Never reward repeated harm to civilians as the best money or progression strategy.** Impacts have strong wanted/mission/financial consequences. Harden collision resolution so NPCs do not clip through the road/cars or trap police. Characters must not be absent just because camera is far overhead: silhouette/readability matters.
+Each district needs at least three recognisable landmarks, two useful alternative routes, a distinctive ambient sound palette and day/night population changes. A player should identify the district from a HUD-free screenshot. Streets transition naturally across borders.
 
-Optional combat on foot later: player can enter/exit vehicles, sprint, take cover and use limited weapons; keep the DRIVING and the criminal economy as core, rather than copying the entire zombie shooter.
+Use varied 1×1, 1×2, 1×3, 2×2 and L-shaped blocks, plus individually authored plazas, yards and parks. Break the repeated rotated-template appearance. Correctly oriented **Kenney road geometry** supplies straights, curves, tees, crossings and junctions. Preserve 15-unit tiles and 10.5-unit asphalt unless an explicitly tested redesign changes the geometry, graph, lanes and colliders together. Add long curves, one-way streets, parking and safe sidewalks; ramps/bridges require genuine multi-level collision and navigation before use.
 
-Adults-only original crime fiction includes rough language, substance themes, gang rivalry, danger and serious violence. 18+ entry label, settings for blood intensity and flashing effects, and sensible content controls. Fictional market names and mechanics; no real-world trafficking instructions.
+Map edges read as coastline, retaining walls, gates or connected perimeter roads. The car can reach the visible edge without premature invisible collisions. Render nearby chunks and a safety margin; retain gameplay state where pursuit, bullets and contacts still matter beyond the camera.
 
-## 6. Dope Wars meets GTA — functional market and risk
-A simulation of fictional illicit commodities (e.g. Ember, Glitch, Velvet, Crown) with regional supply/demand, price noise, supply shocks, police pressure, rumours, gangs, cargo capacity, storage, heat, laundering and territorial influence. Player earns by buying cheaply and selling at favorable district markets, but travel, time, confiscation, betrayal and patrol inspections alter the calculation. Different districts have repeatable but changing economies; balance must not be trivial infinite cash exploit.
+## 4. Driving and spectacular pursuits
 
-Map market nodes: dock stash, nightclub buyer, warehouse supplier, high-end broker, street fence. Dynamic events ('port shipment', 'neighbourhood crackdown', 'festival demand', 'rival raid') with finite duration. Offer contracts, courier runs, vehicle theft, races, protection and deliveries. Shops have hours and accessible interaction radius, prices and inventory; no buy/sell from opposite side of city. Show profit/loss including repair/fines/fuel if implemented. Fictional substance names only, abstract gameplay.
+The vehicle feels like mass on tyres: progressive throttle, speed-sensitive steering, lateral grip, yaw inertia, brake weight transfer, handbrake oversteer and controllable recovery. Starter sedan, tuner, muscle car, exotic, SUV and cargo van have distinct advantages and costs. Mobile steering assistance is adjustable and never silently teleports rotation.
 
-## 7. Safehouses and property ladder
-Start with **Dockside Room**. Walk/drive to a marker; transition to a genuinely enterable **3D interior** or physically integrated room, not merely a static shop menu pretending to be a room. Upgrade and decorate it: lock, bed, desk, stash room, alarm, security cameras, workbench, garage, paint booth, sound system, weapon locker, extra parking/storage. Save game, repair cars, store inventory and hide from police with meaningful constraints. Later buy multiple properties in different districts, with distinct garages, passive revenue/risk, stash raids and decor style. Persist position of all purchased upgrades and garage vehicles.
+Left thumb steers; right thumb uses throttle and brake/reverse, with reachable drift/nitrous. Reverse engages deliberately after braking. Camera eases close on foot and at low speed, opens with speed and threat, looks ahead and keeps the route visible above the thumbs. Inputs remain correct at 30/60 FPS and after pauses, modal changes and orientation changes.
 
-No microtransactions required; all upgrade costs are in-game currency.
+Pursuits have readable stages: **incident → witness/report → pursuit → last-known-position search → cooldown → escaped**, with separate long-term vehicle notoriety. Police use sight, hearing and dispatch information. They search intelligently rather than knowing the player through every wall. Escalation introduces coordinated interceptors, roadblocks, spike strips and specialist units. Expensive helicopter effects come only after mobile profiling.
 
-## 8. Cars, ownership, tuning, garages
-Vehicle dealerships, street theft, purchase/sale, limited garage slots, repairs, tow/impound/recovery. **Customisation visible in 3D:** body color, wrap/decals, wheels, suspension stance, aero/spoilers, exhaust, headlights, window tint, hood, bumper, neon underglow, engine sound and plate. **Mechanical upgrades:** engine, ECU, gearbox, tires, brakes, suspension, armour, cooling, nitrous, reliability; each changes measured physics parameters with trade-offs. Presets stored by unique vehicle IDs. Menus preview real cars rotating on turntable; the world displays the same changes and damage states.
+Crazy chases come from fair interaction: traffic near-misses, damaged steering, alley squeezes, construction barriers, blocked routes, coordinated flanking and last-second escapes. Telegraph roadblocks early enough to respond. No visible spawn-in, abrupt rotation jumps, wall ramming forever, impossible acceleration or unexplained arrests. Traffic yields, queues, avoids hazards and recovers from jams. Offscreen recovery stays out of sight and preserves pursuit consequences.
 
-## 9. Campaign + free roam, no dead menus
-Two selectable modes using one shared city/save: **CAMPAIGN** (mission tracking, dialogue, authored story) and **FREE ROAM** (all systems available immediately, no compulsory mission). On the first load let player drive straight away. Campaign starts with 5 tightly playable missions before expanding:
-1. **LAST $200**: drive battered sedan to first safehouse, meet contact, learn the city.
-2. **HOT DELIVERY**: timed contraband run through traffic, evade patrol, first real cash.
-3. **BURN RUBBER**: race 3 opponents across the industrial route; unlock tuner shop.
-4. **BLUE LIGHT SPECIAL**: bait/escape a rising police chase, lose tail, stash vehicle.
-5. **THE TAKE**: multi-leg high-risk heist setup and getaway with branching payout.
-Mission structure: prerequisites, launch marker, dialogue/cutscene, checkpoints, objectives, timers, fail/retry, reward, persistent unlock and clear in-world navigation. No instant reward buttons sold as missions. Free roam side loops: illegal races, towing, taxi, courier, chase challenges, garage collection, territory pushback.
+Every crash responds to contact position, relative speed and mass. Model-fitted colliders exclude empty canopy/roof space. Damage progresses through dents, shattered lamps/windows, loose panels, smoke, wheel/engine impairment and eventual breakdown; player, civilian and police cars obey the same visible rules. Detached parts have bounded physics. Cars are repairable and recoverable without trapping a broke player.
 
-**Cutscenes:** in-engine camera splines/close-ups, actors and cars physically present, skippable dialogue, subtitles with speaker labels, cinematic letterboxing only when aspect allows, normal play camera restores, AI-controlled vehicle remains stable during scene. Avoid cutscenes for every tiny action.
+## 5. Required on-foot street combat
 
-## 10. Sound, feel and presentation
-Layered car audio with idle, load, acceleration, shifting, turbo, backfire; tire squeals by slip, skid, impacts by material and severity; police siren doppler and radio voice stingers; city traffic beds, pedestrian screams/reactions, nightclub bass, garage tools, rain/distant thunder as optional ambience. Separate sliders for master, engine, SFX, sirens, music and radio. Unlock audio on user gesture, respect pause/mute and Android audio policies. Existing `public/audio/sfx` contains gun impacts and other zombie sounds; reuse selectively, do not pretend they provide proper car audio.
+**Open street gun battles are a core final feature, not an optional later extra.** Walking, sprinting, melee, weapon handling and getting in/out of vehicles form one continuous control experience.
 
-Juice: camera shake, chromatic hit flash only on strong hits, skid particles, sparks, fragments, stretch lights, responsive HUD, animated cash and mission completion, speedometer with KM/H and speed streaks, gear/tachometer, minimap with north/heading markers, heat stars, vehicle damage, current job, garage inventory and GPS path. Accessibility controls: scale/UI contrast, reduced shake, blood intensity and audio independent sliders.
+Start with a polished pistol, shotgun and automatic weapon, plus melee. Differentiate range, cadence, recoil, reload, ammunition cost, sound and impact; expand only after these feel good. Left thumb moves; right thumb aims/fires with adjustable aim assistance, a clear target cue and simple reload/weapon selection. Offer an accessible assisted-fire option. Holster and interact must be easy to distinguish.
 
-## 11. Asset acquisition queue — verified public sources
-First preserve all preloaded assets and inventory before imports. Strong **CC0** starting options:
-- **Kenney Car Kit** — current vehicle set, police, sedan, taxi, trucks, sporty sedans, detached wheels and useful debris: https://kenney.nl/assets/car-kit and https://kenney-assets.itch.io/car-kit
-- **Kenney City Kit Roads** — road/intersection/sidewalk/street furniture: https://kenney.nl/assets/city-kit-roads
-- **Kenney City Kit Commercial** — modern city buildings: https://opengameart.org/content/city-kit-commercial
-- **Kenney City Kit Suburban** — houses/fences/driveways: https://kenney-assets.itch.io/city-kit-suburban
-- **Kenney Racing Kit** — track/race props: https://kenney.nl/assets/racing-kit
-- **Quaternius Cars Pack** — alternative 8 CC0 vehicles: https://quaternius.com/packs/cars.html (FBX/OBJ/Blend, convert offline to GLB).
-- **Quaternius Downtown City MegaKit** — premium-looking modular city: https://quaternius.com/packs/downtowncitymegakit.html ; only free subset, check individual items and scale.
-- **Kenney self-contained GLBs GitHub mirror** — https://github.com/Hidencod/tge-assets ; `packs/car-kit/{sedan,sedan-sports,police,taxi,suv,...}.glb`, plus roads/commercial/suburban. Repository LICENSE explicitly declares Kenney CC0 and conversions CC0; use locally bundled files rather than runtime CDN. Maintain provenance `docs/blacktop-assets.md`.
-- **Car engine CC0 loops** https://opengameart.org/content/racing-car-engine-sound-loops ; **car engine start CC0** https://opengameart.org/content/car-engine-start-01 ; **car horn CC0** https://opengameart.org/content/car-signal. Check original specific sound license and optimise to .ogg (mono for 3D one-shots).
-- **Kenney Starter Kit Racing** https://github.com/KenneyNL/Starter-Kit-Racing with car models and CC0 sound reference (Godot project; import/convert individual assets, not whole runtime).
-For all external assets record original author, link, license, source SHA/version, conversion decisions, target path, scale/orientation, and measured byte/triangle costs. Reject unlicensed GTA/FiveM rips and copyrighted GTA/NFS audio. Do not depend on hotlinked remote gameplay models or audio at runtime.
+Bullets test actual world obstruction and hit regions; cars, walls and appropriate props provide cover. Visible muzzle flashes, tracers used sparingly, material impacts, hit reactions, knockback, animation blends and spatial audio communicate what happened. Enemies acquire targets through perception, use cover, reposition, retreat and react to allies falling. Civilians flee or defend themselves according to personality; gunfire creates witnesses and police response. Gang reinforcements arrive along believable routes with limits.
 
-## 12. Engineering layout and integration
-Recommended new modules:
-```
-src/crime/
-  CrimeGame.tsx          // single React entry / UI / inputs
-  crime.css              // isolated modern portrait UI
-  vehiclePhysics.ts      // deterministic fixed-step planar vehicle physics
-  City.ts                // streamed urban chunks, roads, interiors, markers
-  Vehicles.ts            // garages, traffic, damage, deformation
-  Police.ts              // wanted, chase, dispatch, hiding
-  Pedestrians.ts         // culling, movement, flee, impacts
-  Economy.ts             // deterministic simulated district trade
-  Missions.ts            // objective engine and campaign data
-  Save.ts                // versioned persistence and migrations
-  Sound.ts               // Web Audio car engine + imported SFX
-  Tuning.ts              // developer debug / gameplay tuning
-public/assets/crime/     // newly imported reviewed CC0 GLBs and sounds
-docs/blacktop-assets.md  // provenance, paths, licenses
-tests/crime/              // physics, economy, mission, spawn, save invariants
-```
-Use React only for menu/HUD. Keep Three.js render loop direct, no per-frame React state. Use fixed-step simulation with delta clamp and interpolation; scene graph update and drawn frame separated. Pooled objects, geometries/materials/GLBs shared and disposed on teardown. Visibility calculations include effects and AI, not just meshes. All interactive prompts and overlays pointer-accessible. Limit device pixel ratio adaptively using real timings; default target 60 FPS Android portrait (30 FPS minimum under heavy scenes), no hidden quality reductions without exposed developer option.
+Keep fights legible in portrait: distinctive hostile silhouettes, readable aim direction, offscreen threat indicators and brief damage direction cues. Hits never come from invisible, untelegraphed spawns. Defeat means hospital, lost opportunity and a bounded financial/inventory penalty; recovery keeps the campaign playable. Blood, flashes, shake and haptics have settings. Adult fictional violence has consequences; farming civilians is not the best progression loop.
 
-**No new server or multiplayer required**. Versioned autosave to localStorage/IndexedDB; defensive load validation and backup slots. Do not let currency/cars reset after reload. Distinguish real saved state from demo reset. Pause on tab hidden, stop audio, clear inputs; resume without physics explosion. Handle WebGL context loss where possible.
+## 6. Real playable commodity trading
 
-## 13. Build in vertical slices, ALWAYS playable
-**S0 — Foundation:** fresh dedicated game entry; gorgeous topdown road grid and sidewalk street blocks; thumb multi-touch; physics-based sedan and collision; working camera; pause/save. Build verified.
-**S1 — Road spectacle:** real locally loaded car GLBs; driving surface feedback; skid/engine/sirens; destructible props; continuous positional dents, visual debris, repair; own vehicle damage; traffic. Stress test.
-**S2 — Police & population:** civilians, impact/flee responses, witnesses; accurate heat and live pursuit with road routing, roadblocks, escaping/cooldowns. Make chase exhilarating and FAIR.
-**S3 — Crime economy:** district markets, cargo capacity, price events, buys/sells, police risk, profitable loop, player finance ledger.
-**S4 — Properties:** actual enterable safehouse, 3D upgrade choices, garage, persistent vehicles, tuning with real handling impacts.
-**S5 — Story:** 5 real missions, driving delivery, races, pursuits, cutscenes/dialogue, branching reward, skip/retry and free roam.
-**S6 — polish:** complete Kenney/Quaternius world dressing, material harmonisation, audio mastering, day/night/weather, damage/multicar physics, smooth 30/60 FPS and UX review.
+“Real” means a functioning economy with actual buying, transporting, selling and consequences. Commodity names and values are fictional game data. Retain the four existing goods and grow to eight differentiated goods: cheap bulk, volatile high-value stock, scarce luxury goods, stolen electronics and vehicle parts, each with distinct cargo size, risk, suppliers and buyers.
 
-Each slice: inspect only relevant files, implement, run tests/build, **play in browser** using mouse/touch where possible; record observed outcome, not unverified claims. Workers must read THIS `final-goal.md` before touching code and should use current files, not older README/MEMORY/spec/zombie plans. Don't delegate whole tasks in circles; parallelise independent assets, physics, city or UX work only when integration contract is precise.
+Every market has finite stock, buying demand, replenishment, buy/sell spread and opening/contact conditions. Prices respond to supply, demand, local events, gang influence and police pressure within tuned limits. Purchases reduce available supply; sales consume demand. Large transactions move the market. Cargo occupies a particular vehicle or stash, can be transferred nearby and can be lost or confiscated. Travelling has meaningful risk and time cost.
 
-## 14. Definition of done / acceptance
-A first public playable is NOT done unless all:
-- Launches in Aippy portrait and desktop, renders a 3D street and player within a few seconds after assets ready; offline works after bundle loaded.
-- Drives at 30 and 60 FPS with nearly same acceleration, turning, braking; handbrake U-turn and high-speed drifting visibly behave differently; collisions solid.
-- At least 5 visibly different cars, with real damage visibly altering model and behavior.
-- Street props break, scatter, are culled/recycled, and do not break collision after unloading nearby visuals.
-- Civilian pedestrians walk, panic/flee, get struck/react and witness crimes; police respond, pursue, collide, can be escaped; spawn and recovery do not cheat visibly.
-- A complete delivery → payment → vehicle modification/repair → safehouse loop exists; fictional contraband prices differ by district, balance checked.
-- Enterable 3D safehouse and saved property upgrade/garage. Menu alone does not count.
-- 5 interactive campaign missions and unrestricted free roam share progression; cinematics skippable, mission resume/retry coherent.
-- Engine/skid/siren/crash/witness audio controls, working music/ambient settings, no autoplay violations.
-- Saved cash, heat consequences, cars, upgrades and progress survive reload.
-- Android controls do not stick with multiple fingers; camera does not occlude car; no offscreen heavy render/update; no runaway objects, textures, timers or audio.
-- Benchmark and manual test evidence, real screenshots/video where available; record features honestly as DONE / PARTIAL / TODO. NEVER claim physical device or Aippy test without running them.
+Show unit price, quantity, total, capacity, available stock, average acquisition cost and estimated profit after known fees. Use observed price history and timestamped rumours; remote quotes are intelligence, not guaranteed live prices. Confirm consequential trades with immediate inventory/cash feedback. A completed exchange is atomic and saved once.
 
-### Required Work-mode playtest when handed off
-1. Inspect Git HEAD, `src/App.tsx`, `src/crime`, `public/assets/crime`, `docs/blacktop-assets.md` and package scripts; note what is truly implemented.
-2. Install existing deps with Node 22, run `pnpm run build`, TypeScript check and relevant tests; fix only reproducible faults.
-3. Open served browser build and ACTUALLY drive: portrait ~390x844 and landscape/desktop; exercise acceleration, brake, skid, handbrake, collision, car damage, police chase, pedestrians, market, delivery, safehouse and reload.
-4. Verify linked GLBs load from local paths, camera shows streets with no dense haze/fog, spatial culling works and all user-facing controls respond.
-5. Record FPS/long frames/draw calls when available; inspect scene for unwanted spikes and memory leaks. Avoid falsely claiming Android native testing.
-6. Return an evidence table of DONE/PARTIAL/NOT IMPLEMENTED/BROKEN, screenshots, exact reproduction steps and targeted fixes; prioritise gameplay feel over adding dead feature UI.
-7. Keep pushing toward this final goal, not merely ticking off a shallow demo.
+A persistent simulation clock drives markets, events and cooldowns. Reloading, changing mode, opening menus or changing device time must not reroll favourable prices, duplicate stock or replay rewards. Single-player pause freezes the world; offline income is explicitly capped and summarised if introduced. Give players access to a ledger, bank, stash and understandable money sinks: repairs, ammunition, property upkeep, crew wages and upgrades. Avoid both infinite arbitrage exploits and punitive grind.
 
-## 15. Current delivery honesty
-This document is the intended FINAL GAME CONTRACT. It does **not** assert every feature above exists today. The first implementation should expressly identify what actually shipped. Preserve existing source/assets; never report plans as already completed.
+## 7. Gangs, reputation and territorial ownership
+
+Create four original rival factions with named leaders, visual identities, preferred districts, businesses, vehicles and tactics. Initial design identities: **Breakwater Union** (freight), **Velvet Circuit** (nightlife), **Ashline Crew** (industrial theft), **Crown Syndicate** (high-value finance). Final naming must be original and distinct from reference franchises.
+
+Track separate values: faction respect, faction hostility, player street reputation and police heat. Helping one group can anger another. Respect unlocks contacts, discounts, work and negotiated passage; hostility changes patrols, ambush risk and access. Relationships change through witnessed acts and completed contracts, not unexplained global omniscience. Key contacts remember a limited set of persistent decisions.
+
+Districts contain ownable blocks and business nodes. Ownership progresses through intelligence, disrupting rival income, earning local influence and a deliberate takeover encounter. Holding territory requires supply, security and relationships. Counterattacks are announced with clear response windows; defence can be delegated at a cost. District changes persist visibly through signs, patrols, shop access, traffic and crew presence.
+
+Businesses include garages, clubs, warehouses, transport fronts and resale shops. Each adds playable work and strategic benefits, with costs and risk. Income follows a bounded simulation, not an unlimited claim button. Recruit a small named crew with roles such as driver, guard, mechanic and broker; skills have trade-offs, wages and loyalty. Begin with useful assignments, then add active companions only with reliable navigation.
+
+## 8. Story, jobs and progression
+
+A grounded adult crime drama with dark humour, allies, rivals, betrayals and choices with visible consequences. The player creates an identifiable adult character with readable clothing, hair and silhouette; the world uses authored, locally available character assets and coherent animations.
+
+Target three campaign acts and at least 18 authored missions, supported by eight reusable job families: trades/deliveries, races, vehicle acquisition, escort, retrieval, business defence, rival disruption and multi-stage heists. This is a final content floor, not permission to produce filler. The first five missions must be excellent before expansion. Missions combine traversal, interaction, dialogue, combat or pursuit rather than merely crossing a radius.
+
+Each mission has an identifiable giver, launch conditions, staged objectives, optional approaches, meaningful failure, fast retry, checkpoints, one-time rewards and save/resume support. Choices affect later contacts, faction relations or payout routes. Cinematics use present world actors, intentional framing, concise dialogue, subtitles and skip controls; restore camera/control state reliably. Free roam preserves story progress and offers every system without compulsory story gating, while retaining earned ownership and economy rules.
+
+First-session target: movement within 20 seconds after launch, a clear job within one minute, first trade or delivery within five minutes, and one memorable consequential event within ten. New players learn through short contextual prompts, not a tutorial wall.
+
+## 9. Properties, fleet and identity
+
+Own multiple enterable 3D safehouses with distinct interiors, garage spaces and upgrade paths. Stash, security, furnishings, workshop and weapon storage visibly appear. Parking and interaction distances match the world. Active police at the door prevent magical escape. Interiors offer meaningful interactions, not only an upgrade menu.
+
+Target at least 12 owned-vehicle variants across six handling archetypes. Unique vehicle IDs support multiple examples of one model, each retaining condition, cargo, mods and appearance. Purchase, theft, sale, storage, impound and towing form a complete ownership loop.
+
+Real-time garage previews show the exact world vehicle. Paint, wheels, stance, aero, wraps and lighting are visible; engine, transmission, tyres, brakes, suspension, armour and nitrous affect measured handling with costs/trade-offs. Preserve existing saves through migrations. Cosmetic ownership is not lost during mode switches or updates.
+
+## 10. Portrait UI and navigation quality
+
+A cohesive street-instrument aesthetic: dark shaded panels, restrained warm accent for objectives/profit, cool navigation colour and danger red used meaningfully. Use the bundled Barlow/Rajdhani where legible; body copy remains readable. Icons share one style and carry labels where meaning is ambiguous. No emoji-led production HUD.
+
+Default 390×844 layout: top safe area contains compact status and one active objective; a tappable radar sits away from the driving sightline; lower corners hold controls; context actions appear within thumb reach. Combat swaps vehicle metrics for health/ammo. Trading, inventory, jobs, garage and empire screens each prioritise their current decision. Collapse secondary information instead of shrinking all text indefinitely.
+
+Targets: normal body text about 14–16 CSS px; secondary labels 12–13; primary touch targets at least 48×48 CSS px with separation. These are design targets tested on real phones, not a guarantee from viewport emulation. Provide UI scaling, left-handed control layout, steering sensitivity, colour-independent icons, reduced motion, subtitles and independent audio sliders.
+
+Expanded map supports pan/zoom, player heading, districts, businesses, ownership, contacts, heat/search areas and route selection. Filters prevent icon soup. HUD guidance provides next turn, distance and an offscreen destination arrow; arrived/blocked states are explicit. Jobs show reward, risk, prerequisite and travel distance. Menus pause single-player action and clear held controls; closing restores context.
+
+Release usability target: at least four of five unfamiliar testers can start a job, navigate to it, trade, repair and resume play without outside instruction. Test all major flows at 390×844, 360×800, 844×390 and desktop, including notches and keyboard/host resizing.
+
+## 11. Art, physics, light and sound direction
+
+Cohesive stylised realism: detailed readable silhouettes, consistent scale, authored colour/value grouping, strong contact shadows, curated signs, furnishings, planted spaces, litter and wear. Asset quantity alone is not art direction. Close on-foot views expose hands, character faces, pavements and shopfronts, so these need higher care than distant roofs. Tall buildings fade only when obstructing play.
+
+Day is 06:00–20:00; yellow dawn 05:00–06:00; golden shoulder 20:00–21:00; pink/red dusk 21:00–22:00; night 22:00–05:00. Night retains readable road surfaces and silhouettes. Fit headlights/brake lamps to actual model surfaces, brighten braking and disable headlamps in full daylight. Visible unbroken streetlamps illuminate at night. Use emissives/pooled light footprints widely and a small measured number of real shadowed lights.
+
+Props react by material and mass: cones scatter, signs and streetlamps topple, fences break, trees fall only under sufficient force. Broken scenery stays until its chunk despawns; persistent mission/ownership objects retain meaningful state across streaming. Skid trails are smooth, held for ten seconds, fade over ten more and release their draw resources. Pedestrians have convincing impacts and bounded physical reactions; full skeletal ragdolls require a demonstrated benefit and device budget.
+
+Audio is a gameplay system: layered engine load/gears, tyre slip, surface-specific impacts, spatial gunfire, distinct weapons, gang voices, dispatch chatter, distant sirens, traffic beds and district ambience. Adaptive original/licensed music responds to cruising, combat, pursuit and escape. Separate master/music/engine/SFX/radio controls; audio unlock, pause, interruption and resume must work in Aippy on Android. Haptics are optional and restrained.
+
+Maintain asset provenance in `docs/blacktop-assets.md`: author, exact source, per-asset license, conversion, scale/orientation, local target and size. Build on Kenney roads/city/cars, suitable Kay Lousberg scenery and licensed Quaternius/Poly Pizza characters/props. Individually verify licenses; a hosting site is not a license. Bundle assets locally and share geometry/materials. Original story, brands, soundtrack and art identity remain essential.
+
+## 12. Engineering, performance and release contract
+
+Keep the existing Aippy host/build-time importer, React/Vite/Three stack, single entry and useful archive. React owns UI, not per-frame actor simulation. Fixed-step simulation and render interpolation underpin consistent movement. Domain systems communicate through explicit events and stable IDs; avoid growing one all-purpose component indefinitely. Shared world geometry powers navigation, colliders and maps.
+
+Release targets, to validate on a named midrange Android device in the Aippy host: sustained 60 FPS preferred (p95 frame interval ≤20 ms, p99 ≤33 ms); a deliberately selected 30 FPS quality tier may use p95 ≤37 ms and p99 ≤50 ms. Report scene, device, quality, thermal state and sampling method. No recurring >100 ms traversal hitches. Touch-to-visible feedback target ≤100 ms, measured end to end. Quality reduction trims shadows, reflections, particles and decorative density before reducing control or collision correctness.
+
+A 30-minute warmed drive/fight/chase loop must show no unbounded growth in retained scene objects, geometry, textures, audio nodes or heap. After returning to the same scene and comparable collection points, resource counts return near baseline; investigate sustained >10% growth. Establish draw-call, triangle, light and memory budgets from the first physical-device profile. Publish measured budgets rather than inventing a universal mobile number. Initial asset delivery must fit the existing importer/host and show progress; target first control within 20 seconds on a documented representative cold-load connection.
+
+Final acceptance requires all core systems above playable together; 18 authored missions; nine distinct districts; complete trading/ownership/faction/combat/pursuit loops; robust save migration and recovery; accessible portrait controls; licensed assets; physical Android audio/multitouch/performance evidence; and fresh human playtest recordings. Automated checks supplement this evidence. A build, a screenshot or a feature counter alone never establishes completion.
+
+Use **PASS / PARTIAL / BROKEN / NOT IMPLEMENTED / NOT TESTED** with evidence links in every handoff. The current foundation and remaining work are documented in the companion roadmap; this contract is the destination.

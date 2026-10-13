@@ -1,0 +1,25 @@
+PASS actual forward drive reaches Midtown market approach
+PASS trade action is available after actual driving
+PASS actual UI market purchase updates money/cargo
+PASS reload preserves market purchase
+PASS fixture: another district market sells owned goods
+PASS nine-district market route picker includes Port
+PASS selected market generates graph-based route chevrons
+PASS fixture: hills stream stays within16 chunks
+PASS fixture: financial stream stays within16 chunks
+PASS fixture: gardens stream stays within16 chunks
+PASS fixture: old-quarter stream stays within16 chunks
+PASS fixture: midtown stream stays within16 chunks
+PASS fixture: neon stream stays within16 chunks
+PASS fixture: dockside stream stays within16 chunks
+PASS fixture: industrial stream stays within16 chunks
+PASS fixture: market stream stays within16 chunks
+PASS fixture: cars have their world pose before scene attachment
+PASS actual tow menu recovers car onto clear garage road
+PASS actual punch button hits nearby civilian
+PASS hit nonaggressive pedestrian flees
+PASS aggressive civilian fights back and hurts on-foot player
+PASS fixture: nighttime moonlight, headlamps and two bounded real beams enabled
+PASS autonomous traffic shows no abrupt rotation teleport in sampled session
+PASS no browser runtime errors
+COMPLETE 24 checks

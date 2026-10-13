@@ -1,0 +1,112 @@
+{
+  "checks": [
+    "actual scene uses joined15m Kenney road tiles",
+    "actual radar tap opens enlarged city map",
+    "expandedmap pauses physics and skidclock",
+    "market tap selects route and resumesgame",
+    "headlights and streetlightingoff atnoon",
+    "visible streetlights and vehiclelights on atnight",
+    "yellowdawn andpinkdusk have distinctcolor",
+    "actual brake pedal brightens source-fit rear lamps",
+    "skidpool retained10s/fadesuntil20s thenreleasesdraw",
+    "physical lamp impact hides sourceinstance andcreates fallingmodel",
+    "fallen lamp remainsvisible and unlit",
+    "fallen object settles andpersists beyondold2.5s timeout",
+    "fallen prop resets onlyafterchunkdespawn/reload",
+    "drive reaches widened outerroad whileactualhull staysinmap",
+    "physical carcontact launches anddisplacespedestrian",
+    "enlargedmap alsoopens in landscape",
+    "no JavaScript orGPUshader errors"
+  ],
+  "errors": [],
+  "times": [
+    {
+      "label": "dawn",
+      "h": 5.5,
+      "night": 0.5,
+      "sky": 1.425,
+      "sun": 16766067,
+      "spots": [
+        24,
+        24
+      ],
+      "bulbs": 0.425
+    },
+    {
+      "label": "day",
+      "h": 12,
+      "night": 0,
+      "sky": 1.9500000000000002,
+      "sun": 16772046,
+      "spots": [
+        0,
+        0
+      ],
+      "bulbs": 0
+    },
+    {
+      "label": "golden",
+      "h": 20.5,
+      "night": 0,
+      "sky": 1.9500000000000002,
+      "sun": 16766067,
+      "spots": [
+        0,
+        0
+      ],
+      "bulbs": 0
+    },
+    {
+      "label": "dusk",
+      "h": 21.5,
+      "night": 0.5,
+      "sky": 1.425,
+      "sun": 16421278,
+      "spots": [
+        24,
+        24
+      ],
+      "bulbs": 0.425
+    },
+    {
+      "label": "night",
+      "h": 22,
+      "night": 1,
+      "sky": 0.9,
+      "sun": 16772046,
+      "spots": [
+        48,
+        48
+      ],
+      "bulbs": 0.85
+    }
+  ],
+  "ages": [
+    {
+      "age": 10,
+      "time": 12.843399999999999,
+      "live": 2,
+      "count": 2
+    },
+    {
+      "age": 15,
+      "time": 17.8434,
+      "live": 2,
+      "count": 2
+    },
+    {
+      "age": 20,
+      "time": 22.8434,
+      "live": 0,
+      "count": 0
+    }
+  ],
+  "lamp": {
+    "x": -5.717633234407964,
+    "z": -6.300000508358265,
+    "w": 0.33526646881593436,
+    "d": 0.33526624057344634
+  },
+  "fixtureNotes": "Time,skidgeometry,prop approach,edge approach andpedestrian placement are explicit fixtures. Radar/market/button/keyboard actions,rendering,carcontacts,falling andenginephysics are actualproduction code.",
+  "softwareWebGL": true
+}

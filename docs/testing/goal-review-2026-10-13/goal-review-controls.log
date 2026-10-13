@@ -1,0 +1,237 @@
+initial {
+  x: 0,
+  z: 0,
+  heading: 0,
+  speed: 0,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 30,
+  drawCalls: 77
+} []
+PASS imported player body renders as well as four wheels
+PASS canvas fills portrait scene
+PASS exiting leaves the real car parked in the street
+PASS right walking input moves screen-right from the parked car
+PASS walking does not drag the parked car along
+touch GO held {
+  x: 0,
+  z: 3.1676727655224304,
+  heading: 0,
+  speed: 5.742372682934353,
+  paused: false,
+  controls: {
+    throttle: true,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 94,
+  drawCalls: 78
+}
+keyboard forward {
+  x: 0,
+  z: 6.569042392487324,
+  heading: 0,
+  speed: 8.277854862507917,
+  paused: false,
+  controls: {
+    throttle: true,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 101,
+  drawCalls: 81
+}
+after tab return {
+  x: 0,
+  z: 10.29955588824108,
+  heading: 0,
+  speed: 10.323595604047927,
+  paused: false,
+  controls: {
+    throttle: true,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 116,
+  drawCalls: 84
+}
+back to streets {
+  x: 0,
+  z: 12.823287335383348,
+  heading: 0,
+  speed: 11.061695453732108,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 122,
+  drawCalls: 91
+}
+PASS returning from background resumes driving
+PASS window blur releases held keyboard input
+PASS unrelated keyboard events preserve held touch input
+PASS three fingers hold throttle, analog steering and drift together
+PASS right stick turns right with the behind-car camera
+PASS all touch inputs release without sticking
+safehouse fresh {
+  x: 0,
+  z: 0,
+  heading: 0,
+  speed: 0,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 25,
+  drawCalls: 77
+}
+PASS drive and brake beside safehouse using keyboard
+safehouse stop {
+  x: 0,
+  z: 8.426214093165683,
+  heading: 0,
+  speed: 0.1784975892077831,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 70,
+  drawCalls: 81
+}
+PASS close upgrades and walk inside safehouse
+PASS on-foot player is the locally loaded animated character
+PASS exit safehouse to driving
+reverse {
+  x: 0,
+  z: 8.428042897967742,
+  heading: 0,
+  speed: 0,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 138,
+  drawCalls: 41
+} {
+  x: 0,
+  z: 7.584788668569103,
+  heading: 0,
+  speed: 2.5634338998384063,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    pressed: {},
+    pointers: {}
+  },
+  canvas: [ 390, 844 ],
+  frames: 162,
+  drawCalls: 85
+}
+PASS brake pedal reverses from rest
+PASS steering turns moving vehicle
+PASS landscape speed display avoids radar
+PASS renderer follows host resize without window event
+PASS canvas fills desktop scene
+PASS no browser runtime errors
+errors []
