@@ -1,0 +1,401 @@
+initial {
+  gameTime: 0.7500000000000007,
+  x: 0,
+  z: 0,
+  heading: 0,
+  speed: 0,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 22,
+  drawCalls: 88
+} []
+PASS imported player body renders as well as four wheels
+PASS canvas fills portrait scene
+PASS exiting leaves the real car parked in the street
+PASS right walking input moves screen-right from the parked car
+PASS walking does not drag the parked car along
+touch GO held {
+  gameTime: 3.9333333333333242,
+  x: 0,
+  z: 2.5313333353163325,
+  heading: 0,
+  speed: 5.1214709924556,
+  paused: false,
+  controls: {
+    throttle: true,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 78,
+  drawCalls: 89
+}
+keyboard forward {
+  gameTime: 4.266666666666657,
+  x: 0,
+  z: 4.540826284053516,
+  heading: 0,
+  speed: 6.886877960442266,
+  paused: false,
+  controls: {
+    throttle: true,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 82,
+  drawCalls: 89
+}
+after tab return {
+  gameTime: 4.683333333333322,
+  x: 0,
+  z: 7.872011415519177,
+  heading: 0,
+  speed: 9.050960836768724,
+  paused: false,
+  controls: {
+    throttle: true,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 91,
+  drawCalls: 92
+}
+back to streets {
+  gameTime: 4.783333333333322,
+  x: 0,
+  z: 8.795198781857064,
+  heading: 0,
+  speed: 9.332634209791289,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 96,
+  drawCalls: 91
+}
+PASS returning from background resumes driving
+PASS window blur releases held keyboard input
+PASS unrelated keyboard events preserve held touch input
+PASS three fingers hold throttle, analog steering and drift together
+PASS right stick turns right with the behind-car camera
+PASS all touch inputs release without sticking
+safehouse fresh {
+  gameTime: 0.850000000000001,
+  x: 0,
+  z: 0,
+  heading: 0,
+  speed: 0,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 26,
+  drawCalls: 88
+}
+PASS drive and brake beside safehouse using keyboard
+safehouse stop {
+  gameTime: 3.3166666666666598,
+  x: 0,
+  z: 9.226359469274906,
+  heading: 0,
+  speed: 0.5040690531450862,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 69,
+  drawCalls: 87
+}
+PASS close upgrades and walk inside safehouse
+PASS on-foot player is the locally loaded animated character
+PASS exit safehouse to driving
+reverse {
+  gameTime: 3.516666666666659,
+  x: 0,
+  z: 9.244324983427344,
+  heading: 0,
+  speed: 0,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 125,
+  drawCalls: 41
+} {
+  gameTime: 4.116666666666657,
+  x: 0,
+  z: 8.673655396639417,
+  heading: 0,
+  speed: 2.0924794417395516,
+  paused: false,
+  controls: {
+    throttle: false,
+    brake: false,
+    left: false,
+    right: false,
+    handbrake: false,
+    nitro: false,
+    punch: false,
+    steer: 0,
+    moveX: 0,
+    moveZ: 0,
+    fire: false,
+    reload: false,
+    aimX: 0,
+    aimZ: 0,
+    aiming: false,
+    pressed: {},
+    pointers: {},
+    aims: {},
+    directAim: { x: 0, z: 0, active: false }
+  },
+  canvas: [ 390, 844 ],
+  frames: 146,
+  drawCalls: 90
+}
+PASS brake pedal reverses from rest
+steering comparison {
+  beforeTurn: 0,
+  after: {
+    gameTime: 6.483333333333316,
+    x: -2.589962626162552,
+    z: 17.689142646189037,
+    heading: -0.6710966136998656,
+    speed: 9.265947324597008,
+    paused: false,
+    controls: {
+      throttle: false,
+      brake: false,
+      left: false,
+      right: false,
+      handbrake: false,
+      nitro: false,
+      punch: false,
+      steer: 0,
+      moveX: 0,
+      moveZ: 0,
+      fire: false,
+      reload: false,
+      aimX: 0,
+      aimZ: 0,
+      aiming: false,
+      pressed: {},
+      pointers: {},
+      aims: {},
+      directAim: [Object]
+    },
+    canvas: [ 390, 844 ],
+    frames: 186,
+    drawCalls: 84
+  }
+}
+PASS steering turns moving vehicle
+PASS landscape speed display avoids radar
+PASS renderer follows host resize without window event
+PASS canvas fills desktop scene
+PASS no browser runtime errors
+errors []
+PASS actual scene uses joined15m Kenney road tiles
+PASS actual radar tap opens enlarged city map
+PASS expandedmap pauses physics and skidclock
+PASS market tap selects route and resumesgame
+PASS headlights and streetlightingoff atnoon
+PASS visible streetlights and vehiclelights on atnight
+PASS yellowdawn andpinkdusk have distinctcolor
+PASS actual brake pedal brightens source-fit rear lamps
+PASS skidpool retained10s/fadesuntil20s thenreleasesdraw
+PASS physical lamp impact hides sourceinstance andcreates fallingmodel
+PASS fallen lamp remainsvisible and unlit
+PASS fallen object settles andpersists beyondold2.5s timeout
+PASS fallen prop resets onlyafterchunkdespawn/reload
+PASS drive reaches widened outerroad whileactualhull staysinmap
+PASS physical carcontact launches anddisplacespedestrian
+PASS enlargedmap alsoopens in landscape
+PASS no JavaScript orGPUshader errors
+COMPLETE 17 checks
+PASS fresh game starts persistent v3 economic simulation
+PASS actual keyboard drive and brake reaches Midtown contact
+PASS trade sheet exposes finite supplier and buyer limits
+PASS trade sheet exposes cost basis and sale profit
+PASS trade menu freezes market time and replenishment
+PASS BUY is fully visible without scrolling at portrait market entry
+PASS actual BUY updates owned cargo and cash
+PASS actual BUY depletes dealer inventory
+PASS actual deal shows a persistent receipt
+PASS reload retains purchased cargo and money
+PASS reload retains depleted stock and transaction sequence
+PASS reload resumes saved market time instead of resetting
+DRIVEN ARRIVAL 0 119.68479927470308 0
+PASS actual keyboard drive crosses into Financial Core
+PASS cross-district selling displays a positive cargo profit
+PASS actual Financial buyer purchases transported cargo
+PASS receipt profit reconciles exactly with purchase cost
+PASS sale consumes real buyer demand
+PASS fixture: engine rejects replayed transaction without mutation
+PASS fixture: failed save rolls back actual BUY money cargo and ledger
+PASS failed save is visibly reported as cancelled
+PASS live port supply event provides an actionable route
+PASS intel route button resumes play and sets Port navigation
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('summary').filter({ hasText: 'STASH & BANK' })[22m
+
+    at /workspace/scratch/6af6b1f113d2/blacktop-sweep/scripts/playtest-economy.mjs:37:450 {
+  log: [
+    "  - waiting for locator('summary').filter({ hasText: 'STASH & BANK' })"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.19.0

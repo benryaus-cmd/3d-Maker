@@ -78,7 +78,7 @@ test('confiscation clears only active vehicle stock and acquisition cost',()=>{
 const memory=new Map();globalThis.localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)};
 test('save migration preserves legacy cash cars upgrades cargo and unknown cost basis',()=>{
  memory.clear();const legacy=S.initial();delete legacy.economy;legacy.version=2;legacy.money=3210;legacy.bank=190;legacy.cargo.Ember=3;legacy.builds.sedan.paint=0x123456;
- memory.set('blacktop-empire-save-v2',JSON.stringify(legacy));const s=S.readSave();assert.equal(s.version,3);assert.equal(s.money,3210);assert.equal(s.bank,190);assert.equal(s.cargo.Ember,3);assert.equal(s.builds.sedan.paint,0x123456);assert.equal(E.activeInventory(s).cost.Ember,null);
+ memory.set('blacktop-empire-save-v2',JSON.stringify(legacy));const s=S.readSave();assert.equal(s.version,4);assert.equal(s.money,3210);assert.equal(s.bank,190);assert.equal(s.cargo.Ember,3);assert.equal(s.builds.sedan.paint,0x123456);assert.equal(E.activeInventory(s).cost.Ember,null);
  assert.ok(S.saveGame(s));const restored=S.readSave();assert.equal(restored.economy.sequence,s.economy.sequence);assert.ok(memory.has('blacktop-empire-save-v2-legacy'));
 });
 test('reload preserves market time prices depleted stock cost and transaction identity',()=>{

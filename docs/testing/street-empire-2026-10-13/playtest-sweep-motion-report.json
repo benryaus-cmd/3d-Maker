@@ -1,0 +1,464 @@
+{
+  "checks": [
+    {
+      "ok": true,
+      "name": "actual lateralD movement supplies physical velocity and avoids stationary arrest"
+    },
+    {
+      "ok": true,
+      "name": "actual lateral key release enables stopped arrest and real fine"
+    }
+  ],
+  "errors": [],
+  "fixtures": [
+    "position 120,60; foot=true",
+    "controlled police proximity and fixed-step time for actual lateral key test",
+    "240production physics ticks with proximity cop tracking fixture; keyboardD is actual input",
+    "240production physics ticks with same nearby cop after actual key release"
+  ],
+  "snapshots": {
+    "motion": {
+      "history": [
+        {
+          "i": 0,
+          "foot": true,
+          "x": 119.91666666666667,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 0.850000000000001,
+            "stage": "incident",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 116.00000008894708,
+            "z": 60.00008939028285
+          }
+        },
+        {
+          "i": 20,
+          "foot": true,
+          "x": 118.2500000000001,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 1.183333333333334,
+            "stage": "incident",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 114.33336436135048,
+            "z": 60.00127084515024
+          }
+        },
+        {
+          "i": 40,
+          "foot": true,
+          "x": 116.58333333333353,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 1.5166666666666662,
+            "stage": "dispatch",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 112.66670885975985,
+            "z": 60.001454461570155
+          }
+        },
+        {
+          "i": 60,
+          "foot": true,
+          "x": 114.91666666666696,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 1.8499999999999983,
+            "stage": "dispatch",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 111.00004374475792,
+            "z": 60.00148451552803
+          }
+        },
+        {
+          "i": 80,
+          "foot": true,
+          "x": 113.25000000000038,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 2.1833333333333305,
+            "stage": "dispatch",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 109.33335101876253,
+            "z": 60.00149724819266
+          }
+        },
+        {
+          "i": 100,
+          "foot": true,
+          "x": 111.58333333333381,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 2.5166666666666626,
+            "stage": "dispatch",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 107.66664356853087,
+            "z": 60.00149324945874
+          }
+        },
+        {
+          "i": 120,
+          "foot": true,
+          "x": 109.91666666666724,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 2.8499999999999948,
+            "stage": "dispatch",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 105.99996366206244,
+            "z": 60.00148934868402
+          }
+        },
+        {
+          "i": 140,
+          "foot": true,
+          "x": 108.25000000000067,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 3.183333333333327,
+            "stage": "dispatch",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 104.33330628564208,
+            "z": 60.00149542968373
+          }
+        },
+        {
+          "i": 160,
+          "foot": true,
+          "x": 106.5833333333341,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 3.516666666666659,
+            "stage": "dispatch",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "QA proximity fixture",
+            "lastKnown": {
+              "x": 120,
+              "z": 60
+            },
+            "lastSeenAt": 0,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 102.666679841403,
+            "z": 60.00149723252363
+          }
+        },
+        {
+          "i": 180,
+          "foot": true,
+          "x": 104.91666666666752,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 3.849999999999991,
+            "stage": "pursuit",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "1206800f-ddbc-4a0c-8695-a48074e96336",
+            "lastKnown": {
+              "x": 105.00000000000085,
+              "z": 60
+            },
+            "lastSeenAt": 3.849999999999991,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 101.0000410790108,
+            "z": 60.0014899931301
+          }
+        },
+        {
+          "i": 200,
+          "foot": true,
+          "x": 103.25000000000095,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 4.183333333333324,
+            "stage": "pursuit",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "1206800f-ddbc-4a0c-8695-a48074e96336",
+            "lastKnown": {
+              "x": 103.33333333333428,
+              "z": 60
+            },
+            "lastSeenAt": 4.183333333333324,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 99.33337888396561,
+            "z": 60.00148882786069
+          }
+        },
+        {
+          "i": 220,
+          "foot": true,
+          "x": 101.58333333333438,
+          "z": 60,
+          "vx": -4.999999999999716,
+          "vz": 0,
+          "right": true,
+          "cash": 1200,
+          "police": {
+            "version": 1,
+            "clock": 4.516666666666656,
+            "stage": "pursuit",
+            "heat": 2,
+            "notoriety": 0.5,
+            "vehicleNotoriety": {},
+            "reportedBy": "1206800f-ddbc-4a0c-8695-a48074e96336",
+            "lastKnown": {
+              "x": 101.66666666666771,
+              "z": 60
+            },
+            "lastSeenAt": 4.516666666666656,
+            "reportAt": 3.8333333333333344,
+            "searchAt": 0,
+            "cooldownAt": 0,
+            "arrestProgress": 0,
+            "roadblock": null,
+            "roadblockSequence": 0
+          },
+          "cop": {
+            "x": 97.66671443044733,
+            "z": 60.001488673992405
+          }
+        }
+      ],
+      "foot": true,
+      "footState": {
+        "x": 100.00000000000114,
+        "z": 60,
+        "heading": -1.5707963267948966,
+        "vx": -4.999999999999716,
+        "vz": 0,
+        "yawRate": 0,
+        "steerAngle": 0,
+        "hp": 100,
+        "damageFront": 0,
+        "damageRear": 0,
+        "damageLeft": 0,
+        "damageRight": 0,
+        "nitro": 100,
+        "odometer": 0,
+        "lastImpact": 0
+      },
+      "controls": {
+        "right": true,
+        "left": false,
+        "pressed": [
+          "d"
+        ]
+      },
+      "cash": 1200,
+      "startCash": 1200,
+      "startX": 120,
+      "viewHeading": 0
+    }
+  },
+  "softwareWebGL": true,
+  "limitations": "Headless software WebGL browser QA; not physical Android or performance certification. Direct world placement, legacy save, frozen targets, refill for clearance isolation and active-time advancement are labelled fixtures. Gameplay inputs and domain actions run production code."
+}

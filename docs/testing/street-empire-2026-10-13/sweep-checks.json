@@ -1,0 +1,147 @@
+[
+  {
+    "name": "check-economy",
+    "exit": 0,
+    "tail": [
+      "PASS observed quote history and receipts remain bounded over 100 simulated days",
+      "COMPLETE 21 economy groups"
+    ]
+  },
+  {
+    "name": "check-economy-ui",
+    "exit": 0,
+    "tail": [
+      "PASS fractional event countdowns carry seconds correctly"
+    ]
+  },
+  {
+    "name": "check-sweep-save",
+    "exit": 0,
+    "tail": [
+      "PASS integrated combat/empire save and v3 migration preserve economy"
+    ]
+  },
+  {
+    "name": "check-firearms",
+    "exit": 0,
+    "tail": [
+      "PASS firearms: nearest hit, walls/broken cover, actor/car hulls, finite geometry, cadence/ammo/reload/switch/save, enemy perception/windup/retreat/reposition"
+    ]
+  },
+  {
+    "name": "check-combat-controls",
+    "exit": 0,
+    "tail": [
+      "Combat controls: mixed keyboard/touch, independent move/aim, deadzone, release and focus reset PASS"
+    ]
+  },
+  {
+    "name": "check-police-director",
+    "exit": 0,
+    "tail": [
+      "Police report, obstruction, search, escape, arrest, persistence and roadblock checks: PASS"
+    ]
+  },
+  {
+    "name": "check-empire",
+    "exit": 0,
+    "tail": [
+      "PASS empire: staged jobs, cargo cost basis, active clock, caps, atomic purchases, unique rewards, respect gates, witnessed reputation, takeover/defence/reclaim"
+    ]
+  },
+  {
+    "name": "check-combat-effects",
+    "exit": 0,
+    "tail": [
+      "PASS combat effects: four real GLB hand rigs, forward muzzle/support grip, pose restore, shared GPU assets, bounded pool/fade/disposal, headless audio lifecycle"
+    ]
+  },
+  {
+    "name": "check-district-identity",
+    "exit": 0,
+    "tail": [
+      "District identity: nine brands, wall attachment, safe roads, bounded streaming, garage ownership, gardens supports and disposal PASS"
+    ]
+  },
+  {
+    "name": "check-crime",
+    "exit": 0,
+    "tail": [
+      "Vehicle handling checks passed",
+      "BLACKTOP EMPIRE physics/economy/mission/assets checks passed"
+    ]
+  },
+  {
+    "name": "check-mobile-controls",
+    "exit": 0,
+    "tail": [
+      "Mobile analog / mixed sources / cancellation: PASS"
+    ]
+  },
+  {
+    "name": "check-world",
+    "exit": 0,
+    "tail": [
+      "391 road tiles, 72 merged/standalone blocks, 185 buildings, 344 sidewalk lamps",
+      "World camera, safehouse, day/night, route, connected skid and instance disposal checks passed"
+    ]
+  },
+  {
+    "name": "check-person-disposal",
+    "exit": 0,
+    "tail": [
+      "Character geometry/material/bone texture disposal and rig sharing: PASS"
+    ]
+  },
+  {
+    "name": "check-city-layout",
+    "exit": 0,
+    "tail": [
+      "City layout verified: 9 districts, 72 blocks, 391 nodes, 391 tiles."
+    ]
+  },
+  {
+    "name": "check-road-assets",
+    "exit": 0,
+    "tail": [
+      "Actual GLB deformation refresh and bounded lamp disposal passed.",
+      "Original GLB openings, geometry-derived vehicle lamps and async replacement checks passed."
+    ]
+  },
+  {
+    "name": "check-traffic",
+    "exit": 0,
+    "tail": [
+      "Rotated route max chassis corner offset -1.57 4.10",
+      "Traffic lane graph, forward avoidance, turn-speed and physical recovery: PASS"
+    ]
+  },
+  {
+    "name": "check-street-combat",
+    "exit": 0,
+    "tail": [
+      "Street combat range, reaction, cooldown, and real GLB punch pose: PASS"
+    ]
+  },
+  {
+    "name": "check-daylight",
+    "exit": 0,
+    "tail": [
+      "Daylight boundaries, night wrap, hue windows and smooth C1 fades passed."
+    ]
+  },
+  {
+    "name": "check-skid-lifetime",
+    "exit": 0,
+    "tail": [
+      "Skid10s hold/10s fade,20s expiry,boundedpool anddisposal: PASS"
+    ]
+  },
+  {
+    "name": "check-impact-immersion",
+    "exit": 0,
+    "tail": [
+      "Propmass/thresholds,rotatedphysicaledges,pedestrianknockback/ground/walls: PASS"
+    ]
+  }
+]

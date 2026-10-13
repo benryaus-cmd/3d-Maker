@@ -1,0 +1,71 @@
+PASS fresh game starts persistent v3 economic simulation
+PASS actual keyboard drive and brake reaches Midtown contact
+PASS trade sheet exposes finite supplier and buyer limits
+PASS trade sheet exposes cost basis and sale profit
+PASS trade menu freezes market time and replenishment
+PASS BUY is fully visible without scrolling at portrait market entry
+PASS actual BUY updates owned cargo and cash
+PASS actual BUY depletes dealer inventory
+PASS actual deal shows a persistent receipt
+PASS reload retains purchased cargo and money
+PASS reload retains depleted stock and transaction sequence
+PASS reload resumes saved market time instead of resetting
+DRIVEN ARRIVAL {
+  simulationTime: 12.5000000000002,
+  controls: { throttle: false, brake: false },
+  x: 0,
+  z: 119.97440398169536,
+  speed: 0,
+  cash: 879,
+  cargo: { Ember: 0, Glitch: 0, Velvet: 0, Crown: 1 },
+  economy: {
+    version: 1,
+    seed: 74193,
+    seconds: 18.600000000000225,
+    restockTick: 0,
+    sequence: 1,
+    markets: {
+      port: [Object],
+      club: [Object],
+      yard: [Object],
+      tower: [Object],
+      hills: [Object],
+      gardens: [Object],
+      quarter: [Object],
+      midtown: [Object],
+      market: [Object]
+    },
+    inventories: { 'stash:midtown': [Object], 'vehicle:sedan': [Object] },
+    ledger: [ [Object] ],
+    observed: {
+      'midtown:Ember': [Array],
+      'midtown:Glitch': [Array],
+      'midtown:Velvet': [Array],
+      'midtown:Crown': [Array]
+    }
+  },
+  clock: '17:52'
+}
+PASS actual keyboard drive crosses into Financial Core
+PASS cross-district selling displays a positive cargo profit
+PASS actual Financial buyer purchases transported cargo
+PASS receipt profit reconciles exactly with purchase cost
+PASS sale consumes real buyer demand
+PASS fixture: engine rejects replayed transaction without mutation
+PASS fixture: failed save rolls back actual BUY money cargo and ledger
+PASS failed save is visibly reported as cancelled
+PASS live port supply event provides an actionable route
+PASS intel route button resumes play and sets Port navigation
+PASS fixture: actual safehouse STORE moves cargo into persistent stash
+PASS fixture: remote car disables safehouse cargo transfer controls
+PASS fixture: engine rejects remote-car transfer without teleporting cargo
+PASS actual banking protects cash without creating money
+PASS reload preserves bank and stashed goods
+PASS fixture: zero stock disables BUY with explanation
+PASS empty dealer stock is distinguished from player cargo
+PASS trade targets and no horizontal overflow at 390x844
+PASS trade targets and no horizontal overflow at 360x800
+PASS trade targets and no horizontal overflow at 844x390
+PASS trade targets and no horizontal overflow at 1280x720
+PASS no production page runtime errors
+COMPLETE 34 checks

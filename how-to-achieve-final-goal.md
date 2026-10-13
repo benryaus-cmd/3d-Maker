@@ -1,6 +1,6 @@
 # How to achieve the BLACKTOP EMPIRE final goal
 
-13 October 2026, Australia/Sydney. Execution handoff for the next AI. Read [final-goal.md](final-goal.md) first. This roadmap describes **work still to do**, not implemented features. Latest assessed remote main: `e4244aa4d92126acc7c5342bdcf21a7c28320ab2`; runtime commit: `7ad47a80207df8bf210f0df3996f36c8d9bfbf98`. Always inspect the current remote head before editing.
+13 October 2026, Australia/Sydney. Execution handoff for the next AI. Read [final-goal.md](final-goal.md) first. This roadmap describes **work still to do**, not implemented features. Baseline before the integrated sweep: `a70c857556a0b94a8b41d9b78a0daf8264af163b`. Current runtime/evidence are in [the sweep report](docs/testing/blacktop-street-empire-13oct2026.md). Always inspect the current remote head before editing.
 
 ## 1. Start from evidence
 
@@ -16,13 +16,15 @@ Read [the fresh goal-review playtest](docs/testing/blacktop-goal-review-13oct202
 | City | Nine districts, merged blocks, joined 15-unit Kenney tiles, graph routing | Each district still derives from a repeated rotated partition; author landmarks, unique street plans and meaningful alternate routes |
 | Visual immersion | Day/night, fitted lamps, breakable props, impacts and bounded skid lifetime | Cohesive district art, richer character animation, material consistency, calibrated audio and device profiling |
 | Economy | Four goods, nine markets; persistent finite stock/demand, spreads/events, cargo cost, receipts/history, safehouse bank/stash | Wider balance/playtest coverage, more goods/contact behaviour, integration with gangs and mission economy |
-| Combat | Punches; civilian fight/flee and physical car impacts | Firearms, aim controls, cover, perception, hostile squads and combat saves |
-| Police/traffic | Physical cars, street routing, basic pursuit/heat/arrest | Formal incident/search states, fair dispatch, coordinated tactics, signals, jam handling, larger stress sample |
-| Progression | Five short objective scripts; upgrades, car-specific model builds, safehouse | Mission graph, branching story, crew, gangs, territory, multiple properties and unique vehicle instances |
+| Combat | Three finite-ammo weapons, independent move/aim/fire, wall/car cover, sight/hearing/repositioning, hospital recovery and saves | Phone feel, animation blends, authored encounters and fairness tuning |
+| Police/traffic | Physical routing, incident delay, sight/search/escape, arrest, interception goals and warned roadblock | Chase tuning, route-aware tactics, signals/jams and stress samples |
+| Progression | Five campaign foundations; four faction contracts, garage ownership/income, first block takeover/counterattack | Mission graph, branching story, deeper factions, crew, multiple properties and unique vehicles |
 | UI | Compact driving HUD, jobs, route guidance and enlarged map | Combat/empire states, transaction clarity, consistent components, accessibility/settings and usability testing |
-| Persistence | Save v2; cash, cargo, owned model builds and campaign | Durable market/faction/business/mission state, validated migrations, transaction IDs and corrupt-save recovery |
+| Persistence | Save v4 retains v2/v3; durable economy/faction/ownership/ammo/police/settings with backups | Richer mission/world actors, unique vehicles and interruption stress |
 
 **Historical economy findings from the goal review are addressed by the persistent-economy update:** session-only prices, unlimited dealer inventory, equal buy/sell quotes and UI-only proximity validation are replaced by `Economy.ts` and save payloadv3. See [the economy report](docs/testing/blacktop-economy-13oct2026.md). The S1 checklist below remains the requirement set; read current code and evidence before repeating completed work.
+
+**Integrated sweep status:** S2/S3/S4 now have a connected desktop-verifiable vertical slice. Read `Firearms.ts`, `PoliceDirector.ts`, `Empire.ts`, their UI/visual/audio modules and engine integration before duplicating systems. Complete physical-device gates and expand consequences/content. The following sections remain target acceptance requirements, not automatically completed checkboxes.
 
 ## 2. Work order and integration rules
 
@@ -159,4 +161,4 @@ For every delivered slice, leave:
 
 ### First task for the next AI
 
-Inspect current HEAD and the persistent-economy report, reproduce the current buy/drive/sell/reload loop, then implement **S2's polished pistol encounter**: portrait movement/aim/fire/reload, obstruction/cover, hostile perception and police consequences. Preserve the saved market/cargo/receipt state and existing controls. Continue toward the connected ambush, pursuit and faction slice. Physical-device profiling from S0 remains outstanding; do not repeat the completed S1 core or claim its broader balance/release gates are finished.
+Inspect current HEAD and the street-empire sweep report. Reproduce buy/drive/sell → rival encounter → police search/escape → garage reinvestment and block defence with actual controls. Complete physical Android/Aippy profiling, tune combat/driving/pursuit fairness, then author telegraphed ambient faction encounters and distinctive routes/landmarks before expanding crew/property/campaign depth. Existing S1 economy and S2–S4 vertical-slice systems must be extended, not recreated. Device and full-content acceptance gates remain outstanding.

@@ -1,0 +1,516 @@
+{
+  "summary": {
+    "fullSuite": {
+      "assertions": 61,
+      "passed": 60,
+      "productionRuntimeErrors": 0
+    },
+    "focusedMotionRerun": {
+      "assertions": 2,
+      "passed": 2,
+      "productionRuntimeErrors": 0
+    },
+    "passingAssertionsAcrossPhases": 62,
+    "uniqueValidatedChecks": 59
+  },
+  "harnessCorrection": "The full run expected positive world X from screen-space keyboard D. Actual behind-player camera projects D to negative world X. Corrected displacement to hypot >10m. Focused rerun used actual D/key release and controlled production physics ticks: x120 to100, vx=-5m/s, nearby cop kept pursuit but arrestProgress=0 while moving; key release then produced fine/impound. No production edit was needed. This is phased verification, not an all-once61/61 pass.",
+  "fullSuiteReport": "playtest-sweep-report.json",
+  "motionRerunReport": "playtest-sweep-motion-report.json",
+  "fullSuiteChecks": [
+    {
+      "ok": true,
+      "name": "production integrated engine and v4 arsenal available"
+    },
+    {
+      "ok": true,
+      "name": "fixture: v3 migrates wallet/cargo and initializes pistol without loss"
+    },
+    {
+      "ok": true,
+      "name": "actual E exits stopped car"
+    },
+    {
+      "ok": true,
+      "name": "actual 1 selects and draws pistol"
+    },
+    {
+      "ok": true,
+      "name": "actual J hits visible road target and consumes ammunition",
+      "details": {
+        "hpBefore": 100,
+        "hpAfter": 73,
+        "shotsBefore": 0,
+        "shotsAfter": 1
+      }
+    },
+    {
+      "ok": true,
+      "name": "actual R starts timed reload"
+    },
+    {
+      "ok": true,
+      "name": "actual timed reload restores magazine from finite reserve"
+    },
+    {
+      "ok": true,
+      "name": "fixture: actual J is blocked by existing building before target"
+    },
+    {
+      "ok": true,
+      "name": "actual CDP two-finger move and aim/fire work simultaneously"
+    },
+    {
+      "ok": true,
+      "name": "touch release clears aim/fire and movement"
+    },
+    {
+      "ok": true,
+      "name": "pause freezes simulation and clears held fire/move"
+    },
+    {
+      "ok": true,
+      "name": "encounter enemy hears shot and retaliates with actual firearm",
+      "details": {
+        "before": 100,
+        "after": 75.69999999999999,
+        "enemy": {
+          "hp": 123,
+          "shots": 2
+        }
+      }
+    },
+    {
+      "ok": true,
+      "name": "actual car enter/exit retains injured on-foot health"
+    },
+    {
+      "ok": true,
+      "name": "Empire UI exposes all four contract offers"
+    },
+    {
+      "ok": true,
+      "name": "actual TAKE JOB accepts delivery with owned cargo near contact"
+    },
+    {
+      "ok": true,
+      "name": "fixture arrival: actual HAND OFF consumes transported owned Ember and pays $210"
+    },
+    {
+      "ok": true,
+      "name": "actual contact UI begins three-rival clearance"
+    },
+    {
+      "ok": true,
+      "name": "fixture arrival: real operation spawns all three encounter rivals"
+    },
+    {
+      "ok": true,
+      "name": "actual J eliminates all three real encounter rivals",
+      "details": {
+        "encounter": {
+          "defeated": 3,
+          "total": 3,
+          "x": 0,
+          "z": -120,
+          "faction": "ashline"
+        }
+      }
+    },
+    {
+      "ok": true,
+      "name": "actual clearance handoff pays domain reward and unlocks block influence"
+    },
+    {
+      "ok": true,
+      "name": "actual contact UI unlocks takeover after ambush clearance"
+    },
+    {
+      "ok": true,
+      "name": "actual two-guard takeover grants block and pays $280"
+    },
+    {
+      "ok": true,
+      "name": "fixture active timer announces real counterattack"
+    },
+    {
+      "ok": true,
+      "name": "actual DEFEND secures block after shooting both counterattack rivals"
+    },
+    {
+      "ok": true,
+      "name": "actual BUY GARAGE spends $900 and creates ownership"
+    },
+    {
+      "ok": true,
+      "name": "fixture active minute: actual income collection pays $35 less $15 fee"
+    },
+    {
+      "ok": true,
+      "name": "reload retains finite ammunition history, owned business and wallet"
+    },
+    {
+      "ok": true,
+      "name": "no document overflow 390x844"
+    },
+    {
+      "ok": true,
+      "name": "combat controls inside viewport 390x844",
+      "details": [
+        {
+          "s": ".be-stick-foot",
+          "r": {
+            "x": 13,
+            "y": 703,
+            "w": 126,
+            "h": 126
+          }
+        },
+        {
+          "s": ".be-aim-stick",
+          "r": {
+            "x": 257,
+            "y": 691,
+            "w": 120,
+            "h": 120
+          }
+        },
+        {
+          "s": ".be-worldactions",
+          "r": {
+            "x": 187.234375,
+            "y": 612,
+            "w": 190.765625,
+            "h": 42
+          }
+        },
+        {
+          "s": ".be-weapon-toggle",
+          "r": {
+            "x": 14,
+            "y": 480,
+            "w": 83.21875,
+            "h": 44
+          }
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "name": "world actions do not overlap combat actions 390x844",
+      "details": [
+        {
+          "label": "RELOAD",
+          "overlap": 0
+        },
+        {
+          "label": "HOLSTER",
+          "overlap": 0
+        },
+        {
+          "label": "PUNCH",
+          "overlap": 0
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "name": "Empire close reachable 390x844"
+    },
+    {
+      "ok": true,
+      "name": "no document overflow 360x800"
+    },
+    {
+      "ok": true,
+      "name": "combat controls inside viewport 360x800",
+      "details": [
+        {
+          "s": ".be-stick-foot",
+          "r": {
+            "x": 13,
+            "y": 659,
+            "w": 126,
+            "h": 126
+          }
+        },
+        {
+          "s": ".be-aim-stick",
+          "r": {
+            "x": 227,
+            "y": 647,
+            "w": 120,
+            "h": 120
+          }
+        },
+        {
+          "s": ".be-worldactions",
+          "r": {
+            "x": 157.234375,
+            "y": 568,
+            "w": 190.765625,
+            "h": 42
+          }
+        },
+        {
+          "s": ".be-weapon-toggle",
+          "r": {
+            "x": 14,
+            "y": 436,
+            "w": 83.21875,
+            "h": 44
+          }
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "name": "world actions do not overlap combat actions 360x800",
+      "details": [
+        {
+          "label": "RELOAD",
+          "overlap": 0
+        },
+        {
+          "label": "HOLSTER",
+          "overlap": 0
+        },
+        {
+          "label": "PUNCH",
+          "overlap": 0
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "name": "Empire close reachable 360x800"
+    },
+    {
+      "ok": true,
+      "name": "no document overflow 844x390"
+    },
+    {
+      "ok": true,
+      "name": "combat controls inside viewport 844x390",
+      "details": [
+        {
+          "s": ".be-stick-foot",
+          "r": {
+            "x": 22,
+            "y": 269,
+            "w": 108,
+            "h": 108
+          }
+        },
+        {
+          "s": ".be-aim-stick",
+          "r": {
+            "x": 714,
+            "y": 251,
+            "w": 108,
+            "h": 108
+          }
+        },
+        {
+          "s": ".be-worldactions",
+          "r": {
+            "x": 629.234375,
+            "y": 190,
+            "w": 190.765625,
+            "h": 42
+          }
+        },
+        {
+          "s": ".be-weapon-toggle",
+          "r": {
+            "x": 180,
+            "y": 331,
+            "w": 83.21875,
+            "h": 44
+          }
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "name": "world actions do not overlap combat actions 844x390",
+      "details": [
+        {
+          "label": "RELOAD",
+          "overlap": 0
+        },
+        {
+          "label": "HOLSTER",
+          "overlap": 0
+        },
+        {
+          "label": "PUNCH",
+          "overlap": 0
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "name": "Empire close reachable 844x390"
+    },
+    {
+      "ok": true,
+      "name": "city map reflects persisted owned garage"
+    },
+    {
+      "ok": true,
+      "name": "fixture named report starts3-second dispatch delay"
+    },
+    {
+      "ok": true,
+      "name": "real police simulation transitions out of dispatch and spawns response"
+    },
+    {
+      "ok": true,
+      "name": "actual body input and visible unit trigger real pursuit"
+    },
+    {
+      "ok": true,
+      "name": "real lost-contact pursuit transitions to bounded search"
+    },
+    {
+      "ok": true,
+      "name": "actual city map renders police last-known search radius"
+    },
+    {
+      "ok": false,
+      "name": "actual lateralD movement supplies physical velocity and avoids stationary arrest"
+    },
+    {
+      "ok": true,
+      "name": "actual lateral key release enables stopped arrest and real fine"
+    },
+    {
+      "ok": true,
+      "name": "fixture wallet: actual armoury buys shotgun650 and SMG1200"
+    },
+    {
+      "ok": true,
+      "name": "actual armoury ammo purchase adds finite48round pack"
+    },
+    {
+      "ok": true,
+      "name": "actual2 selects unlocked shotgun"
+    },
+    {
+      "ok": true,
+      "name": "actual3 selects unlocked SMG"
+    },
+    {
+      "ok": true,
+      "name": "actual heldJ fires automatic SMG burst with finite ammo"
+    },
+    {
+      "ok": true,
+      "name": "actual F punch damages nearby pedestrian"
+    },
+    {
+      "ok": true,
+      "name": "fixture live abandonment wave has two armed rivals"
+    },
+    {
+      "ok": true,
+      "name": "actual ABANDON retires old tagged armed rivals"
+    },
+    {
+      "ok": true,
+      "name": "fixture live abandonment wave has two armed rivals"
+    },
+    {
+      "ok": true,
+      "name": "actual ABANDON retires old tagged armed rivals"
+    },
+    {
+      "ok": true,
+      "name": "actual paid DELEGATE retires spawned rivals and secures block"
+    },
+    {
+      "ok": true,
+      "name": "delegated rivals receive bounded12-second retirement"
+    },
+    {
+      "ok": true,
+      "name": "fixture13-second physics expiry removes dispersed rivals and keeps population bounded32"
+    },
+    {
+      "ok": true,
+      "name": "no production JavaScript/shader runtime errors",
+      "details": []
+    }
+  ],
+  "focusedMotionChecks": [
+    {
+      "ok": true,
+      "name": "actual lateralD movement supplies physical velocity and avoids stationary arrest"
+    },
+    {
+      "ok": true,
+      "name": "actual lateral key release enables stopped arrest and real fine"
+    }
+  ],
+  "limitations": "Headless software WebGL browser QA; not physical Android or performance certification. Direct world placement, legacy save, frozen targets, refill for clearance isolation and active-time advancement are labelled fixtures. Gameplay inputs and domain actions run production code.",
+  "fixtures": [
+    "legacy v3 save migration: cash=1350, cargo Ember=1; absent new fields",
+    "position 0,60; foot=false",
+    "frozen hostile target on open road 7m ahead",
+    "wall occlusion: target behind existing solid building wall",
+    "position 0,60; foot=true",
+    "position 0,60; foot=true",
+    "actual encounter enemy placed 8m ahead; hearing activates retaliation",
+    "car beside player for transition health check",
+    "position 0,30; foot=false",
+    "position -120,0; foot=false",
+    "position 0,30; foot=false",
+    "position 0,-120; foot=true",
+    "isolate actual clearance target on open street; stun stops fixture enemies moving",
+    "isolate actual clearance target on open street; stun stops fixture enemies moving",
+    "isolate actual clearance target on open street; stun stops fixture enemies moving",
+    "position 0,-120; foot=true",
+    "position 0,-12; foot=false",
+    "position 30,-30; foot=true",
+    "extra wave isolate real target, freeze rivals and refill finite pistol magazine",
+    "extra wave isolate real target, freeze rivals and refill finite pistol magazine",
+    "position 30,-30; foot=true",
+    "production active-time counterattack advancement300seconds",
+    "extra wave isolate real target, freeze rivals and refill finite pistol magazine",
+    "extra wave isolate real target, freeze rivals and refill finite pistol magazine",
+    "position 30,-30; foot=true",
+    "position 0,-12; foot=false",
+    "accelerate exactly 60 active empire seconds using production tickOperations",
+    "position 0,60; foot=true",
+    "position 0,60; foot=true",
+    "position 0,60; foot=true",
+    "position 0,-12; foot=true",
+    "night scenery clock fixture",
+    "position 120,60; foot=true",
+    "named police incident severity4 to test real dispatch delay",
+    "police vehicle15m behind player to expose real line-of-sight chase",
+    "move all cops outside visual radius to inspect lost-contact search",
+    "position 120,60; foot=true",
+    "controlled police proximity and fixed-step time for actual lateral key test",
+    "240production physics ticks with proximity cop tracking fixture; keyboardD is actual input",
+    "240production physics ticks with same nearby cop after actual key release",
+    "position 0,-12; foot=false",
+    "high cash5000 for catalogue purchases; not naturally earned",
+    "position 0,60; foot=true",
+    "zoom setting1.4 and fixed camera for weapon-fit screenshot",
+    "melee target1.2m ahead for actual punch",
+    "position 0,-120; foot=true",
+    "live two-rival abandonment fixture",
+    "live two-rival abandonment fixture",
+    "position 30,-30; foot=true",
+    "spawn real active counterattack before paid delegation",
+    "advance13simulation seconds and actualphysics step for retired population cleanup",
+    "position 0,-12; foot=true",
+    "inspection camera fixture on actual owned garage fa\u00e7ade",
+    "inspection camera fixture on actual source-fit pistol and avatar",
+    "position 120,60; foot=true",
+    "controlled police proximity and fixed-step time for actual lateral key test",
+    "240production physics ticks with proximity cop tracking fixture; keyboardD is actual input",
+    "240production physics ticks with same nearby cop after actual key release"
+  ]
+}

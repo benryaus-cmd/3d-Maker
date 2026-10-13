@@ -1,0 +1,61 @@
+[
+  {
+    "name": "combat-effects",
+    "exit": 0,
+    "tail": [
+      "PASS combat effects: four real GLB hand rigs, forward muzzle/support grip, pose restore, shared GPU assets, bounded pool/fade/disposal, headless audio lifecycle"
+    ]
+  },
+  {
+    "name": "police-director",
+    "exit": 0,
+    "tail": [
+      "Police report, obstruction, search, escape, arrest, persistence and roadblock checks: PASS"
+    ]
+  },
+  {
+    "name": "empire",
+    "exit": 0,
+    "tail": [
+      "PASS empire: staged jobs, cargo cost basis, active clock, caps, atomic purchases, unique rewards, respect gates, witnessed reputation, takeover/defence/reclaim"
+    ]
+  },
+  {
+    "name": "sweep-save",
+    "exit": 0,
+    "tail": [
+      "PASS integrated combat/empire save and v3 migration preserve economy"
+    ]
+  },
+  {
+    "name": "district-identity",
+    "exit": 0,
+    "tail": [
+      "District identity: nine brands, wall attachment, safe roads, bounded streaming, garage ownership, gardens supports and disposal PASS"
+    ]
+  },
+  {
+    "name": "crime",
+    "exit": 0,
+    "tail": [
+      "PASS mixed wet-road driving remains finite through sustained slides and pedal changes",
+      "Vehicle handling checks passed",
+      "BLACKTOP EMPIRE physics/economy/mission/assets checks passed"
+    ]
+  },
+  {
+    "name": "world",
+    "exit": 0,
+    "tail": [
+      "391 road tiles, 72 merged/standalone blocks, 185 buildings, 344 sidewalk lamps",
+      "World camera, safehouse, day/night, route, connected skid and instance disposal checks passed"
+    ]
+  },
+  {
+    "name": "economy-ui",
+    "exit": 0,
+    "tail": [
+      "PASS fractional event countdowns carry seconds correctly"
+    ]
+  }
+]

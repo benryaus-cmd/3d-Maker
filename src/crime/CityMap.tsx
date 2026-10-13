@@ -1,12 +1,13 @@
+import type {EmpireState} from './Empire';
 import {CITY_EDGE,DISTRICTS,ROAD_TILES,ROAD_TILE_SIZE,roadRoute} from './CityLayout';
 import {MARKETS} from './Systems';
-type MapRadar={player:[number,number];heading:number;parked:[number,number]|null;target:[number,number]|null;cops:[number,number][];traffic:[number,number][]};
+type MapRadar={rivals?:[number,number][];search?:{x:number;z:number;radius:number}|null;player:[number,number];heading:number;parked:[number,number]|null;target:[number,number]|null;cops:[number,number][];traffic:[number,number][]};
 const SCALE=178/CITY_EDGE;
 export const mapPoint=(x:number,z:number)=>[200+x*SCALE,200-z*SCALE];
-export function CityMap({radar,onPick}:{radar:MapRadar;onPick:(id:string)=>void}){
+export function CityMap({radar,onPick,empire}:{radar:MapRadar;empire?:EmpireState;onPick:(id:string)=>void}){
  const [px,py]=mapPoint(...radar.player),route=radar.target?roadRoute({x:radar.player[0],z:radar.player[1]},{x:radar.target[0],z:radar.target[1]}):[];
  const car=radar.parked?mapPoint(...radar.parked):null;
- return <div className="be-citymap"><p className="be-maphelp">Tap a market to set your route.</p><svg viewBox="0 0 400 400" role="img" aria-label="Expanded city map with nine districts, roads, markets and your location">
+ return <div className="be-citymap"><p className="be-maphelp">Tap a contact, garage or block to set your route.</p><svg viewBox="0 0 400 400" role="img" aria-label="Expanded city map with nine districts, roads, markets and your location">
   <rect width="400" height="400" rx="12" fill="#102029"/>
   {DISTRICTS.map(d=>{const [x,y]=mapPoint(d.x-60,d.z+60);return <g key={d.id}><rect x={x} y={y} width={120*SCALE} height={120*SCALE} fill={'#'+d.color.toString(16).padStart(6,'0')} opacity=".18"/></g>;})}
   <g stroke="#576870" strokeWidth={10.5*SCALE} strokeLinecap="round">{ROAD_TILES.flatMap(t=>[1,2].filter(bit=>t.mask&bit).map(bit=>{const [x,y]=mapPoint(t.x,t.z),[nx,ny]=mapPoint(t.x+(bit===2?ROAD_TILE_SIZE:0),t.z+(bit===1?ROAD_TILE_SIZE:0));return <line key={t.x+':'+t.z+':'+bit} x1={x} y1={y} x2={nx} y2={ny}/>;}))}</g>
@@ -15,6 +16,9 @@ export function CityMap({radar,onPick}:{radar:MapRadar;onPick:(id:string)=>void}
   {radar.traffic.map((p,i)=>{const [x,y]=mapPoint(...p);return <circle key={'t'+i} cx={x} cy={y} r="2" fill="#a1b2bd"/>;})}
   {radar.cops.map((p,i)=>{const [x,y]=mapPoint(...p);return <circle key={'p'+i} cx={x} cy={y} r="3" fill="#4c9aff"/>;})}
   {MARKETS.map(m=>{const [x,y]=mapPoint(m.x,m.z);return <g key={m.id} role="button" tabIndex={0} aria-label={'Route to '+m.name} className="be-mapmarket" onClick={()=>onPick(m.id)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onPick(m.id);}}}><circle cx={x} cy={y} r="12" fill="transparent"/><circle cx={x} cy={y} r="5" fill="#e8ad62" stroke="#17232b" strokeWidth="2"/><text x={x+8} y={y+3} fill="#f6e2bd" fontSize="8" fontFamily="Rajdhani,sans-serif">{m.id==='midtown'?'M':m.name.split(' ')[0]}</text></g>;})}
+  {radar.search&&<circle cx={mapPoint(radar.search.x,radar.search.z)[0]} cy={mapPoint(radar.search.x,radar.search.z)[1]} r={radar.search.radius*SCALE} fill="#5b94d9" fillOpacity=".08" stroke="#8cc6ff" strokeWidth="1" strokeDasharray="4 3"/>}
+  {radar.rivals?.map((p,i)=>{const [x,y]=mapPoint(...p);return <circle key={'r'+i} cx={x} cy={y} r="3" fill="#ef795b"/>;})}
+  {empire&&<><g role="button" tabIndex={0} aria-label="Route to Midtown Motor Works" className="be-mapmarket" onClick={()=>onPick('owned-garage')} onKeyDown={e=>{if(e.key==='Enter')onPick('owned-garage');}}><circle cx={mapPoint(0,-12)[0]} cy={mapPoint(0,-12)[1]} r="12" fill="transparent"/><rect x={mapPoint(0,-12)[0]-4} y={mapPoint(0,-12)[1]-4} width="8" height="8" fill={empire.businesses['midtown-garage'].owned?'#80d8b3':'#aaa7bd'}/></g><g role="button" tabIndex={0} aria-label="Route to Midtown block" onClick={()=>onPick('midtown-block')} onKeyDown={e=>{if(e.key==='Enter')onPick('midtown-block');}}><rect x={mapPoint(15,-15)[0]} y={mapPoint(15,-15)[1]} width={30*SCALE} height={30*SCALE} fill={empire.territories['midtown-block'].status==='owned'?'#6cc99d':'#e98b5a'} opacity=".25" stroke="#d9ba8b" strokeWidth="1"/><text x={mapPoint(30,-30)[0]} y={mapPoint(30,-30)[1]} textAnchor="middle" fontSize="7" fill="#f2d39b">{empire.territories['midtown-block'].status.toUpperCase()}</text></g></>}
   {car&&<rect x={car[0]-3.5} y={car[1]-5} width="7" height="10" rx="2" fill="#67d4e6" stroke="#0c1c24"/>}
   <g transform={`translate(${px} ${py}) rotate(${radar.heading*180/Math.PI})`}><circle r="9" fill="#f5d08c" opacity=".17"/><path d="M0 -7 L5 5 L0 2 L-5 5Z" fill="#ffe2a7" stroke="#102029" strokeWidth="1.2"/></g>
   <text x="383" y="16" textAnchor="middle" fill="#a9c7ca" fontSize="10">N ↑</text>

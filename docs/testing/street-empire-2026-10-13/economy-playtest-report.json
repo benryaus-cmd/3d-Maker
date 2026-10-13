@@ -1,0 +1,1580 @@
+{
+  "checks": [
+    "fresh game starts persistent v3 economic simulation",
+    "actual keyboard drive and brake reaches Midtown contact",
+    "trade sheet exposes finite supplier and buyer limits",
+    "trade sheet exposes cost basis and sale profit",
+    "trade menu freezes market time and replenishment",
+    "BUY is fully visible without scrolling at portrait market entry",
+    "actual BUY updates owned cargo and cash",
+    "actual BUY depletes dealer inventory",
+    "actual deal shows a persistent receipt",
+    "reload retains purchased cargo and money",
+    "reload retains depleted stock and transaction sequence",
+    "reload resumes saved market time instead of resetting",
+    "actual keyboard drive crosses into Financial Core",
+    "cross-district selling displays a positive cargo profit",
+    "actual Financial buyer purchases transported cargo",
+    "receipt profit reconciles exactly with purchase cost",
+    "sale consumes real buyer demand",
+    "fixture: engine rejects replayed transaction without mutation",
+    "fixture: failed save rolls back actual BUY money cargo and ledger",
+    "failed save is visibly reported as cancelled",
+    "live port supply event provides an actionable route",
+    "intel route button resumes play and sets Port navigation",
+    "fixture: actual safehouse STORE moves cargo into persistent stash",
+    "fixture: remote car disables safehouse cargo transfer controls",
+    "fixture: engine rejects remote-car transfer without teleporting cargo",
+    "actual banking protects cash without creating money",
+    "reload preserves bank and stashed goods",
+    "fixture: zero stock disables BUY with explanation",
+    "empty dealer stock is distinguished from player cargo",
+    "trade targets and no horizontal overflow at 390x844",
+    "trade targets and no horizontal overflow at 360x800",
+    "trade targets and no horizontal overflow at 844x390",
+    "trade targets and no horizontal overflow at 1280x720",
+    "no production page runtime errors"
+  ],
+  "errors": [],
+  "drivenTrade": {
+    "before": {
+      "simulationTime": 6.016666666666651,
+      "controls": {
+        "throttle": false,
+        "brake": false
+      },
+      "x": 0,
+      "z": 36.62562707686306,
+      "speed": 0,
+      "cash": 1200,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "economy": {
+        "version": 1,
+        "seed": 74193,
+        "seconds": 6.016666666666651,
+        "restockTick": 0,
+        "sequence": 0,
+        "markets": {
+          "port": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "club": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "yard": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "tower": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "hills": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "gardens": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "quarter": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "midtown": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "market": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          }
+        },
+        "inventories": {
+          "stash:midtown": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            }
+          },
+          "vehicle:sedan": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            }
+          }
+        },
+        "ledger": [],
+        "observed": {
+          "midtown:Ember": [
+            {
+              "at": 6.016666666666651,
+              "buy": 66,
+              "sell": 54
+            }
+          ],
+          "midtown:Glitch": [
+            {
+              "at": 6.016666666666651,
+              "buy": 110,
+              "sell": 90
+            }
+          ],
+          "midtown:Velvet": [
+            {
+              "at": 6.016666666666651,
+              "buy": 196,
+              "sell": 160
+            }
+          ],
+          "midtown:Crown": [
+            {
+              "at": 6.016666666666651,
+              "buy": 321,
+              "sell": 263
+            }
+          ]
+        }
+      },
+      "clock": "17:37"
+    },
+    "bought": {
+      "simulationTime": 6.016666666666651,
+      "controls": {
+        "throttle": false,
+        "brake": false
+      },
+      "x": 0,
+      "z": 36.62562707686306,
+      "speed": 0,
+      "cash": 879,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 1
+      },
+      "economy": {
+        "version": 1,
+        "seed": 74193,
+        "seconds": 6.016666666666651,
+        "restockTick": 0,
+        "sequence": 1,
+        "markets": {
+          "port": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "club": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "yard": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "tower": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "hills": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "gardens": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "quarter": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "midtown": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 7,
+              "demand": 12,
+              "revision": 1
+            }
+          },
+          "market": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          }
+        },
+        "inventories": {
+          "stash:midtown": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            }
+          },
+          "vehicle:sedan": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 1
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 321
+            }
+          }
+        },
+        "ledger": [
+          {
+            "id": "trade:74193:1",
+            "at": 6.016666666666651,
+            "market": "midtown",
+            "good": "Crown",
+            "qty": 1,
+            "unitPrice": 321,
+            "total": 321,
+            "profit": null
+          }
+        ],
+        "observed": {
+          "midtown:Ember": [
+            {
+              "at": 6.016666666666651,
+              "buy": 66,
+              "sell": 54
+            }
+          ],
+          "midtown:Glitch": [
+            {
+              "at": 6.016666666666651,
+              "buy": 110,
+              "sell": 90
+            }
+          ],
+          "midtown:Velvet": [
+            {
+              "at": 6.016666666666651,
+              "buy": 196,
+              "sell": 160
+            }
+          ],
+          "midtown:Crown": [
+            {
+              "at": 6.016666666666651,
+              "buy": 321,
+              "sell": 263
+            },
+            {
+              "at": 6.016666666666651,
+              "buy": 326,
+              "sell": 267
+            }
+          ]
+        }
+      },
+      "clock": "17:37"
+    },
+    "reload": {
+      "simulationTime": 0.733333333333334,
+      "controls": {
+        "throttle": false,
+        "brake": false
+      },
+      "x": 0,
+      "z": 36.62562707686332,
+      "speed": 0,
+      "cash": 879,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 1
+      },
+      "economy": {
+        "version": 1,
+        "seed": 74193,
+        "seconds": 6.833333333333314,
+        "restockTick": 0,
+        "sequence": 1,
+        "markets": {
+          "port": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "club": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "yard": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "tower": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "hills": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "gardens": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "quarter": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "midtown": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 7,
+              "demand": 12,
+              "revision": 1
+            }
+          },
+          "market": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          }
+        },
+        "inventories": {
+          "stash:midtown": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            }
+          },
+          "vehicle:sedan": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 1
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 321
+            }
+          }
+        },
+        "ledger": [
+          {
+            "id": "trade:74193:1",
+            "at": 6.016666666666651,
+            "market": "midtown",
+            "good": "Crown",
+            "qty": 1,
+            "unitPrice": 321,
+            "total": 321,
+            "profit": null
+          }
+        ],
+        "observed": {
+          "midtown:Ember": [
+            {
+              "at": 6.016666666666651,
+              "buy": 66,
+              "sell": 54
+            }
+          ],
+          "midtown:Glitch": [
+            {
+              "at": 6.016666666666651,
+              "buy": 110,
+              "sell": 90
+            }
+          ],
+          "midtown:Velvet": [
+            {
+              "at": 6.016666666666651,
+              "buy": 196,
+              "sell": 160
+            }
+          ],
+          "midtown:Crown": [
+            {
+              "at": 6.016666666666651,
+              "buy": 321,
+              "sell": 263
+            },
+            {
+              "at": 6.016666666666651,
+              "buy": 326,
+              "sell": 267
+            }
+          ]
+        }
+      },
+      "clock": "17:38"
+    },
+    "arrived": {
+      "simulationTime": 12.5000000000002,
+      "controls": {
+        "throttle": false,
+        "brake": false
+      },
+      "x": 0,
+      "z": 119.97440398169536,
+      "speed": 0,
+      "cash": 879,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 1
+      },
+      "economy": {
+        "version": 1,
+        "seed": 74193,
+        "seconds": 18.600000000000225,
+        "restockTick": 0,
+        "sequence": 1,
+        "markets": {
+          "port": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "club": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "yard": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "tower": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "hills": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "gardens": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "quarter": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "midtown": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 7,
+              "demand": 12,
+              "revision": 1
+            }
+          },
+          "market": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          }
+        },
+        "inventories": {
+          "stash:midtown": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            }
+          },
+          "vehicle:sedan": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 1
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 321
+            }
+          }
+        },
+        "ledger": [
+          {
+            "id": "trade:74193:1",
+            "at": 6.016666666666651,
+            "market": "midtown",
+            "good": "Crown",
+            "qty": 1,
+            "unitPrice": 321,
+            "total": 321,
+            "profit": null
+          }
+        ],
+        "observed": {
+          "midtown:Ember": [
+            {
+              "at": 6.016666666666651,
+              "buy": 66,
+              "sell": 54
+            }
+          ],
+          "midtown:Glitch": [
+            {
+              "at": 6.016666666666651,
+              "buy": 110,
+              "sell": 90
+            }
+          ],
+          "midtown:Velvet": [
+            {
+              "at": 6.016666666666651,
+              "buy": 196,
+              "sell": 160
+            }
+          ],
+          "midtown:Crown": [
+            {
+              "at": 6.016666666666651,
+              "buy": 321,
+              "sell": 263
+            },
+            {
+              "at": 6.016666666666651,
+              "buy": 326,
+              "sell": 267
+            }
+          ]
+        }
+      },
+      "clock": "17:52"
+    },
+    "sold": {
+      "simulationTime": 12.70000000000021,
+      "controls": {
+        "throttle": false,
+        "brake": false
+      },
+      "x": 0,
+      "z": 119.97440398226641,
+      "speed": 0,
+      "cash": 1270,
+      "cargo": {
+        "Ember": 0,
+        "Glitch": 0,
+        "Velvet": 0,
+        "Crown": 0
+      },
+      "economy": {
+        "version": 1,
+        "seed": 74193,
+        "seconds": 18.800000000000214,
+        "restockTick": 0,
+        "sequence": 2,
+        "markets": {
+          "port": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "club": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "yard": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "tower": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 9,
+              "demand": 11,
+              "revision": 1
+            }
+          },
+          "hills": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "gardens": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "quarter": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          },
+          "midtown": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 7,
+              "demand": 12,
+              "revision": 1
+            }
+          },
+          "market": {
+            "Ember": {
+              "stock": 24,
+              "demand": 30,
+              "revision": 0
+            },
+            "Glitch": {
+              "stock": 18,
+              "demand": 24,
+              "revision": 0
+            },
+            "Velvet": {
+              "stock": 12,
+              "demand": 18,
+              "revision": 0
+            },
+            "Crown": {
+              "stock": 8,
+              "demand": 12,
+              "revision": 0
+            }
+          }
+        },
+        "inventories": {
+          "stash:midtown": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            }
+          },
+          "vehicle:sedan": {
+            "goods": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            },
+            "cost": {
+              "Ember": 0,
+              "Glitch": 0,
+              "Velvet": 0,
+              "Crown": 0
+            }
+          }
+        },
+        "ledger": [
+          {
+            "id": "trade:74193:1",
+            "at": 6.016666666666651,
+            "market": "midtown",
+            "good": "Crown",
+            "qty": 1,
+            "unitPrice": 321,
+            "total": 321,
+            "profit": null
+          },
+          {
+            "id": "trade:74193:2",
+            "at": 18.800000000000214,
+            "market": "tower",
+            "good": "Crown",
+            "qty": -1,
+            "unitPrice": 391,
+            "total": 391,
+            "profit": 70
+          }
+        ],
+        "observed": {
+          "midtown:Ember": [
+            {
+              "at": 6.016666666666651,
+              "buy": 66,
+              "sell": 54
+            }
+          ],
+          "midtown:Glitch": [
+            {
+              "at": 6.016666666666651,
+              "buy": 110,
+              "sell": 90
+            }
+          ],
+          "midtown:Velvet": [
+            {
+              "at": 6.016666666666651,
+              "buy": 196,
+              "sell": 160
+            }
+          ],
+          "midtown:Crown": [
+            {
+              "at": 6.016666666666651,
+              "buy": 321,
+              "sell": 263
+            },
+            {
+              "at": 6.016666666666651,
+              "buy": 326,
+              "sell": 267
+            }
+          ],
+          "tower:Ember": [
+            {
+              "at": 18.800000000000214,
+              "buy": 74,
+              "sell": 61
+            }
+          ],
+          "tower:Glitch": [
+            {
+              "at": 18.800000000000214,
+              "buy": 131,
+              "sell": 107
+            }
+          ],
+          "tower:Velvet": [
+            {
+              "at": 18.800000000000214,
+              "buy": 204,
+              "sell": 167
+            }
+          ],
+          "tower:Crown": [
+            {
+              "at": 18.800000000000214,
+              "buy": 475,
+              "sell": 391
+            },
+            {
+              "at": 18.800000000000214,
+              "buy": 468,
+              "sell": 380
+            }
+          ]
+        }
+      },
+      "clock": "17:52"
+    }
+  },
+  "fixtureNotes": "Replay, save failure, safehouse placement/cargo and empty dealer stock are explicit fixtures. Midtown approach, purchase, reload, Financial traversal/sale and market UI actions used actual keyboard/pointer inputs.",
+  "softwareWebGL": true
+}

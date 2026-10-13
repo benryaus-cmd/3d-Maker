@@ -1,3 +1,6 @@
+import {createArsenal,restoreArsenal,type Arsenal} from './Firearms.ts';
+import {createEmpire,restoreEmpire,type EmpireState} from './Empire.ts';
+import {createPoliceState,restorePoliceState,type PoliceState} from './PoliceDirector.ts';
 import {GOODS,MARKETS,createEconomy,restoreEconomy,validEconomyHeader,syncCargo,switchCargo,emptyGoods,requestTrade,type EconomyState,type Quantities,type TradeContext,marketQuote,nextTradeId} from './Economy.ts';
 export {GOODS,MARKETS,type Commodity,type Market} from './Economy.ts';
 export type CarStyle='sedan'|'sedan-sports'|'police'|'taxi'|'suv'|'race';
@@ -13,20 +16,20 @@ const defaultVehicleBuild=():VehicleBuild=>({mods:initialMods(),paint:0xd45f3d,s
 export function activeBuild(s:GameSave,car:CarStyle=s.car):VehicleBuild{
  if(!s.builds)s.builds={};return s.builds[car]??(s.builds[car]=defaultVehicleBuild());
 }
-export type GameSave={version:3;money:number;bank:number;heat:number;mode:'campaign'|'freeroam';mission:number;missionStep:number;
+export type GameSave={version:4;settings:{aimAssist:boolean;combatVolume:number;cameraScale:number;shake:number;haptics:boolean};health:number;arsenal:Arsenal;empire:EmpireState;police:PoliceState;encounters:Record<string,{defeated:number;total:number;x:number;z:number;faction:string}>;money:number;bank:number;heat:number;mode:'campaign'|'freeroam';mission:number;missionStep:number;
  x:number;z:number;heading:number;car:CarStyle;carHP:number;carDamage:Damage;owned:CarStyle[];mods:Mods;builds:Partial<Record<CarStyle,VehicleBuild>>;garageLevel:number;houseLevel:number;stash:number;cargo:Quantities;economy:EconomyState;lastSave:number;day:number;completed:number[]};
 export function initial():GameSave{
- const s:GameSave={version:3,money:1200,bank:0,heat:0,mode:'campaign',mission:0,missionStep:0,x:0,z:0,heading:0,
+ const s:GameSave={version:4,settings:{aimAssist:true,combatVolume:.35,cameraScale:1,shake:.6,haptics:false},health:100,arsenal:createArsenal(),empire:createEmpire(),police:createPoliceState(),encounters:{},money:1200,bank:0,heat:0,mode:'campaign',mission:0,missionStep:0,x:0,z:0,heading:0,
  car:'sedan',carHP:100,carDamage:{front:0,rear:0,left:0,right:0},owned:['sedan'],mods:initialMods(),builds:{sedan:defaultVehicleBuild()},garageLevel:0,houseLevel:0,stash:0,cargo:emptyGoods(),economy:createEconomy(),lastSave:Date.now(),day:1,completed:[]};
  syncCargo(s);return s;
 }
 function decodeSave(text:string|null):GameSave|null{
  try{
-  const raw=JSON.parse(text??'null');if(!raw||![2,3].includes(raw.version)||!Number.isFinite(raw.money)||!Number.isFinite(raw.x)||!Number.isFinite(raw.z))return null;
-  if(raw.version===3&&!validEconomyHeader(raw.economy))return null;
+  const raw=JSON.parse(text??'null');if(!raw||![2,3,4].includes(raw.version)||!Number.isFinite(raw.money)||!Number.isFinite(raw.x)||!Number.isFinite(raw.z))return null;
+  if(raw.version>=3&&!validEconomyHeader(raw.economy))return null;
   const s=initial();const owned=Array.isArray(raw.owned)?raw.owned.filter((v:CarStyle)=>CARS.includes(v)):['sedan'];
   s.owned=owned.length?[...new Set(owned)] as CarStyle[]:['sedan'];s.car=CARS.includes(raw.car)&&s.owned.includes(raw.car)?raw.car:s.owned[0];
-  if(raw.version===3&&!raw.economy.inventories['vehicle:'+s.car])return null;
+  if(raw.version>=3&&!raw.economy.inventories['vehicle:'+s.car])return null;
   for(const car of CARS){const old=raw.builds?.[car]??(car===s.car?{mods:raw.mods,hp:raw.carHP,damage:raw.carDamage}:null);if(!old)continue;
    const b=defaultVehicleBuild();for(const k of Object.keys(b.mods) as (keyof Mods)[])b.mods[k]=level(old.mods?.[k]);
    for(const k of Object.keys(b.damage) as (keyof Damage)[])b.damage[k]=safeNumber(old.damage?.[k],0,0,1);
@@ -38,7 +41,9 @@ function decodeSave(text:string|null):GameSave|null{
   s.mode=raw.mode==='freeroam'?'freeroam':'campaign';s.mission=Math.floor(safeNumber(raw.mission,0,0,5));s.missionStep=Math.floor(safeNumber(raw.missionStep,0,0,4));
   s.completed=Array.isArray(raw.completed)?[...new Set(raw.completed.filter((n:number)=>Number.isInteger(n)&&n>=0&&n<5))] as number[]:[];
   s.garageLevel=level(raw.garageLevel);s.houseLevel=level(raw.houseLevel);s.stash=safeNumber(raw.stash,0);s.lastSave=safeNumber(raw.lastSave,0);
-  s.economy=restoreEconomy(raw.version===3?raw.economy:null,raw.cargo??{},s.car);syncCargo(s);s.day=1+Math.floor(s.economy.seconds/1200);
+  s.settings={aimAssist:raw.settings?.aimAssist!==false,combatVolume:safeNumber(raw.settings?.combatVolume,.35,0,1),cameraScale:safeNumber(raw.settings?.cameraScale,1,.75,1.4),shake:safeNumber(raw.settings?.shake,.6,0,1),haptics:raw.settings?.haptics===true};s.arsenal=restoreArsenal(raw.arsenal);s.empire=restoreEmpire(raw.empire);s.police=raw.police?restorePoliceState(raw.police):createPoliceState(s.heat);s.health=safeNumber(raw.health,100,0,100);
+  if(raw.encounters&&typeof raw.encounters==='object')for(const [id,data] of Object.entries(raw.encounters).slice(-12)){const v=data as any;if(v&&typeof id==='string'&&id.length<180&&Number.isFinite(v.x)&&Number.isFinite(v.z))s.encounters[id]={defeated:Math.floor(safeNumber(v.defeated,0,0,10)),total:Math.floor(safeNumber(v.total,0,0,10)),x:safeNumber(v.x,0,-187,187),z:safeNumber(v.z,0,-187,187),faction:['ashline','breakwater','velvet','crown'].includes(v.faction)?v.faction:'ashline'};}
+  s.economy=restoreEconomy(raw.version>=3?raw.economy:null,raw.cargo??{},s.car);syncCargo(s);s.day=1+Math.floor(s.economy.seconds/1200);
   return s;
  }catch{return null;}
 }

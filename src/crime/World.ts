@@ -257,6 +257,7 @@ export class CrimeWorld{
  private brokenLamps=new Set<string>();
  private tyreMarks:THREE.InstancedMesh;
  private skids:TimedSkids;
+ cameraScale=1;
  private environmentTime=17.5*3600;clockLabel='17:30';
  private night=0;private cameraHeading=0;private cameraReady=false;
  private navigation=new THREE.Group();private navigationKey='';
@@ -532,7 +533,7 @@ export class CrimeWorld{
   if(interior){
    const entering=!this.interior.visible;this.root.visible=false;this.navigation.visible=false;this.interior.visible=true;
    const desired=new THREE.Vector3(10000+THREE.MathUtils.clamp(x*.45,-2.2,2.2),0,10000+THREE.MathUtils.clamp(z*.35,-1.8,1.8));if(entering)this.cameraFocus.copy(desired);
-   this.cameraFocus.lerp(desired,smooth);this.camera.position.set(this.cameraFocus.x,20,this.cameraFocus.z-16);this.camera.lookAt(this.cameraFocus);this.camera.zoom=1.52;this.camera.updateProjectionMatrix();
+   this.cameraFocus.lerp(desired,smooth);this.camera.position.set(this.cameraFocus.x,20,this.cameraFocus.z-16);this.camera.lookAt(this.cameraFocus);this.camera.zoom=1.52*this.cameraScale;this.camera.updateProjectionMatrix();
    (this.scene.background as THREE.Color).set(0x27313a);this.sun.position.set(9990,20,9985);this.sun.target.position.set(10000,0,10000);this.sun.target.updateMatrixWorld();this.streetLights.forEach(l=>l.intensity=0);return;
   }
   if(this.interior.visible||!this.cameraReady){this.cameraFocus.set(x,0,z);this.cameraHeading=onFoot?0:heading;this.cameraReady=true;}
@@ -543,7 +544,7 @@ export class CrimeWorld{
   const fx=Math.sin(this.cameraHeading),fz=Math.cos(this.cameraHeading),ahead=onFoot?1.4:3.5+Math.min(Math.abs(speed)*.12,6);
   this.cameraFocus.lerp(new THREE.Vector3(x+fx*ahead,0,z+fz*ahead),smooth);
   this.camera.position.set(this.cameraFocus.x-fx*(onFoot?20:28),onFoot?25:40,this.cameraFocus.z-fz*(onFoot?20:28));this.camera.lookAt(this.cameraFocus);
-  const targetZoom=onFoot?2.3:1.22-Math.min(Math.abs(speed)/55,.22);
+  const targetZoom=(onFoot?2.3:1.22-Math.min(Math.abs(speed)/55,.22))*this.cameraScale;
   this.camera.zoom+=(targetZoom-this.camera.zoom)*(1-Math.exp(-dt*2.8));this.camera.updateProjectionMatrix();
   this.sun.position.set(x-32,60,z-22);this.sun.target.position.set(x,0,z);this.sun.target.updateMatrixWorld();
   this.lampRefresh+=dt;

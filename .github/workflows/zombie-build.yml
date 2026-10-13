@@ -19,6 +19,13 @@ jobs:
       - run: pnpm exec tsc -p tsconfig.crime.json --noEmit
       - run: node --experimental-strip-types scripts/check-economy.mjs
       - run: node scripts/check-economy-ui.mjs
+      - run: node --experimental-strip-types scripts/check-sweep-save.mjs
+      - run: node --experimental-strip-types scripts/check-firearms.mjs
+      - run: node --experimental-strip-types scripts/check-combat-controls.mjs
+      - run: node --experimental-strip-types scripts/check-police-director.mjs
+      - run: node --experimental-strip-types scripts/check-empire.mjs
+      - run: node --experimental-strip-types scripts/check-combat-effects.mjs
+      - run: node --experimental-strip-types scripts/check-district-identity.mjs
       - run: node --experimental-strip-types scripts/check-crime.mjs
       - run: node --experimental-strip-types scripts/check-mobile-controls.mjs
       - run: node --experimental-strip-types scripts/check-world.mjs
