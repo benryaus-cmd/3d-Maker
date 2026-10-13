@@ -1,0 +1,23 @@
+PASS fresh games have finite distinct dealer stock and a buy/sell spread
+PASS a trade conserves cash cargo stock and acquisition cost with one ledger receipt
+PASS replaying a transaction cannot move money or stock twice even with a refreshed quote
+PASS stale remote closed moving and inaccessible cargo requests fail without mutation
+PASS finite stock demand capacity money and owned inventory gate trades
+PASS sale reports realised profit and removes proportional acquisition cost
+PASS buying and selling back at the same contact loses money
+PASS clock replenishes only on active simulation and survives serialisation without offline accrual
+PASS event boundaries invalidate quotes even inside one price/restock interval
+PASS port supply and nightlife demand events are deterministic finite opportunities
+PASS switching vehicle keeps cargo and costs with its stable vehicle inventory
+PASS safehouse transfers preserve cost and enforce storage and vehicle capacities
+PASS safehouse cannot transfer cargo to or from a remotely parked car
+PASS confiscation clears only active vehicle stock and acquisition cost
+PASS save migration preserves legacy cash cars upgrades cargo and unknown cost basis
+PASS reload preserves market time prices depleted stock cost and transaction identity
+PASS corrupt primary save restores last known good backup instead of resetting wealth
+PASS structurally corrupt inventory restores backup instead of silently deleting cargo
+PASS invalid save quantities are repaired finite and safe
+PASS banking preserves money and cannot be done away from the safehouse
+BALANCE {"days":100,"minPrice":26,"maxPrice":478,"cash":101861,"receipts":40,"bytes":17232}
+PASS observed quote history and receipts remain bounded over 100 simulated days
+COMPLETE 21 economy groups

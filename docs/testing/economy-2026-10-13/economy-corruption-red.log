@@ -1,0 +1,36 @@
+PASS fresh games have finite distinct dealer stock and a buy/sell spread
+PASS a trade conserves cash cargo stock and acquisition cost with one ledger receipt
+PASS replaying a transaction cannot move money or stock twice even with a refreshed quote
+PASS stale remote closed moving and inaccessible cargo requests fail without mutation
+PASS finite stock demand capacity money and owned inventory gate trades
+PASS sale reports realised profit and removes proportional acquisition cost
+PASS buying and selling back at the same contact loses money
+PASS clock replenishes only on active simulation and survives serialisation without offline accrual
+PASS event boundaries invalidate quotes even inside one price/restock interval
+PASS port supply and nightlife demand events are deterministic finite opportunities
+PASS switching vehicle keeps cargo and costs with its stable vehicle inventory
+PASS safehouse transfers preserve cost and enforce storage and vehicle capacities
+PASS confiscation clears only active vehicle stock and acquisition cost
+PASS save migration preserves legacy cash cars upgrades cargo and unknown cost basis
+PASS reload preserves market time prices depleted stock cost and transaction identity
+PASS corrupt primary save restores last known good backup instead of resetting wealth
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 2
+
+    at file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/check-economy.mjs:89:100
+    at test (file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/check-economy.mjs:6:37)
+    at file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/check-economy.mjs:86:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 2,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

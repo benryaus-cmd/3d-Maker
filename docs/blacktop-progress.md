@@ -1,59 +1,38 @@
-# BLACKTOP EMPIRE — Implementation and Work-mode Playtest Handoff
+# BLACKTOP EMPIRE — Current implementation handoff
 
-Last edited 13 October 2026 (Australia/Sydney). This is a **fact-based checkpoint** for the original AAA ambition in `final-goal.md`, not a declaration that the finished game exists.
+Updated 13 October 2026 (Australia/Sydney). This is a playable foundation progressing toward [final-goal.md](../final-goal.md), not a completed premium game. Follow [how-to-achieve-final-goal.md](../how-to-achieve-final-goal.md) for the remaining work.
 
-## Project
-- GitHub: https://github.com/benryaus-cmd/3d-Maker
-- Game entry: `src/App.tsx` → `src/crime/CrimeGame.tsx` (not the inherited zombie export).
-- Engine: Three.js, React 19 / Vite, existing Aippy setup and build chain. Portrait-first orthographic follow camera and a 3D simulated world.
-- CI: `.github/workflows/zombie-build.yml` is now named **Blacktop Empire Build** and runs Node 22, frozen pnpm install, `tsc -p tsconfig.crime.json --noEmit`, `scripts/check-crime.mjs` and `pnpm build`.
-- Latest verified automation as of this checkpoint: GitHub Actions run `38255823116` for `2113ea060735e49af5b92743fe2fbf7f31b12db0` **SUCCESS**. Builds/unit invariants pass; these are not proof of Android or gameplay quality.
+## Active game
 
-## Code currently shipping
-1. **Driveable physics chassis**: fixed 60 Hz stepping, yaw inertia, steering angle, power/mass, drag, lateral slip/traction, braking, reversing, handbrake, nitrous, asphalt/wet parameter; oriented rectangle SAT car/building and car/car collisions, impact impulses, HP/damage zones, lowered power after damage.
-2. **Visible cars and roads**: six local Kenney CC0 vehicle GLBs, 3D world with chunked roads/buildings, five Kenney commercial-building GLBs, nine Kenney roadside-object GLBs, breakable cone/barrier/dumpster proxies, pooled paired skid marks, impact particles, body dents (geometry displacement), rear spoiler, paint-tinted body, underbody glow, emergency lights on patrol cars, severe-damage smoke.
-3. **Civilian life**: traffic and police AI vehicles sharing physics/colliders; pavement civilians include animated Quaternius GLBs (Idle/Walk/Run/Death) with a procedural fallback, panic/flight, collisions and visible 18+ blood stains. Population is bounded and nearby.
-4. **Police**: witness escalation from hitting pedestrians and vehicles, heat/stars, physically driven pursuing police cars, audible siren, wanted decay, safehouse entry cannot be used while police visibly at door, arrest/impound/fine/confiscation if high heat and caught stationary for several seconds.
-5. **Crime economy**: four fictional commodities, four district markets with different prices, stock/cash/cargo checks, district travel required to trade, garage upgrades expand storage. Market time/price balance remains basic.
-6. **Safehouse and tuning**: real separate 3D interior (walkable on foot with interior furniture blockers); purchased 3D decor/stash/garage improvements; six collectible cars with individually saved state, engine/tyre/brake/armour levels affecting physics, paint palette, spoiler/neon, repair, paid recovery if broken down.
-7. **Campaign/free roam**: mode switch and five authored sequential objective/reward loops; delivery route, timed street-race with physical AI rival, rising-heat chase and escape, basic take/delivery. No cutscenes yet. Missions currently operate as proximity/checkpoint objective scripts, not polished multi-scene scripted missions.
-8. **Sound**: local Kenney CC0 recorded engine, tire skid, crash samples with playback-rate/volume control, plus synthesized police siren and a quiet engine component. Browser audio gesture unlock.
-9. **Persistence**: versioned save `blacktop-empire-save-v2` stores cash, inventory, heat, campaign state, property, owned cars and EACH car's upgrade/paint/damage state. Defensive load and autosave on interval/exit.
-10. **UX**: responsive portrait mobile touch controls with pointer capture, accelerator, brake/reverse, steering, drift, nitrous; desktop WASD/arrows, speed, damage, cash, heat stars, local radar, mission banner, garage, trading and pause panels.
+`src/App.tsx` → `src/crime/CrimeGame.tsx`. React/Vite/Three, portrait-first mobile UI, fixed-step vehicle simulation. Preserve the existing Aippy host and build-time importer. The dormant zombie/HubSide archive is not the active game.
 
-## Known limitations and bugs to verify, not conceal
-- Full physical wheel suspension, wheel deformation/tearing, per-panel fractures and debris from **imported** Kenney meshes are not finished. Current vertices are deformed locally on collisions; it needs close-up playtest to verify visual realism and material UV quality.
-- Traffic/police navigation uses local Manhattan street goals, **not** an obstacle-aware full route planner. NPCs can get stuck at collisions and should be observed.
-- Mission 3 street-race and other campaigns are foundational playable scripts, not full NFS-style rival racing cinematics; checkpoint routing, fair timing, offroad cutting and loss/retry require end-to-end validation.
-- City uses a **seeded endless street grid** with district labeling; not yet a distinct fully handcrafted seven-district campaign city.
-- The walkable interior currently uses simple room furniture primitives, not imported high-end interior models; room interactions should be expanded.
-- There are no real scene-directed character cutscenes, heist animations, on-foot combat system, organized gang territory or interior garage rotating model preview.
-- Pedestrian impacts/animations are basic and should be inspected for mismatched skeleton clips, hierarchy and depth ordering. Avoid pretending there's mature GTA pedestrian AI.
-- No actual police radio voice samples, high-end car sound layering, traffic ambience, music soundtrack or multi-channel volume preferences are implemented yet.
-- Roadway mark instancing and nearby streaming keep GPU cost bounded, but a real Aippy Android FPS benchmark and long-session memory review have **not** been performed.
-- Browser/phone play was **not** tested in this development chat. Only GitHub Actions compilation/build and Node physics/economy/persistence assertions are confirmed. Do not claim real browser testing unless you run it.
+## What exists
 
-## Work-mode full playtest priorities
-1. Inspect main branch HEAD (may advance) and this handoff + `final-goal.md`. Confirm `src/App.tsx` points to `src/crime/CrimeGame.tsx`. Do NOT accidentally play old `src/zombie/ZombieGame.tsx`.
-2. Run **Node 22 / pnpm install / TypeScript check / `node --experimental-strip-types scripts/check-crime.mjs` / `pnpm build`**, then launch Vite and actually operate the game. If you have web browser access, capture screenshots.
-3. Desktop arrows/WASD: drive forward/reverse, fast turns, handbrake drift, oversteer/recovery, collision with *front and side* of a building, observe damage/smoke, hit barrier, follow skid marks. Run at portrait 390×844 and landscape 844×390 plus desktop 1280×720. Check car is in the frame and forward road legible.
-4. 3D asset QA: verify Kenney GLBs load locally and oriented +Z, body/wheels correctly fitted (front wheels from source GLB are at +Z), paint is actually visible without tinting windows/wheels, rear spoiler and neon don't float and geometry damage doesn't shred the car. Check dynamic props don't block roads after breaking.
-5. Market QA: purchase goods at Port, sell at another market, confirm correct cash and cargo, capacity checks and that saving/reloading doesn't exploit/reset stock or cars.
-6. Story QA: get to safehouse, collect package at port and deliver to nightclub, timed race against physical rival, escape high police heat, finish heist mission; check failure/retry and rewards. Check free-roam toggle doesn't lose story or stolen cash.
-7. Police/NPC QA: provoke police by collisions or pedestrian impact, drive chase, let officers corner stopped player, confirm fine/confiscation/impound and ability to recover. Watch NPCs get stuck, spawn through walls or obstruct emergency services.
-8. Safehouse QA: enter after parking, close upgrade menu and WALK inside, interact with 3D space, buy all 3 levels, exit, reenter, reload save and confirm models still present. Police at door must block hiding. Ensure menu doesn't trap player.
-9. Mobile multitouch: hold left steer + throttle + handbrake simultaneously then release all; no sticky input, accidental zoom/scroll, overlaid buttons, rotated display or clips under notches.
-10. Measure actual frame timings / p95 / p99, draw calls, renderer geometries, GLB requests, long tasks and heap trends over a 15-minute drive across chunk boundaries. Prioritise removing duplicated materials/geometry and scene leaks before art polish.
-11. Record findings as PASS / BROKEN / PARTIAL / NOT IMPLEMENTED with exact files/lines and screenshots. Fix only proven failures, then rerun tests and report new commit. If direct browser gameplay tools are available, **play**; code-only reading is not a playtest.
+- Six car models with analogue steering, progressive pedals, drift/nitrous/reverse, structural damage and saved upgrades/appearance. Shared physical traffic/police and street routing.
+- Nine seamless districts in a 3×3 city; mixed block footprints, graph navigation and correctly joined/oriented Kenney roads. Road tiles 15 units, asphalt 10.5 units. Buildings/props use fitted collision footprints; physical perimeter ±187.5.
+- Camera follows speed, walking and interior context. Animated characters, walking, punching, fight/flee, physical vehicle knockback and bounded populations.
+- Breakable local scenery falls and remains until chunk despawn; bounded 10s hold/10s fade skid pool. Day/night, dawn/dusk colour, fitted vehicle lights and streetlight illumination.
+- Radar opens an expanded city map. Jobs/market routing, garage upgrades and an enterable furnished safehouse.
+- **Persistent economy:** four goods, nine contacts, finite dealer stock/buyer demand, replenishment during active simulation, buy/sell spread, deterministic regional prices, timed Port supply and Neon demand events, observed quotes and 40-entry receipts.
+- Trading validates contact proximity, stopped movement, accessible car cargo, quote revision, transaction ID, cash, capacity, stock and demand. Money/cargo/market changes save together; failed storage rolls back the deal and reports cancellation.
+- Cargo and weighted purchase cost stay with each owned model's vehicle inventory. Safehouse storage transfers require a nearby parked car. Banked cash and stash survive cargo confiscation. Multiple same-model vehicle instances remain future work.
+- Save payload v3 in the existing `blacktop-empire-save-v2` key. Migrates legacy cash/cars/mods/cargo without inventing historic purchase costs; retains legacy and last-known-good backups. Corrupt financial inventories recover from a valid backup.
+- Five foundational campaign objective loops and free roam share progress. Local engine/skid/crash samples and synthesised siren; gesture unlock.
 
-## Next engineering milestones
-- Correct any actual runtime/visual issues found by Work first. Retune physics with in-game evidence.
-- Upgrade road graph, intersection traffic law, police dispatch/search/roadblocks and racing AI.
-- Dedicated dislodging car parts, deformable panels, per-vehicle wear and tuning previews.
-- Populate genuinely distinct Dockside, Neon Mile, Old Quarter, Financial Core, Industrial Belt and Hills.
-- Proper scripted campaign camera/actor cutscenes, original adult storyline, choices, mission UX and dynamic world events.
-- Add original properly licensed professional car sound set and complete gain/mute controls.
-- Improve pedestrian animations, safehouse interactions and responsive portrait HUD to release-level polish.
-- Actual Aippy Android rendering/audio/multitouch test required before claiming ship readiness.
+## Verification and limits
 
-Full end-state is defined exclusively by `final-goal.md`. No artificial "done" checkboxes: extend depth until the real game meets it.
+Current economy evidence: [persistent economy playtest](testing/blacktop-economy-13oct2026.md). Earlier [goal review](testing/blacktop-goal-review-13oct2026.md) and [immersion pass](testing/blacktop-immersion-13oct2026.md) distinguish actual input from fixtures.
+
+The economy update was checked through production browser driving, buying, travelling from Midtown to Financial Core, selling for measured profit, reload, persistent stock/ledger, stash/bank and blocked remote transfers. Active crime suites, TypeScript and production build are checked separately from the dormant archive suite. Exact counts/outputs are in the current report.
+
+Physical Android/Aippy performance, audio, thermal stability, touch latency and a 30-minute mixed stress run remain NOT TESTED. Browser viewport/touch emulation cannot replace those. The inherited archive retains nine established failing tests; they are recorded rather than changed as part of crime work.
+
+## Remaining priorities
+
+1. S2: one excellent firearm encounter with responsive portrait aim/fire/reload, obstruction/cover, believable enemies, civilian reactions and police consequences.
+2. S3: police perception/dispatch/search, coordinated interception and telegraphed roadblocks; robust traffic congestion handling.
+3. S4: faction relationships, owned businesses/blocks, crew and meaningful defence/reputation, connected to the economy/combat/pursuit loop.
+4. More deliberately authored district layouts, landmarks, art/audio identity and density. Current repeated partition variation is a foundation.
+5. Full mission director, branching campaign, multi-property ownership, unique car instances, richer garage previews, settings and physical-device release evidence.
+
+Open gun battles, organised gangs, territory control, business simulation, crew, rich cinematics and the final campaign content floor are not implemented yet. Continue towards the full goal; preserve the tested foundation while adding complete playable slices.

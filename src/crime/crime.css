@@ -40,3 +40,76 @@
 
 .be-punch{min-height:64px;width:112px;background:linear-gradient(145deg,#7d4638,#442c2b);border:1px solid #d29167;color:#ffe9cd;border-radius:14px;box-shadow:0 6px 20px #0006;font:600 21px var(--be-display-font,'Barlow Condensed',sans-serif);touch-action:none}.be-punch:active{background:#ad694b}.be-walk-hint{display:flex;align-items:flex-end;flex-direction:column;gap:12px}.be-walk-hint small{max-width:150px;font-size:10px}
 .be-map-open{padding:0;text-align:inherit;color:inherit;font:inherit;pointer-events:auto;cursor:pointer;touch-action:manipulation;border:1px solid #88adba30}.be-map-open:active{filter:brightness(1.25)}.be-citymap{width:100%}.be-citymap svg{display:block;width:100%;max-height:60vh;touch-action:manipulation}.be-mapmarket{cursor:pointer;outline:none}.be-mapmarket:focus circle,.be-mapmarket:hover circle{stroke:#fff2ce;stroke-width:2}.be-maphelp{margin:0 0 10px!important;font-size:12px!important;color:#b8cfd0}.be-maplegend{display:flex;justify-content:space-between;gap:10px;margin:12px 0;font-size:10px;letter-spacing:.04em;color:#b4c9cb}.be-maplegend span{display:flex;align-items:center;gap:5px}.be-maplegend i{display:inline-block;width:6px;height:6px;border-radius:50%}
+
+/* Street economy: clear totals and large targets in a compact portrait sheet. */
+.be-trade-screen{display:flex;flex-direction:column;gap:12px}
+.be-contact-title>span{font:500 11px Rajdhani,sans-serif;letter-spacing:.18em;color:#93b7bc}
+.be-contact-title h2{font:600 24px/1.05 Barlow,sans-serif;margin:3px 0 5px;color:#ffcd90}
+.be-contact-title small{font-size:13px;color:#d0dedc}
+.be-deal-wallet{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#0e181fe0;border:1px solid #82a2ac30;border-radius:9px}
+.be-deal-wallet>span{display:flex;flex-direction:column;gap:3px;font:500 11px Rajdhani,sans-serif;letter-spacing:.08em;color:#a8c3c7}
+.be-deal-wallet b{color:#f5eee1;font:600 19px Barlow,sans-serif;letter-spacing:0}
+.be-market-event{padding:10px 12px;background:linear-gradient(110deg,#9b60293d,#203633);border:1px solid #e6a95b65;border-radius:9px}
+.be-market-event b{display:block;color:#ffd9a5;font-size:15px}
+.be-market-event span{display:block;margin-top:4px;font-size:12px;color:#e6d7c0}
+.be-goods-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.be-panel .be-goods-grid button{padding:12px 10px;background:#19272d;border-color:#6f909759;min-height:72px}
+.be-panel .be-goods-grid button.active{background:linear-gradient(140deg,#774d31,#302c28);border-color:#ffc78a}
+.be-goods-grid strong{display:flex;justify-content:space-between;gap:4px;font:600 17px Barlow,sans-serif}
+.be-goods-grid i{font:500 10px Rajdhani,sans-serif;align-self:center;font-style:normal;color:#b5d0cf}
+.be-goods-grid span{display:flex;justify-content:space-between;gap:3px;font-size:12px;margin-top:8px;color:#ffce98}
+.be-goods-grid em{font-style:normal;color:#8dd9bc}
+.be-commodity-detail{padding:12px;background:#101c23;border:1px solid #799b9b40;border-radius:10px}
+.be-commodity-detail h3{margin:0;font:600 20px Barlow,sans-serif;color:#f6d8af}
+.be-panel .be-commodity-detail p{font-size:13px;margin:4px 0 12px;color:#c9d8d5}
+.be-market-limits{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #9cbdc32a;padding-bottom:10px}
+.be-market-limits span{font:500 10px Rajdhani,sans-serif;color:#a7c0c1;letter-spacing:.06em}
+.be-market-limits b{display:block;margin-top:4px;font:500 14px Rajdhani,sans-serif;letter-spacing:0;color:#eef2e7}
+.be-deal-quantity{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0;font-size:13px;color:#b9cfcd}
+.be-deal-quantity>div{display:flex;gap:6px}
+.be-panel .be-deal-quantity button{min-height:48px;min-width:48px;text-align:center;font-size:22px;border-color:#97baba50}
+.be-deal-quantity input{min-height:48px;width:58px;text-align:center;font:500 19px Rajdhani,sans-serif;background:#07121b;color:#fef0d9;border:1px solid #92b5bd60;border-radius:7px;appearance:textfield}
+.be-deal-quantity input::-webkit-inner-spin-button{appearance:none}
+.be-deal-totals,.be-cost-basis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:10px 0}
+.be-deal-totals span{font-size:13px;color:#c3d8d3}
+.be-deal-totals b{display:block;font:600 24px Barlow,sans-serif;color:#fff0dc;margin-top:3px}
+.be-cost-basis span{font-size:10px;letter-spacing:.05em;color:#a9c0c4}
+.be-cost-basis b{display:block;margin-top:4px;font:500 15px Rajdhani,sans-serif;letter-spacing:0;color:#e0efea}
+.be-cost-note,.be-restock{display:block;font-size:12px;line-height:1.4;color:#abbec1}
+.be-profit{color:#91e6bd!important}
+.be-loss{color:#ffaca1!important}
+.be-deal-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.be-panel .be-deal-actions button{min-height:54px;padding:10px 12px;font:600 17px Barlow,sans-serif;text-align:center}
+.be-deal-actions b{display:block;font-size:16px;margin-top:3px}
+.be-panel .be-buy{background:linear-gradient(145deg,#c48141,#78402a);border-color:#eeb26d90}
+.be-panel .be-sell{background:linear-gradient(145deg,#27735e,#1b4a44);border-color:#7ed2b380}
+.be-panel button:disabled{opacity:.4;cursor:default;filter:none;transform:none}
+.be-restock{margin-top:12px}
+.be-panel .be-deal-reason{color:#f4c493;font-size:12px;margin:9px 0 0}
+.be-trade-error{padding:10px 12px;background:#651e2640;border:1px solid #e77e7a60;border-radius:8px;font-size:13px;color:#ffbbae}
+.be-trade-receipt{background:#1a393130;border:1px solid #88c5a950;border-radius:9px;padding:10px 12px}
+.be-trade-receipt>small{display:block;font-size:10px;color:#a5c8c1;letter-spacing:.06em}
+.be-trade-receipt>b{display:flex;justify-content:space-between;gap:8px;font:500 16px Rajdhani,sans-serif;margin-top:5px;color:#f4e8cf}
+.be-trade-receipt>span{display:block;margin-top:4px;font-size:12px;color:#b6ddc7}
+.be-market-intel,.be-price-history,.be-safe-storage{padding:11px 12px;background:#102029ab;border:1px solid #7fa6b245;border-radius:9px}
+.be-market-intel summary,.be-price-history summary,.be-safe-storage summary{cursor:pointer;min-height:32px;line-height:32px;font-size:13px;color:#e8d8bc;touch-action:manipulation}
+.be-market-intel summary>span,.be-price-history summary>span,.be-safe-storage summary>span{float:right;font-size:10px;color:#9bbdbf}
+.be-panel .be-intel-event{display:block;width:100%;padding:10px 12px;margin:10px 0;background:#30402f;border-color:#b3c18155}
+.be-intel-event strong{display:flex;justify-content:space-between;gap:8px;font:600 16px Barlow,sans-serif;color:#f4d99e}
+.be-intel-event em{font:500 12px Rajdhani,sans-serif;color:#d7dfb0;font-style:normal}
+.be-intel-event>span{display:block;font-size:13px;line-height:1.4;margin:6px 0;color:#dde2cd}
+.be-intel-event small{font-size:11px;color:#a9cec1}
+.be-panel .be-intel-note{font-size:12px;color:#abc1c5}
+.be-observed-markets{display:flex;flex-direction:column;gap:6px}
+.be-panel .be-observed-markets button{min-height:48px;padding:10px;background:#192b32}
+.be-observed-markets b{display:block;color:#ded9c4;font-size:13px}
+.be-observed-markets small{display:block;font-size:12px;margin-top:5px;color:#abccc5}
+.be-observed-markets i{font-style:normal;font-size:10px;color:#809c9f;float:right}
+.be-price-history>div{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.be-price-history>div>span{font-size:13px;color:#d7dfce}
+.be-price-history small{float:right;color:#9ab5b8;font-size:11px}
+.be-stash-goods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}
+.be-panel .be-stash-goods button{min-height:55px;font-size:13px}
+.be-stash-goods small{display:block;font-size:11px;font-weight:400;color:#b6ceca;margin-top:4px}
+
+.be-trade-panel{max-height:94%;scroll-padding-bottom:90px}.be-trade-screen{gap:10px;position:relative;padding-bottom:4px}.be-trade-screen>.be-deal-actions{position:sticky;bottom:-15px;z-index:2;padding:10px 0;margin:0;background:#111c23f7;box-shadow:0 -10px 15px #111c23ed;border-top:1px solid #92b8ac45}.be-trade-screen>.be-deal-actions button{min-height:56px}.be-trade-screen .be-goods-grid button{min-height:64px;padding:9px 10px}.be-trade-panel .be-panelhead{position:sticky;top:-15px;background:#263037f7;z-index:3;padding-top:5px;box-shadow:0 -10px #263037}.be-trade-panel .be-panelhead strong{font-size:20px}

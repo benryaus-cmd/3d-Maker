@@ -11,7 +11,9 @@ import {StreetCombat,npcCombatIntent,aggressiveFromSeed,restorePunchPose,applyPu
 import {clone as cloneSkinned} from 'three/examples/jsm/utils/SkeletonUtils.js';
 import {CrimeWorld,createCarVisual,renderCar,showCarDamage,applyCarCosmetics,disposeCarVisual,type CarStyle} from './World';
 import {BASE_TUNE,axes,drive,newCar,collideWall,collideCars,pointTouchesCar,carOverlapsWall,constrainCarToBounds,kmh,speed,tuneWithMods,type CarState,type CarTune,type DriverInput} from './vehiclePhysics';
-import {readSave,saveGame,initial,MARKETS,GOODS,MISSIONS,quote,trade,missionUpdate,missionMarker,buyUpgrade,buyCar,cargoCount,cargoCap,activeBuild,type GameSave,type Commodity,type Mods} from './Systems';
+import {readSave,saveGame,initial,MARKETS,GOODS,MISSIONS,bankMoney,missionUpdate,missionMarker,buyUpgrade,buyCar,cargoCount,cargoCap,activeBuild,type GameSave,type Commodity,type Mods} from './Systems';
+import {advanceEconomy,marketQuote,observeMarket,requestTrade,transferCargo,seizeCargo,syncCargo,type TradeRequest,type TradeResult} from './Economy';
+import {TradePanel,SafehouseStorage,MarketIntel} from './EconomyPanels';
 import './crime.css';
 import {Controls,type ControlField} from './Controls';
 import {disposePersonVisual,markSharedPersonModel,screenMovement} from './PersonVisuals';
@@ -128,7 +130,7 @@ class Sound{
  }
 }
 class EmpireEngine{
- world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;private menuOpen=false;private backgrounded=document.hidden;foot=false;footMesh:THREE.Group;
+ world:CrimeWorld;player:CarState;mesh:THREE.Group;save:GameSave;house=false;paused=false;private menuOpen=false;private tradeContact:string|null=null;private backgrounded=document.hidden;foot=false;footMesh:THREE.Group;
  actors:Actor[]=[];people:Ped[]=[];private sound=new Sound();private alive=true;private raf=0;private prev=performance.now();private acc=0;private gameTime=0;private displayAt=0;private saveAt=0;private noticeUntil=0;
  private message='HIT THE STREETS';private lastCrimeAt=0;private lastPoliceAt=0;private lastPedSpawn=0;private lastActorSpawn=0;
  private camTarget=new THREE.Vector3();private playerDamage=[0,0,0,0];private npcDamage=new WeakMap<Actor,number>();private currentCarStyle:CarStyle;
@@ -142,6 +144,7 @@ class EmpireEngine{
   this.save=readSave();const active=activeBuild(this.save);this.player=newCar(this.save.x,this.save.z,this.save.heading,active.hp);
   Object.assign(this.player,{damageFront:active.damage.front,damageRear:active.damage.rear,damageLeft:active.damage.left,damageRight:active.damage.right});
   this.currentCarStyle=this.save.car;this.world=new CrimeWorld(el);this.headlightRig=new VehicleLightRig(this.world.scene);
+  this.world.restoreClock(this.save.economy.seconds);
   this.world.setInteriorLevels(this.save.houseLevel,this.save.garageLevel);
   this.world.stream(this.player.x,this.player.z);
   if(this.world.walls.some(w=>carOverlapsWall(this.player,w))||Math.abs(this.player.x)>CITY_EDGE||Math.abs(this.player.z)>CITY_EDGE){const street=nearestStreet(this.player.x,this.player.z);this.player.x=street.x;this.player.z=street.z;}
@@ -183,7 +186,7 @@ class EmpireEngine{
   this.save.carHP=this.player.hp;
   this.save.carDamage={front:this.player.damageFront,rear:this.player.damageRear,left:this.player.damageLeft,right:this.player.damageRight};
   const build=activeBuild(this.save);build.hp=this.player.hp;build.damage={...this.save.carDamage};
-  build.mods={...this.save.mods};saveGame(this.save);};
+  build.mods={...this.save.mods};return saveGame(this.save);};
  unlock(){this.sound.start();}
  notice(s:string){this.message=s;this.noticeUntil=this.gameTime+3.5;this.publish();}
  private crime(heat:number){this.save.heat=clamp(this.save.heat+heat,0,5);this.lastCrimeAt=this.gameTime;}
@@ -243,7 +246,7 @@ class EmpireEngine{
   this.arrestProgress=0;this.finishRace();
   const fine=Math.min(this.save.money,Math.max(250,Math.round(this.save.heat*600)));
   this.save.money-=fine;
-  for(const good of GOODS)this.save.cargo[good]=0;
+  seizeCargo(this.save);
   this.save.heat=0;
   this.player.x=0;this.player.z=-12;this.player.heading=0;
   this.player.vx=this.player.vz=this.player.yawRate=0;
@@ -322,7 +325,7 @@ class EmpireEngine{
   this.footMesh.rotation.y=Math.atan2(dx,dz);
  }
  private physics(dt:number){
-  this.gameTime+=dt;const c=this.controls;
+  this.gameTime+=dt;advanceEconomy(this.save.economy,dt);this.save.day=1+Math.floor(this.save.economy.seconds/1200);const c=this.controls;
   if(!this.foot){
    const steer=-clamp(c.steer+Number(c.right)-Number(c.left),-1,1),tune=engineTune(this.save.car,this.save.mods);
    drive(this.player,{throttle:Number(c.throttle),brake:Number(c.brake),steer,handbrake:c.handbrake,nitro:c.nitro},dt,tune);
@@ -465,7 +468,7 @@ class EmpireEngine{
   if(!this.alive)return;
   const elapsed=clamp((now-this.prev)/1000,0,.08);this.prev=now;
   if(this.house&&!this.paused&&!this.backgrounded)this.save.heat=Math.max(0,this.save.heat-elapsed*.17);
-  if(this.house&&!this.paused&&!this.menuOpen&&!this.backgrounded)this.walkInterior(elapsed);
+  if(this.house&&!this.paused&&!this.menuOpen&&!this.backgrounded){this.walkInterior(elapsed);advanceEconomy(this.save.economy,elapsed);}
   if(!this.paused&&!this.menuOpen&&!this.house&&!this.backgrounded){this.acc=Math.min(.10,this.acc+elapsed);for(let i=0;i<5&&this.acc>=1/60;i++){this.physics(1/60);this.acc-=1/60;}}
   const position=this.position();
   if(!this.house){this.world.stream(position.x,position.z);}
@@ -504,7 +507,7 @@ class EmpireEngine{
     traffic:this.actors.filter(a=>a.type==='traffic').map(a=>[a.car.x,a.car.z] as [number,number]),
     parked:this.foot?[this.player.x,this.player.z]:null,people:this.people.filter(p=>p.alive).map(p=>[p.x,p.z] as [number,number]),target:!this.house&&objective?[objective.x,objective.z]:null}});
  }
- setMenuOpen(open:boolean){this.menuOpen=open;clearInputs(this.controls);this.sound.muted=this.paused||open||this.house||this.backgrounded;}
+ setMenuOpen(open:boolean){this.menuOpen=open;if(!open)this.tradeContact=null;clearInputs(this.controls);this.sound.muted=this.paused||open||this.house||this.backgrounded;}
  isMenuOpen(){return this.menuOpen;}
  navigateTo(id:string){const place=MARKETS.find(m=>m.id===id);if(place){this.waypoint={x:place.x,z:place.z,label:place.name};this.publish();}}
  clearWaypoint(){this.waypoint=null;this.publish();}
@@ -595,9 +598,31 @@ class EmpireEngine{
   else build.neon=true;
   applyCarCosmetics(this.mesh,build);this.notice(kind.toUpperCase()+' FITTED · $'+price);this.saveNow();
  }
- deal(market:string,good:Commodity,qty:number){const r=trade(this.save,market,good,qty,this.gameTime);this.notice(r.text);if(r.ok){this.crime(.08);this.saveNow();}}
+ openMarket(market:string){
+  const m=MARKETS.find(x=>x.id===market),here=this.position();
+  if(!m||this.house||Math.hypot(here.x-m.x,here.z-m.z)>7.5||kmh(here)>6)return false;
+  if(this.foot&&Math.hypot(here.x-this.player.x,here.z-this.player.z)>8){this.notice('PARK YOUR CAR BY THE CONTACT FOR CARGO');return false;}
+  this.tradeContact=market;this.setMenuOpen(true);observeMarket(this.save.economy,market);this.saveNow();return true;
+ }
+ private financialAction(action:()=>TradeResult):TradeResult{
+  const before=JSON.parse(JSON.stringify(this.save)) as GameSave,previousCrimeAt=this.lastCrimeAt;
+  const result=action();
+  if(result.ok){
+   if(result.receipt)this.crime(.08);
+   if(!this.saveNow()){this.save=before;this.lastCrimeAt=previousCrimeAt;syncCargo(this.save);const failed={ok:false,text:'SAVE UNAVAILABLE · DEAL CANCELLED'};this.notice(failed.text);return failed;}
+  }
+  this.notice(result.text);return result;
+ }
+ deal(request:TradeRequest){
+  const here=this.position();return this.financialAction(()=>requestTrade(this.save,request,{x:here.x,z:here.z,speed:kmh(here),
+   open:this.menuOpen&&this.tradeContact===request.market&&!this.backgrounded&&!this.house,
+   cargoAccessible:!this.foot||Math.hypot(here.x-this.player.x,here.z-this.player.z)<=8}));
+ }
+ canTransferCargo(){return this.house&&Math.hypot(this.player.x-7,this.player.z-7)<=12&&kmh(this.player)<=6;}
+ moveCargo(good:Commodity,qty:number){return this.financialAction(()=>transferCargo(this.save,good,qty,this.house&&this.menuOpen&&!this.backgrounded,this.canTransferCargo()));}
+ bankCash(amount:number){return this.financialAction(()=>bankMoney(this.save,amount,this.house&&this.menuOpen&&!this.backgrounded));}
  getData(){return this.save;}
- getPrice(market:string,good:Commodity){return quote(market,good,this.gameTime);}
+ getPrice(market:string,good:Commodity){return marketQuote(this.save.economy,market,good)?.buy??0;}
  dispose(){this.alive=false;cancelAnimationFrame(this.raf);this.saveNow();clearInputs(this.controls);
   document.removeEventListener('visibilitychange',this.visibility);window.removeEventListener('pagehide',this.saveNow);window.removeEventListener('resize',this.resize);
   this.sound.dispose();this.headlightRig.dispose();this.actors.forEach(a=>disposeCarVisual(a.mesh));this.people.forEach(p=>{p.mixer?.stopAllAction();if(p.mixer)p.mixer.uncacheRoot(p.mixer.getRoot());disposePersonVisual(p.mesh);if(p.bleed){p.bleed.removeFromParent();p.bleed.geometry.dispose();(p.bleed.material as THREE.Material).dispose();}});
@@ -647,7 +672,7 @@ function MiniMap({radar}:{radar:Radar}){const canvas=useRef<HTMLCanvasElement>(n
 export default function CrimeGame(){
  const el=useRef<HTMLDivElement>(null),controls=useRef(new Controls()),engine=useRef<EmpireEngine|null>(null);
  const [hud,setHud]=useState<UI>(initialUi),[menu,setMenu]=useState<'none'|'pause'|'garage'|'trade'|'house'|'jobs'|'map'>('none');
- const [selectedGood,setSelectedGood]=useState<Commodity>('Ember'),[qty,setQty]=useState(1);
+
  useEffect(()=>{controls.current.clear();engine.current?.setMenuOpen(menu!=='none');},[menu]);
  useEffect(()=>{
   if(!el.current)return;const game=new EmpireEngine(el.current,controls.current,setHud);engine.current=game;
@@ -668,7 +693,7 @@ export default function CrimeGame(){
   if(hud.house){engine.current?.action();close();}
   else if(hud.near==='garage'){if(!engine.current?.canUseGarage()){engine.current?.notice('BRING YOUR CAR TO THE GARAGE AND PARK');return;}setMenu('garage');}
   else if(hud.near==='safehouse'){if(hud.speed>6){engine.current?.notice('PARK BEFORE ENTERING THE SAFEHOUSE');return;}engine.current?.action();if(engine.current?.house)setMenu('house');}
-  else if(hud.near&&MARKETS.some(m=>m.id===hud.near)){if(hud.speed>6){engine.current?.notice('PARK BEFORE TRADING');return;}setMenu('trade');}
+  else if(hud.near&&MARKETS.some(m=>m.id===hud.near)){if(hud.speed>6){engine.current?.notice('PARK BEFORE TRADING');return;}if(engine.current?.openMarket(hud.near))setMenu('trade');}
   else engine.current?.action();
  };
  const adjust=(key:keyof Mods|'house'|'garage')=>engine.current?.upgrade(key);
@@ -693,15 +718,11 @@ export default function CrimeGame(){
     {hud.foot&&<div className="be-walk-hint">{!hud.house&&<ControlButton label="PUNCH" field="punch" controls={controls} engine={engine} className="be-punch"/>}<small>{hud.house?'Explore your rooms':'F punch · Approach your car to enter'}</small></div>}
    </div></div></>}
   {menu!=='none'&&<div className="be-overlay" role="dialog" aria-modal="true">
-   <div className="be-panel"><div className="be-panelhead"><strong>{menu==='pause'?'CITY MENU':menu==='trade'?'STREET MARKET':menu==='garage'?'VEHICLE SHOP':menu==='house'?'MIDTOWN SAFEHOUSE':menu==='map'?'CITY MAP':'JOBS & CAMPAIGN'}</strong><button onClick={close} aria-label="Close menu">✕</button></div>
+   <div className={'be-panel'+(menu==='trade'?' be-trade-panel':'')}><div className="be-panelhead"><strong>{menu==='pause'?'CITY MENU':menu==='trade'?(item?.name??'STREET MARKET'):menu==='garage'?'VEHICLE SHOP':menu==='house'?'MIDTOWN SAFEHOUSE':menu==='map'?'CITY MAP':'JOBS & CAMPAIGN'}</strong><button onClick={close} aria-label="Close menu">✕</button></div>
    {menu==='map'&&<CityMap radar={hud.radar} onPick={id=>{engine.current?.navigateTo(id);close();}}/>}
    {menu==='pause'&&<><p>STREETS NEVER SLEEP. DRIVE, BUILD YOUR EMPIRE AND LOSE THE HEAT.</p><div className="be-columns"><button onClick={()=>{engine.current?.setMode('campaign');close();}}>CAMPAIGN</button><button onClick={()=>{engine.current?.setMode('freeroam');close();}}>FREE ROAM</button></div>
     <button onClick={()=>{engine.current?.resume();close();}}>RESUME DRIVING</button><button onClick={()=>{engine.current?.unlock();close();}}>BACK TO STREETS</button><button onClick={()=>{engine.current?.tow();close();}}>TOW MY VEHICLE TO GARAGE · $180</button><p className="be-note">WASD/arrows drive · SPACE drift · SHIFT nitro · E interact · F punch · M jobs. Progress autosaves.</p></>}
-   {menu==='trade'&&<><p>{item?.name??'NEARBY STREET MARKET'} · Prices move between districts. Reach a market before trading.</p>
-    <div className="be-columns">{GOODS.map(g=><button key={g} className={selectedGood===g?'active':''} onClick={()=>setSelectedGood(g)}>{g.toUpperCase()}<small>{money(engine.current?.getPrice(item?.id??'port',g)??0)} · HAVE {s.cargo[g]}</small></button>)}</div>
-    <div className="be-tradeqty"><label>Quantity <input type="number" min="1" max="20" value={qty} onChange={e=>setQty(clamp(Math.trunc(Number(e.target.value)||1),1,20))}/></label></div>
-    <div className="be-columns"><button onClick={()=>item&&engine.current?.deal(item.id,selectedGood,qty)}>BUY</button><button onClick={()=>item&&engine.current?.deal(item.id,selectedGood,-qty)}>SELL</button></div>
-    <p>BOOT CAPACITY {cargoCount(s)}/{cargoCap(s)} · CASH {money(hud.cash)}</p></>}
+   {menu==='trade'&&<TradePanel save={s} market={item??null} onDeal={request=>engine.current!.deal(request)} onNavigate={id=>{engine.current?.navigateTo(id);close();}}/>}
    {menu==='garage'&&<><p>OWNED CARS · PURCHASE · MOD · REPAIR</p><div className="be-columns">{(['sedan','sedan-sports','taxi','suv','race','police'] as CarStyle[]).map(c=><button key={c} onClick={()=>engine.current?.purchaseCar(c)}>{c.toUpperCase()}<small>{s.owned.includes(c)?'OWNED · SELECT':c==='race'?'$11,000':c==='sedan-sports'?'$5,500':c==='police'?'$9,000':c==='suv'?'$3,800':'$1,700'}</small></button>)}</div>
     <button onClick={()=>engine.current?.repair()}>FULL BODY / ENGINE REPAIR</button>
     <p>CUSTOM BODYWORK · ALL MODS SAVED TO THIS VEHICLE</p>
@@ -711,8 +732,10 @@ export default function CrimeGame(){
     {(['engine','tires','brakes','armor'] as (keyof Mods)[]).map(k=><button key={k} onClick={()=>adjust(k)}>{k.toUpperCase()} · LEVEL {activeBuild(s).mods[k]}/3 · {money(350*(activeBuild(s).mods[k]+1))}</button>)}</>}
    {menu==='house'&&<><p>YOUR ENTERABLE SAFEHOUSE · PERSONAL GARAGE · STORAGE · HIDEOUT</p><p>HOUSE LEVEL {s.houseLevel} · GARAGE LEVEL {s.garageLevel}</p>
     <div className="be-columns"><button onClick={()=>adjust('house')}>UPGRADE ROOMS · {money(550*(s.houseLevel+1))}</button><button onClick={()=>adjust('garage')}>EXPAND GARAGE/STASH · {money(650*(s.garageLevel+1))}</button></div>
+    <SafehouseStorage save={s} canTransfer={engine.current?.canTransferCargo()??false} onTransfer={(good,qty)=>engine.current!.moveCargo(good,qty)} onBank={amount=>engine.current!.bankCash(amount)}/>
     <button onClick={()=>{engine.current?.repair();}}>REPAIR YOUR CAR</button><button onClick={()=>{engine.current?.action();close();}}>EXIT SAFEHOUSE</button></>}
    {menu==='jobs'&&<><p>CAMPAIGN: {s.completed.length} / {MISSIONS.length} COMPLETED. FREE ROAM ALWAYS OPEN.</p>
+    <MarketIntel save={s} onNavigate={id=>{engine.current?.navigateTo(id);close();}}/>
     <p>DISTRICT MARKETS · SET A ROUTE</p><div className="be-columns">{MARKETS.map(m=><button key={m.id} onClick={()=>{engine.current?.navigateTo(m.id);close();}}>{m.name}<small>{districtAt(m.x,m.z).name} · {Math.round(Math.hypot(m.x-hud.radar.player[0],m.z-hud.radar.player[1]))} m</small></button>)}</div><button onClick={()=>{engine.current?.clearWaypoint();close();}}>RETURN TO STORY ROUTE</button>
     {MISSIONS.map((m,i)=><div key={m.title} className={'be-job '+(s.mission===i?'active':'')}><b>{i+1}. {m.title}</b><span>{m.brief}</span><small>{s.completed.includes(i)?'COMPLETED':s.mission===i?'ACTIVE':s.mission<i?'LOCKED':'UP NEXT'} · {money(m.reward)}</small></div>)}
     <div className="be-columns"><button onClick={()=>{engine.current?.setMode('campaign');close();}}>CONTINUE STORY</button><button onClick={()=>{engine.current?.setMode('freeroam');close();}}>EXPLORE CITY</button></div></>}

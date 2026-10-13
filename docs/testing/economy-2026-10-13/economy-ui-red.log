@@ -1,0 +1,21 @@
+PASS fresh game starts persistent v3 economic simulation
+PASS actual keyboard drive and brake reaches Midtown contact
+PASS trade sheet exposes finite supplier and buyer limits
+PASS trade sheet exposes cost basis and sale profit
+PASS trade menu freezes market time and replenishment
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: BUY is fully visible without scrolling at portrait market entry
+    at check (file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/playtest-economy.mjs:6:42)
+    at file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/playtest-economy.mjs:18:145 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

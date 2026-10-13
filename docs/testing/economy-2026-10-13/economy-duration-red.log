@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: rounded event countdown must carry seconds into minutes
+    at file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/check-economy-ui.mjs:6:82
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '<details class="be-market-intel"><summary>STREET INTEL <span>1 LIVE EVENT</span></summary><button class="be-intel-event"><strong>PORT SHIPMENT<em>2:60 left</em></strong><span>Ember and Glitch prices fall while a fresh shipment clears the docks.</span><small>SET ROUTE → PORT MARKET</small></button><p class="be-intel-note">Quotes below are from your visits. Prices and demand may change before arrival.</p><div class="be-observed-markets"><button><b>PORT MARKET</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>NEON CLUB</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>INDUSTRIAL YARD</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>FINANCIAL BROKER</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>HILLS CONTACT</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>GARDENS EXCHANGE</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>OLD QUARTER MARKET</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>MIDTOWN DEALER</b><small>VISIT FOR A PRICE CHECK</small></button><button><b>MARKET WARD</b><small>VISIT FOR A PRICE CHECK</small></button></div></details>',
+  expected: /\d+:60 left/,
+  operator: 'doesNotMatch',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

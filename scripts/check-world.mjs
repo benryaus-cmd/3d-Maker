@@ -33,6 +33,8 @@ try{
  Object.assign(world,{scene:new THREE.Scene(),props:[],root:new THREE.Group(),interior:new THREE.Group(),navigation:new THREE.Group(),navigationKey:'',camera:new THREE.OrthographicCamera(-12,12,25,-25,.1,400),cameraFocus:new THREE.Vector3(),cameraHeading:0,cameraReady:false,sun:new THREE.DirectionalLight(),sky:new THREE.HemisphereLight(),streetLights:[],activeProps:new Set(),brokenLamps:new Set(),lampAnchors:[],lampRefresh:Infinity,lampX:Infinity,lampZ:Infinity,renderer:{toneMappingExposure:1},lampMaterial:new THREE.MeshBasicMaterial(),windowMaterial:new THREE.MeshBasicMaterial(),routeMaterial:new THREE.MeshBasicMaterial(),environmentTime:17.5*3600,night:0,skidCursor:0,skidSide:0,skidPrevious:[null,null],skidDummy:new THREE.Object3D(),tyreMarks:new THREE.InstancedMesh(new THREE.PlaneGeometry(.2,1),new THREE.MeshBasicMaterial(),420)});
  world.skids=new TimedSkids(world.scene,(x,z)=>world.surfaceHeight(x,z));world.tyreMarks=world.skids.mesh;
  world.scene.background=new THREE.Color();world.interior.visible=false;
+ assert.equal(typeof world.restoreClock,'function','reload restores the day/night clock from persistent elapsed time');
+ world.restoreClock(400);assert.equal(world.clockLabel,'01:30');world.restoreClock(0);assert.equal(world.clockLabel,'17:30');
  for(let i=0;i<180;i++)world.follow(0,0,0,0,1/60,false,false);
  assert.equal(world.surfaceHeight(0,18),.055,'road grounding includes connected vertical streets');assert.equal(world.surfaceHeight(7,16),.09,'ordinary sidewalk grounding');assert.equal(world.viewHeading,0,'HUD exposes current damped camera heading');
  const slowZoom=world.camera.zoom;

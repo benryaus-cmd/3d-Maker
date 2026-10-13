@@ -555,6 +555,9 @@ export class CrimeWorld{
   }
   this.streetLights.forEach((l,i)=>{const anchor=this.lampAnchors[i];l.intensity=anchor?this.night*18:0;if(anchor)l.position.copy(anchor);});
  }
+ restoreClock(elapsedSeconds:number){
+  this.environmentTime=(17.5*3600+Math.max(0,Number.isFinite(elapsedSeconds)?elapsedSeconds:0)*72)%86400;this.updateEnvironment(0);
+ }
  updateEnvironment(dt:number){
   this.environmentTime=(this.environmentTime+Math.max(0,dt)*72)%86400;
   const hours=this.environmentTime/3600;this.clockLabel=String(Math.floor(hours)).padStart(2,'0')+':'+String(Math.floor(hours%1*60)).padStart(2,'0');

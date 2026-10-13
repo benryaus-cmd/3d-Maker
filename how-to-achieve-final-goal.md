@@ -15,14 +15,14 @@ Read [the fresh goal-review playtest](docs/testing/blacktop-goal-review-13oct202
 | Driving/input | Analog steering, pedal smoothing, fixed-step vehicle physics, drift, reverse, multitouch checks | Physical-device tuning, archetype balance, pursuit stress and end-to-end latency |
 | City | Nine districts, merged blocks, joined 15-unit Kenney tiles, graph routing | Each district still derives from a repeated rotated partition; author landmarks, unique street plans and meaningful alternate routes |
 | Visual immersion | Day/night, fitted lamps, breakable props, impacts and bounded skid lifetime | Cohesive district art, richer character animation, material consistency, calibrated audio and device profiling |
-| Economy | Four goods, nine markets, cash/cargo checks, purchase persistence | Finite dealer stock/demand, spread, cargo ownership, market events, ledger and saved economic clock |
+| Economy | Four goods, nine markets; persistent finite stock/demand, spreads/events, cargo cost, receipts/history, safehouse bank/stash | Wider balance/playtest coverage, more goods/contact behaviour, integration with gangs and mission economy |
 | Combat | Punches; civilian fight/flee and physical car impacts | Firearms, aim controls, cover, perception, hostile squads and combat saves |
 | Police/traffic | Physical cars, street routing, basic pursuit/heat/arrest | Formal incident/search states, fair dispatch, coordinated tactics, signals, jam handling, larger stress sample |
 | Progression | Five short objective scripts; upgrades, car-specific model builds, safehouse | Mission graph, branching story, crew, gangs, territory, multiple properties and unique vehicle instances |
 | UI | Compact driving HUD, jobs, route guidance and enlarged map | Combat/empire states, transaction clarity, consistent components, accessibility/settings and usability testing |
 | Persistence | Save v2; cash, cargo, owned model builds and campaign | Durable market/faction/business/mission state, validated migrations, transaction IDs and corrupt-save recovery |
 
-**Concrete economy findings:** `Systems.ts::quote` uses `floor(clock/75)`; `CrimeGame.tsx::getPrice/deal` passes session `gameTime`, initialised to zero. Dealer stock/demand and economic time are absent from `GameSave`. `trade` treats “NOT ENOUGH STOCK” as insufficient *player cargo*, not dealer inventory. Buy and sell use the same quote. Trading location is gated by current UI proximity, while the domain trade function itself lacks position/contact validation. Correct these at the transaction boundary when adding events or new interfaces. These are code-audit findings, not a claim that a browser exploit was demonstrated.
+**Historical economy findings from the goal review are addressed by the persistent-economy update:** session-only prices, unlimited dealer inventory, equal buy/sell quotes and UI-only proximity validation are replaced by `Economy.ts` and save payloadv3. See [the economy report](docs/testing/blacktop-economy-13oct2026.md). The S1 checklist below remains the requirement set; read current code and evidence before repeating completed work.
 
 ## 2. Work order and integration rules
 
@@ -159,4 +159,4 @@ For every delivered slice, leave:
 
 ### First task for the next AI
 
-Inspect current HEAD and this baseline, reproduce the existing trade loop, then implement **S1's persistent market clock, finite stock/demand and atomic saved trade transaction** behind the current trade UI. Add an acquisition-cost/profit receipt and prove the cross-district buy/sell/reload loop. Follow with S2's pistol encounter. Continue towards the integrated slice rather than spending the next pass exclusively on decorative props.
+Inspect current HEAD and the persistent-economy report, reproduce the current buy/drive/sell/reload loop, then implement **S2's polished pistol encounter**: portrait movement/aim/fire/reload, obstruction/cover, hostile perception and police consequences. Preserve the saved market/cargo/receipt state and existing controls. Continue toward the connected ambush, pursuit and faction slice. Physical-device profiling from S0 remains outstanding; do not repeat the completed S1 core or claim its broader balance/release gates are finished.

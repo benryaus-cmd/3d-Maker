@@ -1,0 +1,26 @@
+PASS fresh game starts persistent v3 economic simulation
+PASS actual keyboard drive and brake reaches Midtown contact
+PASS trade sheet exposes finite supplier and buyer limits
+PASS trade sheet exposes cost basis and sale profit
+PASS trade menu freezes market time and replenishment
+PASS BUY is fully visible without scrolling at portrait market entry
+PASS actual BUY updates owned cargo and cash
+PASS actual BUY depletes dealer inventory
+PASS actual deal shows a persistent receipt
+PASS reload retains purchased cargo and money
+PASS reload retains depleted stock and transaction sequence
+PASS reload resumes saved market time instead of resetting
+DRIVEN ARRIVAL 0 119.85392135619804 0
+PASS actual keyboard drive crosses into Financial Core
+PASS cross-district selling displays a positive cargo profit
+PASS actual Financial buyer purchases transported cargo
+PASS receipt profit reconciles exactly with purchase cost
+PASS sale consumes real buyer demand
+PASS fixture: engine rejects replayed transaction without mutation
+PASS fixture: failed save rolls back actual BUY money cargo and ledger
+PASS failed save is visibly reported as cancelled
+PASS live port supply event provides an actionable route
+PASS intel route button resumes play and sets Port navigation
+PASS fixture: actual safehouse STORE moves cargo into persistent stash
+PASS fixture: remote car disables safehouse cargo transfer controls
+PASS fixture: engine rejects remote-car transfer without teleporting cargo

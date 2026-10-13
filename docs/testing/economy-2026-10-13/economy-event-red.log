@@ -1,0 +1,27 @@
+PASS fresh games have finite distinct dealer stock and a buy/sell spread
+PASS a trade conserves cash cargo stock and acquisition cost with one ledger receipt
+PASS replaying a transaction cannot move money or stock twice even with a refreshed quote
+PASS stale remote closed moving and inaccessible cargo requests fail without mutation
+PASS finite stock demand capacity money and owned inventory gate trades
+PASS sale reports realised profit and removes proportional acquisition cost
+PASS buying and selling back at the same contact loses money
+PASS clock replenishes only on active simulation and survives serialisation without offline accrual
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
+
+'74193:club:Velvet:1:6:0'
+    at file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/check-economy.mjs:52:132
+    at test (file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/check-economy.mjs:6:37)
+    at file:///workspace/scratch/6af6b1f113d2/blacktop-economy/scripts/check-economy.mjs:50:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '74193:club:Velvet:1:6:0',
+  expected: '74193:club:Velvet:1:6:0',
+  operator: 'notStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

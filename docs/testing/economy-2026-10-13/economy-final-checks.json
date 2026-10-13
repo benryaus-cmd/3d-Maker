@@ -1,0 +1,93 @@
+[
+  {
+    "name": "check-economy",
+    "exit": 0,
+    "tail": [
+      "COMPLETE 21 economy groups"
+    ]
+  },
+  {
+    "name": "check-economy-ui",
+    "exit": 0,
+    "tail": [
+      "PASS fractional event countdowns carry seconds correctly"
+    ]
+  },
+  {
+    "name": "check-crime",
+    "exit": 0,
+    "tail": [
+      "BLACKTOP EMPIRE physics/economy/mission/assets checks passed"
+    ]
+  },
+  {
+    "name": "check-mobile-controls",
+    "exit": 0,
+    "tail": [
+      "Mobile analog / mixed sources / cancellation: PASS"
+    ]
+  },
+  {
+    "name": "check-world",
+    "exit": 0,
+    "tail": [
+      "World camera, safehouse, day/night, route, connected skid and instance disposal checks passed"
+    ]
+  },
+  {
+    "name": "check-person-disposal",
+    "exit": 0,
+    "tail": [
+      "Character geometry/material/bone texture disposal and rig sharing: PASS"
+    ]
+  },
+  {
+    "name": "check-city-layout",
+    "exit": 0,
+    "tail": [
+      "City layout verified: 9 districts, 72 blocks, 391 nodes, 391 tiles."
+    ]
+  },
+  {
+    "name": "check-road-assets",
+    "exit": 0,
+    "tail": [
+      "Original GLB openings, geometry-derived vehicle lamps and async replacement checks passed."
+    ]
+  },
+  {
+    "name": "check-traffic",
+    "exit": 0,
+    "tail": [
+      "Traffic lane graph, forward avoidance, turn-speed and physical recovery: PASS"
+    ]
+  },
+  {
+    "name": "check-street-combat",
+    "exit": 0,
+    "tail": [
+      "Street combat range, reaction, cooldown, and real GLB punch pose: PASS"
+    ]
+  },
+  {
+    "name": "check-daylight",
+    "exit": 0,
+    "tail": [
+      "Daylight boundaries, night wrap, hue windows and smooth C1 fades passed."
+    ]
+  },
+  {
+    "name": "check-skid-lifetime",
+    "exit": 0,
+    "tail": [
+      "Skid10s hold/10s fade,20s expiry,boundedpool anddisposal: PASS"
+    ]
+  },
+  {
+    "name": "check-impact-immersion",
+    "exit": 0,
+    "tail": [
+      "Propmass/thresholds,rotatedphysicaledges,pedestrianknockback/ground/walls: PASS"
+    ]
+  }
+]

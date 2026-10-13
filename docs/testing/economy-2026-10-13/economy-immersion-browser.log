@@ -1,0 +1,18 @@
+PASS actual scene uses joined15m Kenney road tiles
+PASS actual radar tap opens enlarged city map
+PASS expandedmap pauses physics and skidclock
+PASS market tap selects route and resumesgame
+PASS headlights and streetlightingoff atnoon
+PASS visible streetlights and vehiclelights on atnight
+PASS yellowdawn andpinkdusk have distinctcolor
+PASS actual brake pedal brightens source-fit rear lamps
+PASS skidpool retained10s/fadesuntil20s thenreleasesdraw
+PASS physical lamp impact hides sourceinstance andcreates fallingmodel
+PASS fallen lamp remainsvisible and unlit
+PASS fallen object settles andpersists beyondold2.5s timeout
+PASS fallen prop resets onlyafterchunkdespawn/reload
+PASS drive reaches widened outerroad whileactualhull staysinmap
+PASS physical carcontact launches anddisplacespedestrian
+PASS enlargedmap alsoopens in landscape
+PASS no JavaScript orGPUshader errors
+COMPLETE 17 checks

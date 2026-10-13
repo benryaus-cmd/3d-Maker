@@ -1,0 +1,100 @@
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 94 modules transformed.
+rendering chunks...
+[plugin vite:singlefile] 
+
+[plugin vite:singlefile] Inlining: index-C6HjgHfP.js
+[plugin vite:singlefile] Inlining: style-D5GZtuAD.css
+🔍 Scanning source files for static assets...
+🔍 Deep scanning source file contents...
+📁 Found 83 static assets in source files
+📋 Assets found:
+   - https://…/image.jpg
+   - engine.ogg
+   - skid.ogg
+   - audio/impact.ogg
+   - fonts/BarlowCondensed-SemiBold.ttf
+   - fonts/Rajdhani-Medium.ttf
+   - ./bundled/audio/engine.ogg?url&inline
+   - ./bundled/audio/skid.ogg?url&inline
+   - ./bundled/audio/impact.ogg?url&inline
+   - ./bundled/fonts/BarlowCondensed-SemiBold.ttf?url&inline
+   - ./bundled/fonts/Rajdhani-Medium.ttf?url&inline
+   - audio/engine.ogg
+   - audio/skid.ogg
+   - pistol-0.wav
+   - ../../public/audio/sfx/pistol-0.wav
+   - pistol-1.wav
+   - ../../public/audio/sfx/pistol-1.wav
+   - pistol-2.wav
+   - ../../public/audio/sfx/pistol-2.wav
+   - rifle-0.wav
+   - ../../public/audio/sfx/rifle-0.wav
+   - rifle-1.wav
+   - ../../public/audio/sfx/rifle-1.wav
+   - rifle-2.wav
+   - ../../public/audio/sfx/rifle-2.wav
+   - shotgun-0.wav
+   - ../../public/audio/sfx/shotgun-0.wav
+   - shotgun-1.wav
+   - ../../public/audio/sfx/shotgun-1.wav
+   - zombie-1.wav
+   - ../../public/audio/sfx/zombie-1.wav
+   - zombie-3.wav
+   - ../../public/audio/sfx/zombie-3.wav
+   - zombie-4.wav
+   - ../../public/audio/sfx/zombie-4.wav
+   - zombie-5.wav
+   - ../../public/audio/sfx/zombie-5.wav
+   - zombie-6.wav
+   - ../../public/audio/sfx/zombie-6.wav
+   - zombie-7.wav
+   - ../../public/audio/sfx/zombie-7.wav
+   - zombie-8.wav
+   - ../../public/audio/sfx/zombie-8.wav
+   - zombie-9.wav
+   - ../../public/audio/sfx/zombie-9.wav
+   - zombie-10.wav
+   - ../../public/audio/sfx/zombie-10.wav
+   - zombie-11.wav
+   - ../../public/audio/sfx/zombie-11.wav
+   - zombie-12.wav
+   - ../../public/audio/sfx/zombie-12.wav
+   - war-stinger-0.ogg
+   - ../../public/audio/sfx/war-stinger-0.ogg
+   - war-stinger-1.ogg
+   - ../../public/audio/sfx/war-stinger-1.ogg
+   - war-stinger-2.ogg
+   - ../../public/audio/sfx/war-stinger-2.ogg
+   - war-explosion.wav
+   - ../../public/audio/sfx/war-explosion.wav
+   - war-fire-crackle.ogg
+   - ../../public/audio/sfx/war-fire-crackle.ogg
+   - combo-hit.ogg
+   - ../../public/audio/sfx/combo-hit.ogg
+   - combo-up.ogg
+   - ../../public/audio/sfx/combo-up.ogg
+   - combo-big.ogg
+   - ../../public/audio/sfx/combo-big.ogg
+   - reload.ogg
+   - ../../public/audio/sfx/reload.ogg
+   - reload-rifle.ogg
+   - ../../public/audio/sfx/reload-rifle.ogg
+   - reload-shotgun.ogg
+   - ../../public/audio/sfx/reload-shotgun.ogg
+   - empty-click.ogg
+   - ../../public/audio/sfx/empty-click.ogg
+   - bullet-impact-0.ogg
+   - ../../public/audio/sfx/bullet-impact-0.ogg
+   - bullet-impact-1.ogg
+   - ../../public/audio/sfx/bullet-impact-1.ogg
+   - https://cdn.aippy.ai/asset/8b4e67014e4e44d198e7b4f60bed81ba.jpg?x-oss-process=style/p
+   - https://cdn.aippy.ai/asset/25534e17770b4efda4d1a0bfce3abbd5.jpg?x-oss-process=style/p
+   - https://cdn.aippy.ai/asset/cfbed8301681433ca6fc655493cb8840.jpg?x-oss-process=style/p
+   - https://cdn.aippy.ai/asset/7862e5d02a264a2fb84d647e49158994.jpg?x-oss-process=style/p
+✅ Injected 83 preload meta tags into index.html
+computing gzip size...
+dist/index.html  9,152.25 kB │ gzip: 2,661.51 kB
+
+✓ built in 845ms

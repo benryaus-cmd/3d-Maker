@@ -18,7 +18,7 @@ controls.key('arrowup',true);controls.key('w',true);controls.key('w',false);asse
 controls.clear();controls.release(4);assert.ok(!controls.throttle&&!controls.left,'late capture release after reset is harmless');
 import fs from 'node:fs';
 import {newCar,drive,kmh,collideWall,impact,speed,tuneWithMods} from '../src/crime/vehiclePhysics.ts';
-import {initial,trade,quote,cargoCount,missionUpdate,buyUpgrade,buyCar,activeBuild,saveGame,readSave,MARKETS} from '../src/crime/Systems.ts';
+import {initial,trade,cargoCount,missionUpdate,buyUpgrade,buyCar,activeBuild,saveGame,readSave,MARKETS} from '../src/crime/Systems.ts';
 const input={throttle:1,brake:0,steer:0,handbrake:false,nitro:false};
 const simulate=(dt,total,steer=0)=>{const s=newCar();let acc=0;for(let i=0;i<Math.ceil(total/dt);i++){acc+=dt;while(acc>=1/60){drive(s,{...input,steer},1/60);acc-=1/60;}}return s;};
 const s30=simulate(1/30,4),s60=simulate(1/60,4);
@@ -43,11 +43,13 @@ assert.ok(crashed.hp<100&&crashed.damageFront>0,'contact damages physical front'
 const upgrades=tuneWithMods({mass:1000,power:8000,grip:1,brakeForce:10000,steerLock:.6,drag:.4,wheelbase:2.7,topSpeed:55,durability:100},{engine:1,tires:1,brakes:1,armor:1});
 assert.ok(upgrades.mass>1000&&upgrades.power>8000&&upgrades.grip>1,'upgrades affect dynamics');
 const state=initial();const start=state.money;
-assert.ok(trade(state,'port','Ember',1,0).ok);assert.equal(cargoCount(state),1);
-assert.ok(trade(state,'club','Ember',-1,0).ok);assert.equal(cargoCount(state),0);
-assert.ok(quote('port','Ember',0)!==quote('club','Ember',0),'different markets have different prices');
+const contact=id=>({...MARKETS.find(m=>m.id===id),open:true,speed:0,cargoAccessible:true});
+const {marketQuote}=await import('../src/crime/Economy.ts');
+assert.ok(trade(state,'port','Ember',1,contact('port')).ok);assert.equal(cargoCount(state),1);
+assert.ok(trade(state,'club','Ember',-1,contact('club')).ok);assert.equal(cargoCount(state),0);
+assert.ok(marketQuote(state.economy,'port','Ember').buy!==marketQuote(state.economy,'club','Ember').buy,'different markets have different prices');
 assert.ok(MARKETS.length>=4);assert.ok(start>0);
-assert.ok(!trade(state,'club','Crown',-1,0).ok,'no selling inventory not held');
+assert.ok(!trade(state,'club','Crown',-1,contact('club')).ok,'no selling inventory not held');
 const story=initial();assert.equal(story.mission,0);assert.ok(missionUpdate(story,7,7,0)?.includes('COMPLETE'));assert.equal(story.mission,1);
 const upgradeSave=initial();assert.ok(buyUpgrade(upgradeSave,'engine').ok);assert.equal(upgradeSave.mods.engine,1);
 const owned=initial();owned.money=10000;assert.ok(buyCar(owned,'sedan-sports').ok);assert.ok(owned.owned.includes('sedan-sports'));
